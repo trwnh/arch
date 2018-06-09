@@ -1,0 +1,34 @@
+#!/bin/bash
+
+## Verification
+
+# ls /sys/firmware/efi/efivars             # verify boot
+ping archlinux.org                         # verify internet connection
+timedatectl set-ntp true                   # verify network time
+# timedatectl status                       # check time
+
+## Format disks (repeat for all devices as desired)
+
+fdisk -l                                   # identify devices
+parted /dev/sda mklabel gpt yes            # set /dev/sda to gpt disk and auto-confirm
+cgdisk /dev/sda                            # pseudographical gdisk tool for partitions
+#    --- Create /boot partition ---
+#    [New]
+#    [enter] to set default sector size (2048)
+#    +512M [enter] to set a 512MiB partition size
+#    ef00 [enter] to set partition type as EFI System Partition
+#    ESP [enter] to name this partition "ESP"
+#    --- Create / partition ---
+#    [down] [down] to select free space at end
+#    [New]
+#    [enter] to set start sector at beginning of free space
+#    [enter] to set end sector at end of free space 
+#    [enter] to set partition type as Linux filesystem (default / 83 / 8300)
+#    Root [enter] to name this partition "Root"
+#    --- Write partition table to disk ---
+#    [Write]
+#    yes [enter] to confirm partition table
+#    [Quit]
+fdisk -l                                   # verify that the table is correct
+mkfs.fat /dev/sda1                         # format ESP as fat32 (required for ESP)
+mkfs.ext4 /dev/sda2                        # format / as ext4
