@@ -9,7 +9,7 @@ timedatectl set-ntp true                   # verify network time
 
 ## Format disks (repeat for all devices as desired)
 
-fdisk -l                                   # identify devices
+# fdisk -l                                 # identify devices
 parted /dev/sda mklabel gpt yes            # set /dev/sda to gpt disk and auto-confirm
 cgdisk /dev/sda                            # pseudographical gdisk tool for partitions
 #    --- Create /boot partition ---
@@ -29,6 +29,6 @@ cgdisk /dev/sda                            # pseudographical gdisk tool for part
 #    [Write]
 #    yes [enter] to confirm partition table
 #    [Quit]
-fdisk -l                                   # verify that the table is correct
+# fdisk -l                                 # verify that the table is correct
 mkfs.fat /dev/sda1                         # format ESP as fat32 (required for ESP)
 mkfs.ext4 /dev/sda2                        # format / as ext4
