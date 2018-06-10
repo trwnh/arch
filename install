@@ -59,25 +59,33 @@ mkdir /mnt/boot                            # create /boot folder
 mount /dev/sda1 /mnt/boot                  # mount ESP inside /boot on root partition
 
 ## Update mirrorlist
-pacman -Sy                                                                       # sync package manager database
-pacman -S reflector                                                              # install Reflector
-reflector --country 'US' -p http --sort rate --save /etc/pacman.d/mirrorlist     # generate optimal mirrorlist
+pacman -Sy                                 # sync package manager database
+pacman -S reflector                        # install Reflector
+reflector --country 'US'                   # get mirrors in US
+          -p http                          # using http protocol
+          --sort rate                      # and sort them by speed
+          --save /etc/pacman.d/mirrorlist  # save optimal mirrorlist
 
 ## Install system
-pacstrap /mnt base base-devel                                                    # bootstrap minimal system with base packages
-################################################################################ #     this will take a while...
-################################################################################ #     better go find something to do
-################################################################################ #     for half an hour or so.
-genfstab -U /mnt >> /mnt/etc/fstab                                               # generate filesystem table using UUIDs
-arch-chroot /mnt                                                                 # start running commands inside new system
+pacstrap /mnt base base-devel              # bootstrap minimal system with base packages
+#..........................................#     this will take a while...
+#..........................................#     better go find something to do
+#..........................................#     for half an hour or so.
+genfstab -U /mnt >> /mnt/etc/fstab         # generate filesystem table using UUIDs
+arch-chroot /mnt                           # start running commands inside new system
 
-## Configure new installation
-ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime     # set local timezone
-hwclock --systohc                                             # sync system clock with hardware clock
+## Timezones
+ln -sf /usr/share/zoneinfo/America/Chicago # symbolic link from Central Time
+       /etc/localtime                      # to the local timezone
+hwclock --systohc                          # sync system clock with hardware clock
+
+## Locales
 echo "en_US.UTF-8 UTF-8" > /etc/locale.gen                    # overwrite locale generation
 echo "ar_JO.UTF-8 UTF-8" >> /etc/locale.gen                   # append locale generation
 locale-gen                                                    # generate locales from locale.gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf                    # set specific locale
+
+## Hostnames
 echo "arch" > /etc/hostname                                   # set hostname
 echo "127.0.0.1 localhost" > /etc/hosts                       # loopback localhost ipv4
 echo "::1 localhost" >> /etc/hosts                            # loopback localhost ipv6
@@ -94,7 +102,7 @@ echo "title Arch Linux" > /boot/loader/entries/arch.conf
 echo "linux /vmlinuz-linux" >> /boot/loader/entries/arch.conf
 echo "initrd /intel-ucode.img" >> /boot/loader/entries/arch.conf
 echo "initrd /initramfs-linux.img" >> /boot/loader/entries/arch.conf
-echo "options root=LABEL=Root rw" >> /boot/loader/entries/arch.conf
+echo "options root=/dev/sda2 rw" >> /boot/loader/entries/arch.conf
 
 #### EFI Shell v1 entry
 echo "title EFI Shell v1" > /boot/loader/entries/arch.conf
@@ -110,6 +118,6 @@ echo "timeout 3" >> /boot/loader/loader.conf
 echo "editor no" >> /boot/loader/loader.conf
 
 ## Finishing up
-exit
-umount -R /mnt
-reboot
+exit                  # exit chroot
+umount -R /mnt        # unmount partitions
+reboot                # reboot
