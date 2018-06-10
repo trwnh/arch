@@ -1,3 +1,6 @@
+#!/bin/bash
+# stuff after install. don't run this either
+
 ## User management
 # (login as root)
 useradd -m                          # create new user
@@ -7,6 +10,7 @@ useradd -m                          # create new user
 usermod -aG wheel,http,ftp trwnh    # append groups to user
 passwd trwnh                        # set password for new user
 nano /etc/sudoers                   # uncomment wheel, ctrl+x, y, [enter]
+echo "EDITOR=nano" > /etc/environment
 exit
 # (log in as new non-root user)
 
@@ -28,6 +32,9 @@ sudo systemctl enable ntpd
 ## XFCE
 pacman -S xorg xorg-server
 pacman -S xfce4 xfce4-goodies
+echo "export DE=xfce" > .xinitrc 
+echo "exec startxfce4" >> .xinitrc
+echo "exec startx" >> .bash_profile 
 
 ## Virtualbox Guest Utilities, if running inside VBox
 pacman -S linux-headers virtualbox-guest-dkms virtualbox-guest-utils            # for graphical system
