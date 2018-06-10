@@ -65,10 +65,51 @@ reflector --country 'US' -p http --sort rate --save /etc/pacman.d/mirrorlist    
 
 ## Install system
 pacstrap /mnt base base-devel                                                    # bootstrap minimal system with base packages
+################################################################################ #     this will take a while...
+################################################################################ #     better go find something to do
+################################################################################ #     for half an hour or so.
 genfstab -U /mnt >> /mnt/etc/fstab                                               # generate filesystem table using UUIDs
 arch-chroot /mnt                                                                 # start running commands inside new system
 
 ## Configure new installation
 ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime     # set local timezone
 hwclock --systohc                                             # sync system clock with hardware clock
-cat "en_US.UTF-8 UTF-8" >> /etc/locale.gen                    # concatenate 
+echo "en_US.UTF-8 UTF-8" > /etc/locale.gen                    # overwrite locale generation
+echo "ar_JO.UTF-8 UTF-8" >> /etc/locale.gen                   # append locale generation
+locale-gen                                                    # generate locales from locale.gen
+echo "LANG=en_US.UTF-8" > /etc/locale.conf                    # set specific locale
+echo "arch" > /etc/hostname                                   # set hostname
+echo "127.0.0.1 localhost" > /etc/hosts                       # loopback localhost ipv4
+echo "::1 localhost" >> /etc/hosts                            # loopback localhost ipv6
+echo "127.0.1.1 arch.localdomain arch" >> /etc/hosts          # loopback hostname ipv4
+systemctl enable dhcpcd.service                               # networking (example)
+passwd                                                        # set root password
+
+## Bootloader setup
+pacman -S intel-ucode                                         # recommended for intel cpu
+bootctl install                                               # install systemd-boot
+
+#### Arch Linux bootloader entry
+echo "title Arch Linux" > /boot/loader/entries/arch.conf
+echo "linux /vmlinuz-linux" >> /boot/loader/entries/arch.conf
+echo "initrd /intel-ucode.img" >> /boot/loader/entries/arch.conf
+echo "initrd /initramfs-linux.img" >> /boot/loader/entries/arch.conf
+echo "options root=LABEL=Root rw" >> /boot/loader/entries/arch.conf
+
+#### EFI Shell v1 entry
+echo "title EFI Shell v1" > /boot/loader/entries/arch.conf
+echo "efi /EFI/shellx64_v1.efi" >> /boot/loader/entries/arch.conf
+
+#### EFI Shell v2 entry
+echo "title EFI Shell v2" > /boot/loader/entries/arch.conf
+echo "efi /EFI/shellx64_v2.efi" >> /boot/loader/entries/arch.conf
+
+#### Configure loaders
+echo "default arch" > /boot/loader/loader.conf
+echo "timeout 3" >> /boot/loader/loader.conf
+echo "editor no" >> /boot/loader/loader.conf
+
+## Finishing up
+exit
+umount -R /mnt
+reboot
