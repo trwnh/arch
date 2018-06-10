@@ -30,8 +30,9 @@ pacman -S xorg xorg-server
 pacman -S xfce4 xfce4-goodies
 
 ## Virtualbox Guest Utilities, if running inside VBox
-pacman -S virtualbox-guest-utils            # for graphical system
+pacman -S linux-headers virtualbox-guest-dkms virtualbox-guest-utils            # for graphical system
 # pacman -S virtualbox-guest-utils-nox      # for non-graphical system
+sudo systemctl enable vboxservice
 
 ## Fonts -- pick and choose
 packer -S all-repository-fonts
