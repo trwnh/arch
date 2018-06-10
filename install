@@ -1,10 +1,8 @@
-#!/bin/bash
-
 ## Verification
 
 # ls /sys/firmware/efi/efivars             # verify boot
-ping archlinux.org                         # verify internet connection
-timedatectl set-ntp true                   # verify network time
+# ping archlinux.org                       # verify internet connection
+timedatectl set-ntp true                   # use network time
 # timedatectl status                       # check time
 
 ## Format disks (repeat for all devices as desired)
@@ -12,23 +10,45 @@ timedatectl set-ntp true                   # verify network time
 # fdisk -l                                 # identify devices
 parted /dev/sda mklabel gpt yes            # set /dev/sda to gpt disk and auto-confirm
 cgdisk /dev/sda                            # pseudographical gdisk tool for partitions
+######## Example cgdisk flow #########################################################
 #    --- Create /boot partition ---
 #    [New]
 #    [enter] to set default sector size (2048)
 #    +512M [enter] to set a 512MiB partition size
 #    ef00 [enter] to set partition type as EFI System Partition
 #    ESP [enter] to name this partition "ESP"
+#    --- Create swap partition (optional unless low memory) ---
+#    Select free space at end
+#    [New]
+#    -4G [enter] to set start sector
+#    [enter] to set size as remaining end space
+#    8200 [enter] to set partition type as Linux swap
+#    Swap [enter] to name this partition "Swap"
 #    --- Create / partition ---
-#    [down] [down] to select free space at end
+#    Select free space at end (or middle, if you created swap)
 #    [New]
 #    [enter] to set start sector at beginning of free space
 #    [enter] to set end sector at end of free space 
-#    [enter] to set partition type as Linux filesystem (default / 83 / 8300)
+#    [enter] to set partition type as Linux filesystem (default / 8300)
 #    Root [enter] to name this partition "Root"
 #    --- Write partition table to disk ---
 #    [Write]
 #    yes [enter] to confirm partition table
 #    [Quit]
+#######################################################################################
+fdisk /dev/sda
+#    --- Reorder partitions sequentially from start to end of disk ---
+#    x [enter] to enter expert mode
+#    f [enter] to fix partition order
+#    r [enter] to return to main menu
+#    w [enter] to write changes
+#    --- /dev/sda2 should now be root, /dev/sda3 should now be swap ---
 # fdisk -l                                 # verify that the table is correct
 mkfs.fat /dev/sda1                         # format ESP as fat32 (required for ESP)
-mkfs.ext4 /dev/sda2                        # format / as ext4
+mkfs.ext4 /dev/sda2                        # format / as ext4 (use /dev/sda2 if no swap)
+mkswap /dev/sda3                           # designate swap partition (only if you made one)
+
+## Mount partitions
+mount /dev/sda2 /mnt                       # mount the root partition
+mkdir /mnt/boot                            # create /boot folder
+mount /dev/sda1 /mnt/boot                  # mount ESP inside /boot on root partition
