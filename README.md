@@ -6,3 +6,4 @@ install/config commands for arch linux for self-reference
 - ext4 filesystem for /
 - systemd-boot
 - only one system installed
+- packer as AUR helper
