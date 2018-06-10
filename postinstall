@@ -19,4 +19,32 @@ makepkg                                                                     # ma
 sudo pacman -U packer- [tab to autocomplete] [enter]                        # install package from local build
 cd .. && sudo rm -dR packer                                                 # exit directory and cleanup
 
-## 
+## Network time
+timedatectl set-ntp true
+sudo pacman -S ntpd
+sudo systemcl start ntpd
+sudo systemctl enable ntpd
+
+## XFCE
+pacman -S xorg xorg-server
+pacman -S xfce4 xfce4-goodies
+
+## Virtualbox Guest Utilities, if running inside VBox
+pacman -S virtualbox-guest-utils            # for graphical system
+# pacman -S virtualbox-guest-utils-nox      # for non-graphical system
+
+## Fonts -- pick and choose
+packer -S all-repository-fonts
+# --- bitmap ---
+# packer -S proggyfonts bdf-unifont terminus-font profont
+# --- families ---
+# packer -S ttf-bitstream-vera ttf-dejavu ttf-liberation ttf-ubuntu-font-family
+#           ttf-croscore ttf-courier-prime ttf-google-fonts ttf-droid ttf-roboto noto-fonts
+# --- monospace ---
+# packer -S ttf-anonymous-pro otf-fira-mono ttf-freefont
+#           ttf-hack ttf-inconsolata ttf-inconsolata-g
+#           ttf-meslo ttf-monaco ttf-monofur ttf-mononoki
+#           adobe-source-code-pro-fonts
+# --- arabic ---
+# packer -S ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts
+#           ttf-sil-lateef ttf-sil-scheherazade
