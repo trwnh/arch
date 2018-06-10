@@ -1,0 +1,22 @@
+## User management
+# (login as root)
+useradd -m                          # create new user
+        -g users                    # in users group
+        -s /bin/bash                # with bash as default shell
+        trwnh                       # username
+usermod -aG wheel,http,ftp trwnh    # append groups to user
+passwd trwnh                        # set password for new user
+nano /etc/sudoers                   # uncomment wheel, ctrl+x, y, [enter]
+exit
+# (log in as new non-root user)
+
+## Install an AUR helper
+sudo pacman -S wget git expac jshon                                         # dependencies
+mkdir packer && cd packer                                                   # create and enter a directory
+sudo wget -O PKGBUILD                                                       # download PKGBUILD script
+          https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=packer
+makepkg                                                                     # make package
+sudo pacman -U packer- [tab to autocomplete] [enter]                        # install package from local build
+cd .. && sudo rm -dR packer                                                 # exit directory and cleanup
+
+## 
