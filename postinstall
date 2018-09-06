@@ -24,20 +24,20 @@ sudo pacman -U packer- [tab to autocomplete] [enter]                        # in
 cd .. && sudo rm -dR packer                                                 # exit directory and cleanup
 
 ## Network time
-sudo pacman -S ntp
+packer -S ntp
 sudo systemctl start ntpd
 sudo systemctl enable ntpd
 
 ## XFCE
-pacman -S xorg xorg-server
-pacman -S xfce4 xfce4-goodies
+packer -S xorg xorg-server
+packer -S xfce4 xfce4-goodies
 echo "export DE=xfce" > .xinitrc 
 echo "exec startxfce4" >> .xinitrc
 echo "exec startx" >> .bash_profile 
 
 ## Virtualbox Guest Utilities, if running inside VBox
-pacman -S linux-headers virtualbox-guest-dkms virtualbox-guest-utils            # for graphical system
-# pacman -S virtualbox-guest-utils-nox      # for non-graphical system
+packer -S linux-headers virtualbox-guest-dkms virtualbox-guest-utils            # for graphical system
+# packer -S virtualbox-guest-utils-nox      # for non-graphical system
 sudo systemctl enable vboxservice
 
 ## Fonts -- pick and choose
