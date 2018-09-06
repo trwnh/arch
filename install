@@ -105,12 +105,12 @@ echo "initrd /initramfs-linux.img" >> /boot/loader/entries/arch.conf
 echo "options root=/dev/sda2 rw" >> /boot/loader/entries/arch.conf
 
 #### EFI Shell v1 entry
-echo "title EFI Shell v1" > /boot/loader/entries/arch.conf
-echo "efi /EFI/shellx64_v1.efi" >> /boot/loader/entries/arch.conf
+echo "title EFI Shell v1" > /boot/loader/entries/efi1.conf
+echo "efi /EFI/shellx64_v1.efi" >> /boot/loader/entries/efi1.conf
 
 #### EFI Shell v2 entry
-echo "title EFI Shell v2" > /boot/loader/entries/arch.conf
-echo "efi /EFI/shellx64_v2.efi" >> /boot/loader/entries/arch.conf
+echo "title EFI Shell v2" > /boot/loader/entries/efi2.conf
+echo "efi /EFI/shellx64_v2.efi" >> /boot/loader/entries/efi2.conf
 
 #### Configure loaders
 echo "default arch" > /boot/loader/loader.conf
