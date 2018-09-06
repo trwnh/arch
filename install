@@ -90,7 +90,7 @@ echo "arch" > /etc/hostname                                   # set hostname
 echo "127.0.0.1 localhost" > /etc/hosts                       # loopback localhost ipv4
 echo "::1 localhost" >> /etc/hosts                            # loopback localhost ipv6
 echo "127.0.1.1 arch.localdomain arch" >> /etc/hosts          # loopback hostname ipv4
-systemctl enable dhcpcd.service                               # networking (example)
+systemctl enable dhcpcd                                       # networking (example)
 passwd                                                        # set root password
 
 ## Bootloader setup
