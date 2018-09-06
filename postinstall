@@ -24,9 +24,8 @@ sudo pacman -U packer- [tab to autocomplete] [enter]                        # in
 cd .. && sudo rm -dR packer                                                 # exit directory and cleanup
 
 ## Network time
-timedatectl set-ntp true
-sudo pacman -S ntpd
-sudo systemcl start ntpd
+sudo pacman -S ntp
+sudo systemctl start ntpd
 sudo systemctl enable ntpd
 
 ## XFCE
