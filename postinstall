@@ -31,9 +31,10 @@ sudo systemctl enable ntpd
 ## XFCE
 packer -S xorg xorg-server
 packer -S xfce4 xfce4-goodies
-echo "export DE=xfce" > .xinitrc 
-echo "exec startxfce4" >> .xinitrc
-echo "exec startx" >> .bash_profile 
+#echo "export DE=xfce" > .xinitrc 
+#echo "exec startxfce4" >> .xinitrc
+#echo "exec startx" >> .bash_profile 
+echo "exec startxfce4" >> .bash_profile 
 
 ## Virtualbox Guest Utilities, if running inside VBox
 packer -S linux-headers virtualbox-guest-dkms virtualbox-guest-utils            # for graphical system
