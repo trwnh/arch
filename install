@@ -50,8 +50,8 @@ cgdisk /dev/sda                            # pseudographical gdisk tool for part
 # fdisk -l                                 # verify that the table is correct
 mkfs.fat /dev/sda1                         # format ESP as fat32 (required for ESP)
 mkfs.ext4 /dev/sda2                        # format / as ext4 (use /dev/sda2 if no swap)
-mkswap /dev/sda3                           # designate swap partition (if you made one)
-swapon /dev/sda3                           # turn on swap (if you made one)
+# mkswap /dev/sda3                         # designate swap partition (if you made one)
+# swapon /dev/sda3                         # turn on swap (if you made one)
 
 ## Mount partitions
 mount /dev/sda2 /mnt                       # mount the root partition
