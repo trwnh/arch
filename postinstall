@@ -15,7 +15,7 @@ exit
 # (log in as new non-root user)
 
 ## Install an AUR helper
-### packer (incredibly basic and written in bash)
+### packer (incredibly basic and written in bash, but stalled development)
 # sudo pacman -S wget git expac jshon                                         # dependencies
 # mkdir packer && cd packer                                                   # create and enter a directory
 # sudo wget -O PKGBUILD                                                       # download PKGBUILD script
@@ -23,11 +23,14 @@ exit
 # makepkg                                                                     # make package
 # sudo pacman -U packer- [tab to autocomplete] [enter]                        # install package from local build
 # cd .. && sudo rm -dR packer                                                 # exit directory and cleanup
-### yay (if you're willing to have Go installed as a dependency)
-sudo pacman -S git
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -si
+### yay (if you're willing to have Go installed as a dependency during build)
+sudo pacman -S git                                                            # dependency for build
+git clone https://aur.archlinux.org/yay.git                                   # clone the repo
+cd yay && makepkg -sic                                                        # (s)ync deps, (i)nstall pkg, (c)lean files
+yay --nodiffmenu --save                                                       # if you never want to see diffs 
+# yay -Yc    # clean unneeded dependencies (like Go, maybe)
+# yay -Ps    # (P)rint (s)tatistics
+cat "Color" >> /etc/pacman.conf
 
 ## Network time
 sudo systemctl start systemd-timesyncd
@@ -47,7 +50,7 @@ sudo systemctl start vboxservice
 sudo systemctl enable vboxservice
 
 ## Fonts -- pick and choose
-packer -S all-repository-fonts
+yay -S all-repository-fonts
 # --- bitmap ---
 # packer -S proggyfonts bdf-unifont terminus-font profont
 # --- families ---
