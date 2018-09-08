@@ -40,7 +40,7 @@ cgdisk /dev/sda                            # pseudographical gdisk tool for part
 #    yes [enter] to confirm partition table
 #    [Quit]
 #####################################################################################
-fdisk /dev/sda
+# fdisk /dev/sda                           # if you made a swap partition
 #    --- Reorder partitions sequentially from start to end of disk ---
 #    x [enter] to enter expert mode
 #    f [enter] to fix partition order
@@ -70,9 +70,10 @@ reflector --country 'US'                   # get mirrors in US
 pacstrap /mnt base base-devel              # bootstrap minimal system with base packages
 #..........................................#     this will take a while...
 #..........................................#     better go find something to do
-#..........................................#     for half an hour or so.
+#..........................................#     for ten minutes or so.
 genfstab -U /mnt >> /mnt/etc/fstab         # generate filesystem table using UUIDs
 arch-chroot /mnt                           # start running commands inside new system
+passwd                                     # set root password
 
 ## Timezones
 ln -sf /usr/share/zoneinfo/America/Chicago # symbolic link from Central Time
@@ -91,7 +92,6 @@ echo "127.0.0.1 localhost" > /etc/hosts                       # loopback localho
 echo "::1 localhost" >> /etc/hosts                            # loopback localhost ipv6
 echo "127.0.1.1 arch.localdomain arch" >> /etc/hosts          # loopback hostname ipv4
 systemctl enable dhcpcd                                       # networking (example)
-passwd                                                        # set root password
 
 ## Bootloader setup
 pacman -S intel-ucode                                         # recommended for intel cpu
