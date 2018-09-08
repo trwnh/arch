@@ -37,30 +37,9 @@ sudo systemctl start systemd-timesyncd
 sudo systemctl enable systemd-timesyncd
 # timedatectl    # if you want to check
 
-## XFCE
-sudo pacman -S xorg xorg-server
-sudo pacman -S xfce4 xfce4-goodies
-echo "exec startxfce4" >> .bash_profile
-
 ## Virtualbox Guest Utilities, if running inside VBox
 sudo pacman -S linux-headers virtualbox-guest-modules-arch
 sudo pacman -S virtualbox-guest-utils                        # for graphical system
 # sudo pacman -S virtualbox-guest-utils-nox                  # for non-graphical system
 sudo systemctl start vboxservice
 sudo systemctl enable vboxservice
-
-## Fonts -- pick and choose
-yay -S all-repository-fonts
-# --- bitmap ---
-# packer -S proggyfonts bdf-unifont terminus-font profont
-# --- families ---
-# packer -S ttf-bitstream-vera ttf-dejavu ttf-liberation ttf-ubuntu-font-family
-#           ttf-croscore ttf-courier-prime ttf-google-fonts ttf-droid ttf-roboto noto-fonts
-# --- monospace ---
-# packer -S ttf-anonymous-pro otf-fira-mono ttf-freefont
-#           ttf-hack ttf-inconsolata ttf-inconsolata-g
-#           ttf-meslo ttf-monaco ttf-monofur ttf-mononoki
-#           adobe-source-code-pro-fonts
-# --- arabic ---
-# packer -S ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts
-#           ttf-sil-lateef ttf-sil-scheherazade
