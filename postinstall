@@ -30,9 +30,9 @@ cd yay
 makepkg -si
 
 ## Network time
-packer -S ntp
-sudo systemctl start ntpd
-sudo systemctl enable ntpd
+sudo systemctl start systemd-timesyncd
+sudo systemctl enable systemd-timesyncd
+# timedatectl    # if you want to check
 
 ## XFCE
 sudo pacman -S xorg xorg-server
