@@ -14,14 +14,6 @@ echo "EDITOR=nano" > /etc/environment
 exit
 # (log in as new non-root user)
 
-## Update mirrorlist
-sudo pacman -Syu                           # sync package manager database
-sudo pacman -S reflector                   # install Reflector
-reflector --country 'US'                   # get mirrors in US
-          -p http                          # using http protocol
-          --sort rate                      # and sort them by speed
---save /etc/pacman.d/mirrorlist            # save optimal mirrorlist
-
 ## Install an AUR helper
 ### packer (incredibly basic and written in bash)
 # sudo pacman -S wget git expac jshon                                         # dependencies
