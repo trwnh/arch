@@ -37,14 +37,13 @@ sudo systemctl enable systemd-timesyncd
 ## XFCE
 sudo pacman -S xorg xorg-server
 sudo pacman -S xfce4 xfce4-goodies
-#echo "export DE=xfce" > .xinitrc 
-#echo "exec startxfce4" >> .xinitrc
-#echo "exec startx" >> .bash_profile 
 echo "exec startxfce4" >> .bash_profile
 
 ## Virtualbox Guest Utilities, if running inside VBox
-sudo pacman -S linux-headers virtualbox-guest-dkms virtualbox-guest-utils   # for graphical system
-# sudo pacman -S virtualbox-guest-utils-nox                                 # for non-graphical system
+sudo pacman -S linux-headers virtualbox-guest-modules-arch
+sudo pacman -S virtualbox-guest-utils                        # for graphical system
+# sudo pacman -S virtualbox-guest-utils-nox                  # for non-graphical system
+sudo systemctl start vboxservice
 sudo systemctl enable vboxservice
 
 ## Fonts -- pick and choose
