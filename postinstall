@@ -15,13 +15,19 @@ exit
 # (log in as new non-root user)
 
 ## Install an AUR helper
-sudo pacman -S wget git expac jshon                                         # dependencies
-mkdir packer && cd packer                                                   # create and enter a directory
-sudo wget -O PKGBUILD                                                       # download PKGBUILD script
-          https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=packer
-makepkg                                                                     # make package
-sudo pacman -U packer- [tab to autocomplete] [enter]                        # install package from local build
-cd .. && sudo rm -dR packer                                                 # exit directory and cleanup
+### packer (incredibly basic and written in bash)
+# sudo pacman -S wget git expac jshon                                         # dependencies
+# mkdir packer && cd packer                                                   # create and enter a directory
+# sudo wget -O PKGBUILD                                                       # download PKGBUILD script
+#           https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=packer
+# makepkg                                                                     # make package
+# sudo pacman -U packer- [tab to autocomplete] [enter]                        # install package from local build
+# cd .. && sudo rm -dR packer                                                 # exit directory and cleanup
+### yay (if you're willing to have Go installed as a dependency)
+sudo pacman -S git
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
 
 ## Network time
 packer -S ntp
@@ -29,16 +35,16 @@ sudo systemctl start ntpd
 sudo systemctl enable ntpd
 
 ## XFCE
-packer -S xorg xorg-server
-packer -S xfce4 xfce4-goodies
+sudo pacman -S xorg xorg-server
+sudo pacman -S xfce4 xfce4-goodies
 #echo "export DE=xfce" > .xinitrc 
 #echo "exec startxfce4" >> .xinitrc
 #echo "exec startx" >> .bash_profile 
-echo "exec startxfce4" >> .bash_profile 
+echo "exec startxfce4" >> .bash_profile
 
 ## Virtualbox Guest Utilities, if running inside VBox
-packer -S linux-headers virtualbox-guest-dkms virtualbox-guest-utils            # for graphical system
-# packer -S virtualbox-guest-utils-nox      # for non-graphical system
+sudo pacman -S linux-headers virtualbox-guest-dkms virtualbox-guest-utils   # for graphical system
+# sudo pacman -S virtualbox-guest-utils-nox                                 # for non-graphical system
 sudo systemctl enable vboxservice
 
 ## Fonts -- pick and choose
