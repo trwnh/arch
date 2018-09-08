@@ -1,0 +1,13 @@
+#!/bin/bash
+# don't run this, it's just for syntax highlighting
+
+# manually importing a package key? (example)
+gpg --recv-keys 5CC908FDB71E12C2
+
+# installed yay?
+yay     # sync and update arch / aur
+yay -Ps # stats for installed packages
+yay -Yc # clean unneeded dependencies
+
+# remove orphans
+sudo pacman -Rns $(sudo pacman -Qtdq)
