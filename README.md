@@ -6,4 +6,4 @@ install/config commands for arch linux for self-reference
 - ext4 filesystem for /
 - systemd-boot
 - only one system installed (no dual boot from same drive by default)
-- `packer` or `yay` as AUR helper
+- `yay` as AUR helper (since `packer` has stalled and been renamed `packer-aur`, after `packer-io` has been renamed to `packer`)
