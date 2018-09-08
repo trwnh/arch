@@ -5,5 +5,5 @@ install/config commands for arch linux for self-reference
 - UEFI/GPT/SSD boot drive only
 - ext4 filesystem for /
 - systemd-boot
-- only one system installed
+- only one system installed (no dual boot from same drive)
 - packer as AUR helper
