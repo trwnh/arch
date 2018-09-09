@@ -1,0 +1,9 @@
+#!/bin/bash
+# syntax highlighting, you know the drill
+
+## Install some other utilities, if you didn't already
+sudo pacman -S wget unzip zip unrar rsync
+               archey3 # neofetch screenfetch
+
+## Python 
+sudo pacman -S python-pip
