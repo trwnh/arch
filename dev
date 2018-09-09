@@ -8,9 +8,9 @@ sudo pacman -S wget unzip zip unrar rsync
 ## Python 
 sudo pacman -S python
 
-## zsh (upload config once done tweaking)
+## zsh
 yay -S zsh oh-my-zsh-git
-       python-powerline-git otf-inconsolata-powerline-git
+       powerline otf-inconsolata-powerline-git
        zsh-theme-powerlevel9k
        zsh-autosuggestions
-curl [github/trwnh/arch/config/.zshrc] > ~/.zshrc
+curl https://raw.githubusercontent.com/trwnh/arch/master/config/.zshrc > ~/.zshrc
