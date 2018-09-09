@@ -6,4 +6,11 @@ sudo pacman -S wget unzip zip unrar rsync
                archey3 # neofetch screenfetch
 
 ## Python 
-sudo pacman -S python-pip
+sudo pacman -S python
+
+## zsh (upload config once done tweaking)
+yay -S zsh oh-my-zsh-git
+       python-powerline-git otf-inconsolata-powerline-git
+       zsh-theme-powerlevel9k
+       zsh-autosuggestions
+curl [github/trwnh/arch/config/.zshrc] > ~/.zshrc
