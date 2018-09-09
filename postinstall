@@ -14,6 +14,11 @@ echo "EDITOR=nano" > /etc/environment
 exit
 # (log in as new non-root user)
 
+## Network time
+sudo systemctl start systemd-timesyncd
+sudo systemctl enable systemd-timesyncd
+# timedatectl    # if you want to check
+
 ## Install an AUR helper
 ### packer (incredibly basic and written in bash, but stalled development)
 # sudo pacman -S wget git expac jshon                                         # dependencies
@@ -31,11 +36,6 @@ yay --nodiffmenu --save                                                       # 
 # yay -Yc    # clean unneeded dependencies (like Go, maybe)
 # yay -Ps    # (P)rint (s)tatistics
 cat "Color" >> /etc/pacman.conf
-
-## Network time
-sudo systemctl start systemd-timesyncd
-sudo systemctl enable systemd-timesyncd
-# timedatectl    # if you want to check
 
 ## Virtualbox Guest Utilities, if running inside VBox
 sudo pacman -S linux-headers virtualbox-guest-modules-arch
