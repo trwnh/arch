@@ -22,4 +22,8 @@ yay -S all-repository-fonts
 # packer -S ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts
 #           ttf-sil-lateef ttf-sil-scheherazade
 
-## 
+## Theming
+yay -S arc-icon-theme 
+  materia-gtk-theme
+  # adapta-gtk-theme
+  # arc-gtk-theme
