@@ -23,11 +23,12 @@ yay -S all-repository-fonts
 #           ttf-sil-lateef ttf-sil-scheherazade
 
 ## Theming
-yay -S arc-icon-theme 
+yay -S
   materia-gtk-theme
+  faenza-icon-theme
+  xfce-theme-greybird
+  # arc-icon-theme 
   # adapta-gtk-theme
   # arc-gtk-theme
-  la capitaine
-  moka
-  faenza
-  greybird
+  # la-capitaine-icon-theme
+  # moka-icon-theme
