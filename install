@@ -102,7 +102,7 @@ echo "title Arch Linux" > /boot/loader/entries/arch.conf
 echo "linux /vmlinuz-linux" >> /boot/loader/entries/arch.conf
 echo "initrd /intel-ucode.img" >> /boot/loader/entries/arch.conf
 echo "initrd /initramfs-linux.img" >> /boot/loader/entries/arch.conf
-echo "options root=LABEL=Root rw" >> /boot/loader/entries/arch.conf
+echo "options root=PARTLABEL=Root rw" >> /boot/loader/entries/arch.conf
 
 #### EFI Shell v1 entry
 echo "title EFI Shell v1" > /boot/loader/entries/efi1.conf
