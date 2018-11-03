@@ -14,3 +14,9 @@ sudo pacman -Rns $(sudo pacman -Qtdq)
 
 # check whether you fucked up and overwrote a partition table with a filesystem
 blkid -p /dev/sdf1    # should return gpt details -- if it's only vfat/ext4, then you forgot the number
+
+# find yourself stuck in fallback shell on boot?
+mount /dev/sde2 new_root    # might take some guesswork to find where your system is
+ls new_root                 # verify that you mounted the right system
+exit                        # continue booting
+## now go and make sure your systemd-boot entry defines the root correctly!
