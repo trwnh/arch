@@ -11,3 +11,6 @@ yay -Yc # clean unneeded dependencies
 
 # remove orphans
 sudo pacman -Rns $(sudo pacman -Qtdq)
+
+# check whether you fucked up and overwrote a partition table with a filesystem
+blkid -p /dev/sdf1    # should return gpt details -- if it's only vfat/ext4, then you forgot the number
