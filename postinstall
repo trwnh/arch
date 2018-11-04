@@ -35,7 +35,7 @@ cd yay && makepkg -sic                                                        # 
 yay --nodiffmenu --save                                                       # if you never want to see diffs 
 # yay -Yc    # clean unneeded dependencies (like Go, maybe)
 # yay -Ps    # (P)rint (s)tatistics
-cat "Color" >> /etc/pacman.conf
+sudo -s 'cat "Color" >> /etc/pacman.conf'    # color output
 
 ## Virtualbox Guest Utilities, if running inside VBox
 sudo pacman -S linux-headers virtualbox-guest-modules-arch
