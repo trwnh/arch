@@ -20,3 +20,8 @@ mount /dev/sde2 new_root    # might take some guesswork to find where your syste
 ls new_root                 # verify that you mounted the right system
 exit                        # continue booting
 ## now go and make sure your systemd-boot entry defines the root correctly!
+
+# want to set some volume labels retroactively? (sample)
+yay -S dosfstools
+sudo fatlabel /dev/sde1 ESP
+sudo e2label /dev/sde2 Arch
