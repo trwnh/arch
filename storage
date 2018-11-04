@@ -5,6 +5,7 @@
 sudo mkdir /mnt/disk{1,2,3,4}    # make mount points
 ls -l /dev/disk/by-uuid          # list all formatted disks by uuid
 sudo blkid -p /dev/sda           # double-check formatting of single disk
+sudo blkid -p /dev/sde2          # double-check formatting of single partition
 lsblk -f                         # double-check all disks
 
 ## for raw storage, write filesystem directly to device (no partitions/gpt)
