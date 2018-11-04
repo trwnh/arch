@@ -13,7 +13,8 @@ yay -Yc # clean unneeded dependencies
 sudo pacman -Rns $(sudo pacman -Qtdq)
 
 # check whether you fucked up and overwrote a partition table with a filesystem
-blkid -p /dev/sdf1    # should return gpt details -- if it's only vfat/ext4, then you forgot the number
+sudo blkid -p /dev/sdf1    # should return gpt details -- if it's only vfat/ext4, then you forgot the number
+lsblk -f                   # look over this and make sure it's ok
 
 # find yourself stuck in fallback shell on boot?
 mount /dev/sde2 new_root    # might take some guesswork to find where your system is
