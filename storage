@@ -1,0 +1,14 @@
+#!/bin/bash
+# syntax highlighting, you know the drill
+
+# sample setup: 4x 8TB drives
+sudo mkdir /mnt/disk{1,2,3,4}    # make mount points
+ls -l /dev/disk/by-uuid          # list all formatted disks by uuid
+sudo blkid -p /dev/sda           # double-check formatting of single disk
+
+## a) write filesystem directly to device (no partitions/gpt)
+sudo mkfs.ext4 /dev/sda
+
+## b) create gpt then format a partition
+sudo pacman -S parted
+sudo parted /dev/sda mklabel gpt yes
