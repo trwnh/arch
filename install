@@ -48,8 +48,8 @@ cgdisk /dev/sda                            # pseudographical gdisk tool for part
 #    w [enter] to write changes
 #    --- /dev/sda2 should now be root, /dev/sda3 should now be swap ---
 # fdisk -l                                 # verify that the table is correct
-mkfs.fat /dev/sda1                         # format ESP as fat32 (required for ESP)
-mkfs.ext4 /dev/sda2                        # format / as ext4 (use /dev/sda2 if no swap)
+mkfs.fat /dev/sda1 -n "ESP"                # format ESP as fat32 (required for ESP)
+mkfs.ext4 /dev/sda2 -L "Arch"              # format / as ext4 (use /dev/sda2 if no swap)
 # mkswap /dev/sda3                         # designate swap partition (if you made one)
 # swapon /dev/sda3                         # turn on swap (if you made one)
 
@@ -102,7 +102,7 @@ echo "title Arch Linux" > /boot/loader/entries/arch.conf
 echo "linux /vmlinuz-linux" >> /boot/loader/entries/arch.conf
 echo "initrd /intel-ucode.img" >> /boot/loader/entries/arch.conf
 echo "initrd /initramfs-linux.img" >> /boot/loader/entries/arch.conf
-echo "options root=PARTLABEL=Root rw" >> /boot/loader/entries/arch.conf
+echo "options root=LABEL=Arch rw" >> /boot/loader/entries/arch.conf
 
 #### EFI Shell v1 entry
 echo "title EFI Shell v1" > /boot/loader/entries/efi1.conf
