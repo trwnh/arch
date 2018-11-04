@@ -1,0 +1,32 @@
+# === ROOT SSD =====================================================
+# fs  dir  type  options  dump  pass
+# ==================================================================
+
+# WD Blue 500GB (164401A02C75)
+# I-SATA 0 (/dev/sde)
+
+## Root (/dev/sde2)
+UUID=b8522041-b164-4f81-8cc5-4f868a3041f5  /  ext4  rw,relatime  0  1
+
+## ESP (/dev/sde1)
+UUID=674D-5FD8  /boot  vfat  rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,utf8,errors=remount-ro  0  2
+
+# === HARD DRIVES ==================================================
+# fs                     dir           type    options     dump pass
+# ==================================================================
+
+# EFAX P1 (7SGLSX6C)
+# S-SATA0 (/dev/sda)
+UUID=081A448D1A4479A8    /mnt/disk1    ext4    rw,relatime    0    2
+
+# EFAX P2 (7SGNDTNC)
+# S-SATA1 (/dev/sdb)
+UUID=00F8BA7AF8BA6D92    /mnt/disk2    ext4    rw,relatime    0    2
+
+# EFAX P3 (7SGMXZ9C)
+# S-SATA2 (/dev/sdc)
+UUID=3684F69984F65AB7    /mnt/disk3    ext4    rw,relatime    0    2
+
+# EMAZ P4 (7SGN83HC)
+# S-SATA3 (/dev/sdd)
+UUID=12B6F259B6F23D33    /mnt/disk4    ext4    rw,relatime    0    2
