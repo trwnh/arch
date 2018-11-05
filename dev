@@ -2,8 +2,10 @@
 # syntax highlighting, you know the drill
 
 ## Install some other utilities, if you didn't already
-sudo pacman -S wget unzip zip unrar rsync
-               archey3 # neofetch screenfetch
+yay -S wget unzip zip unrar rsync
+       archey3 neofetch #screenfetch
+       inxi
+       dmidecode dnsutils hddtemp tree lm_sensors #ipmitool freeipmi #upower
 
 ## Python 
 sudo pacman -S python
