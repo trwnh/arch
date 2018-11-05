@@ -115,7 +115,7 @@ echo "efi /EFI/shellx64_v2.efi" >> /boot/loader/entries/efi2.conf
 #### Configure loaders
 echo "default arch" > /boot/loader/loader.conf
 echo "timeout 3" >> /boot/loader/loader.conf
-echo "editor no" >> /boot/loader/loader.conf
+echo "editor yes" >> /boot/loader/loader.conf
 
 ## Finishing up
 exit                  # exit chroot
