@@ -5,7 +5,7 @@
 yay -S wget unzip zip unrar rsync
        archey3 neofetch #screenfetch
        inxi
-       dmidecode dnsutils hddtemp tree lm_sensors #ipmitool freeipmi #upower
+       dmidecode dnsutils hddtemp tree lm_sensors #ipmitool freeipmi #upower #net-tools
 
 ## Python 
 sudo pacman -S python
