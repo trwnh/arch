@@ -94,7 +94,7 @@ echo "127.0.1.1 arch.localdomain arch" >> /etc/hosts          # loopback hostnam
 systemctl enable dhcpcd                                       # networking (example)
 
 ## Bootloader setup
-pacman -S intel-ucode                                         # recommended for intel cpu
+pacman -S intel-ucode linux-lts                               # recommended
 bootctl install                                               # install systemd-boot
 
 #### Arch Linux bootloader entry
@@ -103,6 +103,27 @@ echo "linux /vmlinuz-linux" >> /boot/loader/entries/arch.conf
 echo "initrd /intel-ucode.img" >> /boot/loader/entries/arch.conf
 echo "initrd /initramfs-linux.img" >> /boot/loader/entries/arch.conf
 echo "options root=LABEL=Arch rw" >> /boot/loader/entries/arch.conf
+
+#### Arch Linux bootloader entry (fallback)
+echo "title Arch Linux (fallback)" > /boot/loader/entries/arch-fallback.conf
+echo "linux /vmlinuz-linux" >> /boot/loader/entries/arch-fallback.conf
+echo "initrd /intel-ucode.img" >> /boot/loader/entries/arch-fallback.conf
+echo "initrd /initramfs-linux-fallback.img" >> /boot/loader/entries/arch-fallback.conf
+echo "options root=LABEL=Arch rw" >> /boot/loader/entries/arch-fallback.conf
+
+#### Arch Linux bootloader entry (LTS)
+echo "title Arch Linux (LTS)" > /boot/loader/entries/arch-lts.conf
+echo "linux /vmlinuz-linux-lts" >> /boot/loader/entries/arch-lts.conf
+echo "initrd /intel-ucode.img" >> /boot/loader/entries/arch-lts.conf
+echo "initrd /initramfs-linux-lts.img" >> /boot/loader/entries/arch-lts.conf
+echo "options root=LABEL=Arch rw" >> /boot/loader/entries/arch-lts.conf
+
+#### Arch Linux bootloader entry (LTS fallback)
+echo "title Arch Linux (LTS fallback)" > /boot/loader/entries/arch-lts.conf
+echo "linux /vmlinuz-linux-lts" >> /boot/loader/entries/arch-lts.conf
+echo "initrd /intel-ucode.img" >> /boot/loader/entries/arch-lts.conf
+echo "initrd /initramfs-linux-lts-fallback.img" >> /boot/loader/entries/arch-lts.conf
+echo "options root=LABEL=Arch rw" >> /boot/loader/entries/arch-lts.conf
 
 #### EFI Shell v1 entry
 echo "title EFI Shell v1" > /boot/loader/entries/efi1.conf
@@ -118,6 +139,8 @@ echo "timeout 3" >> /boot/loader/loader.conf
 echo "editor yes" >> /boot/loader/loader.conf
 
 ## Finishing up
-exit                  # exit chroot
-umount -R /mnt        # unmount partitions
-reboot                # reboot
+exit                                                         # exit chroot
+cp /boot/EFI/shellx64_v1.efi /mnt/boot/EFI/shellx64_v1.efi   # copy efi1 loader
+cp /boot/EFI/shellx64_v2.efi /mnt/boot/EFI/shellx64_v2.efi   # copy efi2 loader
+umount -R /mnt                                               # unmount partitions
+reboot                                                       # reboot
