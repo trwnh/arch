@@ -29,3 +29,5 @@ sudo e2label /dev/sde2 Arch
 
 # systemd freezing at boot / no signal / black screen?
 ## press [e] to edit boot command, add "rescue" at the end
+## if that doesn't work: press [e] and add "emergency"
+## worst case scenarion: replace the entire statement with "init=/bin/sh"
