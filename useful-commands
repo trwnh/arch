@@ -26,3 +26,6 @@ exit                        # continue booting
 yay -S dosfstools
 sudo fatlabel /dev/sde1 ESP
 sudo e2label /dev/sde2 Arch
+
+# systemd freezing at boot / no signal / black screen?
+## press [e] to edit boot command, add "rescue" at the end
