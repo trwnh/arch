@@ -1,0 +1,7 @@
+
+sudo pacman -S ifenslave
+sudo cp /etc/netctl/examples/bonding /etc/netctl/bond0
+sudo nano /etc/netctl/bond0    # edit BindToInterfaces, IP=dhcp
+sudo netctl switch-to bond0
+sudo systemctl start netctl
+sudo systemctl enable netctl
