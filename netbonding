@@ -2,6 +2,13 @@
 sudo pacman -S ifenslave
 sudo cp /etc/netctl/examples/bonding /etc/netctl/bond0
 sudo nano /etc/netctl/bond0    # edit BindToInterfaces, IP=dhcp
-sudo netctl switch-to bond0
-sudo systemctl start netctl
-sudo systemctl enable netctl
+
+# netctl (deprecated?)
+#sudo netctl switch-to bond0
+#sudo systemctl start netctl
+#sudo systemctl enable netctl
+
+# ip
+ip address add 192.168.1.9 dev enp5s0f0
+ip address add 192.168.1.9 dev enp5s0f1
+ip address add 192.168.1.9 dev bond0
