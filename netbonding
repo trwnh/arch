@@ -9,6 +9,18 @@ sudo nano /etc/netctl/bond0    # edit BindToInterfaces, IP=dhcp
 #sudo systemctl enable netctl
 
 # ip
-ip address add 192.168.1.9 dev enp5s0f0
-ip address add 192.168.1.9 dev enp5s0f1
-ip address add 192.168.1.9 dev bond0
+#ip address add 192.168.1.9 dev enp5s0f0
+#ip address add 192.168.1.9 dev enp5s0f1
+#ip address add 192.168.1.9 dev bond0
+
+#systemd-networkd
+sudo nano /etc/systemd/network/20-wired.network
+## [Match]
+## Name=bond0
+##
+## [Network]
+## Address=192.168.1.9/24
+## Gateway=192.168.1.1
+## DNS=8.8.8.8
+sudo systemctl start systemd-networkd
+sudo systemctl enable systemd-networkd
