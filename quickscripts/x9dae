@@ -1,13 +1,12 @@
 #!/bin/bash
 timedatectl set-ntp true
-fdisk -l
 
-read -p "Install on which drive? Identifier in form /dev/sdX: " dev
-parted $dev mklabel gpt yes
+lsblk -f
+read -p "Install on which drive? Give identifier in form /dev/sd_: " dev
+parted $dev mklabel gpt
 cgdisk $dev
 mkfs.fat $dev1 -n "ESP"
 mkfs.ext4 $dev2 -L "Arch"
-
 lsblk -f
 read -p "Does this look right? If so, type yes: " blkyes
 if [ "$blkyes" = "yes" ]; then
@@ -15,6 +14,7 @@ if [ "$blkyes" = "yes" ]; then
   mount $dev2 /mnt
   mkdir /mnt/boot
   mount $dev1 /mnt/boot
+  echo "Partitions mounted."
 else
   echo "Let's try this again..."
   exit 1
@@ -35,12 +35,14 @@ echo "en_US.UTF-8 UTF-8
 ar_JO.UTF-8 UTF-8" >> /etc/locale.gen
 locale-gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
+echo "Locales set and generated."
 
 echo "x9dae" > /etc/hostname
 echo "127.0.0.1 localhost
 ::1 localhost
 127.0.1.1 x9dae.localdomain x9dae" >>/etc/hosts
 systemctl enable dhcpcd
+echo "Network settings loaded."
 
 pacman -S intel-ucode linux-lts
 bootctl install
@@ -86,8 +88,10 @@ echo "default arch" > /boot/loader/loader.conf
 echo "timeout 3" >> /boot/loader/loader.conf
 echo "editor yes" >> /boot/loader/loader.conf
 
+echo "EFI loaders created."
 exit
 cp /boot/EFI/shellx64_v1.efi /mnt/boot/EFI/shellx64_v1.efi
 cp /boot/EFI/shellx64_v2.efi /mnt/boot/EFI/shellx64_v2.efi
+echo "EFI Shells copied."
 umount -R /mnt
-reboot
+echo "Partitions unmounted. You can now reboot."
