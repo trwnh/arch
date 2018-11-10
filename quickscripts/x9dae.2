@@ -63,8 +63,3 @@ echo "editor yes" >> /boot/loader/loader.conf
 
 echo "EFI loaders created."
 exit
-cp /boot/EFI/shellx64_v1.efi /mnt/boot/EFI/shellx64_v1.efi
-cp /boot/EFI/shellx64_v2.efi /mnt/boot/EFI/shellx64_v2.efi
-echo "EFI Shells copied."
-umount -R /mnt
-echo "Partitions unmounted. You can now reboot."
