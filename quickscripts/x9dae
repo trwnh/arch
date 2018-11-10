@@ -11,9 +11,9 @@ lsblk -f
 read -p "Does this look right? If so, type yes: " blkyes
 if [ "$blkyes" = "yes" ]; then
   mkdir /mnt
-  mount $dev2 /mnt
+  mount ${dev}2 /mnt
   mkdir /mnt/boot
-  mount $dev1 /mnt/boot
+  mount ${dev}1 /mnt/boot
   echo "Partitions mounted."
 else
   echo "Let's try this again..."
