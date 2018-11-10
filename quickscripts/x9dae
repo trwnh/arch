@@ -5,8 +5,8 @@ lsblk -f
 read -p "Install on which drive? Give identifier in form /dev/sd_: " dev
 parted $dev mklabel gpt
 cgdisk $dev
-mkfs.fat $dev1 -n "ESP"
-mkfs.ext4 $dev2 -L "Arch"
+mkfs.fat ${dev}1 -n "ESP"
+mkfs.ext4 ${dev}2 -L "Arch"
 lsblk -f
 read -p "Does this look right? If so, type yes: " blkyes
 if [ "$blkyes" = "yes" ]; then
