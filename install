@@ -12,7 +12,7 @@ timedatectl set-ntp true                   # use network time
 ## Format disks (repeat for all devices as desired)
 
 # fdisk -l                                 # identify devices
-parted /dev/sda mklabel gpt yes            # set /dev/sda to gpt disk and auto-confirm
+parted /dev/sda mklabel gpt                # set /dev/sda to gpt disk
 cgdisk /dev/sda                            # pseudographical gdisk tool for partitions
 ######## Example cgdisk flow #########################################################
 #    --- Create /boot partition ---
