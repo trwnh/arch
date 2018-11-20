@@ -22,6 +22,6 @@ fi
 pacman -Sy
 pacman -S reflector
 reflector --country 'US' -p http --sort rate --save /etc/pacman.d/mirrorlist
-pacstrap /mnt base base-devel
+pacstrap /mnt base base-devel linux-lts intel-ucode
 genfstab -U /mnt >> /mnt/etc/fstab
 arch-chroot /mnt
