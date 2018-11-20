@@ -23,5 +23,10 @@ pacman -Sy
 pacman -S reflector
 reflector --country 'US' -p http --sort rate --save /etc/pacman.d/mirrorlist
 pacstrap /mnt base base-devel linux-lts intel-ucode
+mkdir /mnt/mnt/disk{1,2,3,4}
+mount /dev/sda /mnt/mnt/disk1
+mount /dev/sdb /mnt/mnt/disk2
+mount /dev/sdc /mnt/mnt/disk3
+mount /dev/sdd /mnt/mnt/disk4
 genfstab -U /mnt >> /mnt/etc/fstab
 arch-chroot /mnt
