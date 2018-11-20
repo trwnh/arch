@@ -3,6 +3,8 @@ passwd
 
 ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime
 hwclock --systohc
+systemctl enable systemd-timesyncd
+echo "Time settings loaded."
 
 echo "en_US.UTF-8 UTF-8
 ar_JO.UTF-8 UTF-8" >> /etc/locale.gen
@@ -17,7 +19,15 @@ echo "127.0.0.1 localhost
 systemctl enable dhcpcd
 echo "Network settings loaded."
 
-pacman -S intel-ucode linux-lts
+pacman -S openssh docker parted gptfdisk
+systemctl enable sshd
+useradd -m -g users -s /bin/bash trwnh
+usermod -aG wheel,http,ftp,docker trwnh
+passwd trwnh
+echo "EDITOR=nano" > /etc/environment
+nano /etc/sudoers    # %wheel ALL=(ALL) ALL
+nano /etc/pacman.conf    # Colors
+
 bootctl install
 
 #### Arch Linux bootloader entry
