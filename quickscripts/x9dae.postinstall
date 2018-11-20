@@ -1,24 +1,5 @@
 #!/bin/bash
 
-# ========== (login as root) ==========
-## preparation
-pacman -S openssh docker
-nano /etc/pacman.conf    # uncomment Color
-
-## create user
-useradd -m -g users -s /bin/bash trwnh
-usermod -aG wheel,http,ftp,docker trwnh
-passwd trwnh
-echo "EDITOR=nano" > /etc/environment
-nano /etc/sudoers    # uncomment wheel
-
-## enable services
-systemctl start sshd
-systemctl enable sshd
-systemctl enable 
-
-exit
-
 # ========== (login as trwnh) ==========
 ## install yay helper
 git clone https://aur.archlinux.org/yay.git
