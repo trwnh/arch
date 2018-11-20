@@ -9,10 +9,10 @@ echo "exec startxfce4" >> .bash_profile
 ## Fonts -- pick and choose
 yay -S all-repository-fonts
 # --- bitmap ---
-# packer -S proggyfonts bdf-unifont terminus-font profont
+# packer -S proggyfonts bdf-unifont terminus-font
 # --- families ---
 # packer -S ttf-bitstream-vera ttf-dejavu ttf-liberation ttf-ubuntu-font-family
-#           ttf-croscore ttf-courier-prime ttf-google-fonts ttf-droid ttf-roboto noto-fonts
+#           ttf-croscore ttf-courier-prime ttf-droid ttf-roboto noto-fonts
 # --- monospace ---
 # packer -S ttf-anonymous-pro otf-fira-mono ttf-freefont
 #           ttf-hack ttf-inconsolata ttf-inconsolata-g
@@ -20,7 +20,7 @@ yay -S all-repository-fonts
 #           adobe-source-code-pro-fonts
 # --- arabic ---
 # packer -S ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts
-#           ttf-sil-lateef ttf-sil-scheherazade
+#           ttf-sil-lateef
 
 ## Theming
 yay -S
