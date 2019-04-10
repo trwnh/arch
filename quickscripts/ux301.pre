@@ -1,1 +1,71 @@
+#!/bin/bash
 
+## prerequisite steps before running this script:
+# wifi-menu
+# curl https://github.com/trwnh/arch/quickscripts/ux301.pre -o install
+# chmod +x ./install
+# ./install
+
+timedatectl set-ntp true
+parted /dev/sda mklabel gpt
+cgdisk /dev/sda
+# (make ESP and Root partitions)
+mkfs.fat /dev/sda1 -n "ESP"
+mkfs.ext4 /dev/sda2 -L "Arch"
+mount /dev/sda2 /mnt
+mkdir /mnt/boot
+mount /dev/sda1 /mnt/boot
+pacman -Sy
+pacman -S reflector
+reflector --country 'US' -p http --sort rate --save /etc/pacman.d/mirrorlist
+pacstrap /mnt base base-devel intel-ucode \
+	networkmanager nm-connection-manager network-manager-applet \
+	xorg-server wayland xfce4 xfce4-whisker-menu \
+	lightdm lightdm-webkit2-greeter \
+	materia-gtk-theme faenza-icon-theme \
+	ttf-droid ttf-roboto noto-fonts noto-fonts-emoji noto-fonts-extra noto-fonts-cjk \
+	otf-fira-code otf-fira-sans otf-fira-mono ttf-inconsolata \
+	adobe-source-code-pro-fonts adobe-source-sans-pro-fonts adobe-source-serif-pro-fonts \
+	git wget zip unzip unrar rsync archey3 \
+	epiphany gnome-disk-utility 
+genfstab -U /mnt >> /mnt/etc/fstab
+arch-chroot /mnt
+
+ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime
+hwclock --systohc
+passwd
+# (set root password)
+useradd -m -g users -s /bin/bash trwnh
+passwd trwnh
+# (set user password)
+sed -i '/#\s%wheel\sALL=(ALL)\sALL/s/^#//g' /etc/sudoers
+echo "EDITOR=nano" > etc/environment
+echo "ux301" > /etc/hostname
+echo "127.0.0.1 localhost" > /etc/hosts
+echo "::1 localhost" >> /etc/hosts 
+echo "127.0.1.1 ux301.localdomain ux301" >> /etc/hosts
+bootctl install
+echo "title Arch Linux" > /boot/loader/entries/arch.conf
+echo "linux /vmlinuz-linux" >> /boot/loader/entries/arch.conf
+echo "initrd /intel-ucode.img" >> /boot/loader/entries/arch.conf
+echo "initrd /initramfs-linux.img" >> /boot/loader/entries/arch.conf
+echo "options root=LABEL=Arch rw" >> /boot/loader/entries/arch.conf
+echo "default arch" > /boot/loader/loader.conf
+echo "timeout 0" >> /boot/loader/loader.conf
+echo "editor yes" >> /boot/loader/loader.conf
+systemctl enable NetworkManager
+systemctl enable systemd-timesyncd
+systemctl enable lightdm
+sed -i '/#Color/s/^#//g' /etc/pacman.conf
+sed -i -e  's/#greeter-session=example-gtk-gnome/greeter-session=lightdm-webkit2-greeter/g' /etc/lightdm/lightdm.conf
+
+## post
+# login as trwnh
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -sic
+yay --nodiffmenu --save
+cd ..
+sudo rm -r yay
+yay -S enpass-bin \
+	ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-sil-scheherazade
