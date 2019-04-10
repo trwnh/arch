@@ -1,0 +1,13 @@
+#!/bin/bash
+
+## post
+# login as trwnh
+
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -sic
+yay --nodiffmenu --save
+cd ..
+sudo rm -r yay
+yay -S enpass-bin \
+	ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-sil-scheherazade
