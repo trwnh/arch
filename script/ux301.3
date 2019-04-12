@@ -9,8 +9,13 @@ makepkg -sic
 yay --nodiffmenu --save
 cd ..
 sudo rm -r yay
-yay -S enpass-bin \
+yay -S enpass-bin firefox-developer-edition quassel-client dino \
+# fonts
 	ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-sil-scheherazade \
-	sway wayland xwayland light playerctl \
-	xfce4
-	
+	ttf-droid ttf-roboto ttf-roboto-slab ttf-roboto-mono noto-fonts noto-fonts-emoji noto-fonts-extra noto-fonts-cjk \
+	otf-fira-code otf-fira-sans otf-fira-mono ttf-inconsolata \
+	adobe-source-code-pro-fonts adobe-source-sans-pro-fonts adobe-source-serif-pro-fonts \
+# desktop stuff
+	deepin xorg-server \
+#	sway wayland xwayland light playerctl \
+	nm-connection-manager network-manager-applet
