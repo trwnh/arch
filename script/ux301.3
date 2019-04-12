@@ -9,32 +9,32 @@ makepkg -sic
 yay --nodiffmenu --save
 cd ..
 sudo rm -r yay
+echo "Installed yay."
 yay -S \
-# fonts
-	ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-sil-scheherazade \
-	ttf-droid ttf-roboto ttf-roboto-slab ttf-roboto-mono noto-fonts noto-fonts-emoji noto-fonts-extra noto-fonts-cjk \
-	otf-fira-code otf-fira-sans otf-fira-mono ttf-inconsolata \
-	adobe-source-code-pro-fonts adobe-source-sans-pro-fonts adobe-source-serif-pro-fonts \
-# desktop stuff
-	nm-connection-manager network-manager-applet \
-# apps
-	enpass-bin firefox-developer-edition quassel-client dino \
-	gnome-disk-utility
+  ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-sil-scheherazade \
+  ttf-droid ttf-roboto ttf-roboto-slab ttf-roboto-mono noto-fonts noto-fonts-emoji noto-fonts-extra noto-fonts-cjk \
+  otf-fira-code otf-fira-sans otf-fira-mono ttf-inconsolata \
+  adobe-source-code-pro-fonts adobe-source-sans-pro-fonts adobe-source-serif-pro-fonts \
+  nm-connection-manager network-manager-applet \
+  enpass-bin firefox-developer-edition quassel-client dino \
+  gnome-disk-utility
 
 ## pick a de/wm
-printf 'Install [xfce, deepin, sway]: '
+echo "Install [xfce, deepin, sway]: "
 read DESKTOP
 
 case $DESKTOP in
   xfce)
     yay -S xorg-server xfce4 xfce4-goodies compton
-    curl https://raw.githubusercontent.com/trwnh/arch/master/config/compton.conf -O ~/.config/compton.conf
-    xfconf-query -c xfwm4 -p /general/use_compositing -t bool -s false
-    curl https://raw.githubusercontent.com/trwnh/arch/master/config/i3-gaps -O ~/.config/i3/config
+    curl https://raw.githubusercontent.com/trwnh/arch/master/config/compton.conf -o ~/.config/compton.conf
+    curl https://raw.githubusercontent.com/trwnh/arch/master/config/i3-gaps -o ~/.config/i3/config
+    ;;
   deepin)
     yay -S xorg-server deepin deepin-extra
+    ;;
   sway)
     yay -S sway wayland xwayland light playerctl
-    curl https://raw.githubusercontent.com/trwnh/arch/master/config/sway -O ~/.config/sway/config
-    curl https://raw.githubusercontent.com/trwnh/arch/master/config/swaystatus.sh -O ~/.config/sway/status.sh
+    curl https://raw.githubusercontent.com/trwnh/arch/master/config/sway -o ~/.config/sway/config
+    curl https://raw.githubusercontent.com/trwnh/arch/master/config/swaystatus.sh -o ~/.config/sway/status.sh
+    ;;
 esac
