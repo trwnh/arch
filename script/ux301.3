@@ -28,10 +28,14 @@ read DESKTOP
 case $DESKTOP in
   xfce)
     yay -S xorg-server xfce4 xfce4-goodies compton
+    curl https://github.com/trwnh/arch/config/compton.conf -O ~/.config/compton.conf
+    echo "
+    > ~/.config/autostart/compton.desktop
+    xfconf-query -c xfwm4 -p /general/use_compositing -t bool -s false
   deepin)
     yay -S xorg-server deepin deepin-extra
   sway)
     yay -S sway wayland xwayland light playerctl
     curl https://github.com/trwnh/arch/config/sway -O ~/.config/sway/config
-    curl https://github.com/trwnh/arch/config/sway -O ~/.config/sway/config
+    curl https://github.com/trwnh/arch/config/swaystatus.sh -O ~/.config/sway/status.sh
 esac
