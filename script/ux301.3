@@ -30,7 +30,18 @@ case $DESKTOP in
     yay -S xorg-server xfce4 xfce4-goodies compton
     curl https://github.com/trwnh/arch/config/compton.conf -O ~/.config/compton.conf
     echo "
-    > ~/.config/autostart/compton.desktop
+    [Desktop Entry]
+    Encoding=UTF-8
+    Version=0.9.4
+    Type=Application
+    Name=Compton
+    Comment=X11 compositor
+    Exec=compton -b
+    OnlyShowIn=XFCE;
+    StartupNotify=false
+    Terminal=false
+    Hidden=false
+    " > ~/.config/autostart/compton.desktop
     xfconf-query -c xfwm4 -p /general/use_compositing -t bool -s false
   deepin)
     yay -S xorg-server deepin deepin-extra
