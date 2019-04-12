@@ -16,16 +16,22 @@ yay -S \
   otf-fira-code otf-fira-sans otf-fira-mono ttf-inconsolata \
   adobe-source-code-pro-fonts adobe-source-sans-pro-fonts adobe-source-serif-pro-fonts \
   nm-connection-manager network-manager-applet \
+  materia-gtk-theme materia-kde faenza-icon-theme xfce-theme-greybird \
   enpass-bin firefox-developer-edition quassel-client dino \
   gnome-disk-utility
 
 ## pick a de/wm
-echo "Install [xfce, deepin, sway]: "
+echo "Install [xfce, xfi3, deepin, sway]: "
 read DESKTOP
 
 case $DESKTOP in
   xfce)
     yay -S xorg-server xfce4 xfce4-goodies compton
+    curl https://raw.githubusercontent.com/trwnh/arch/master/config/compton.conf -o ~/.config/compton.conf
+    #xfconf-query -c xsettings -p /Net/ThemeName -s "Materia-dark"
+    ;;
+  xfi3)
+    yay -S xorg-server xfce4 xfce4-goodies compton i3-gaps
     curl https://raw.githubusercontent.com/trwnh/arch/master/config/compton.conf -o ~/.config/compton.conf
     curl https://raw.githubusercontent.com/trwnh/arch/master/config/i3-gaps -o ~/.config/i3/config
     ;;
