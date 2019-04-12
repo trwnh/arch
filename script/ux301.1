@@ -1,20 +1,30 @@
 #!/bin/bash
-## prerequisite steps before running this script:
-# wifi-menu
 
 timedatectl set-ntp true
-parted /dev/sda mklabel gpt
-cgdisk /dev/sda
-# (make ESP and Root partitions)
+parted -s /dev/sda mklabel gpt
+sgdisk -n 0:0:+512M -t 0:ef00 -c 0:"ESP" /dev/sda
+sgdisk -n 0:0:0 -t 0:8300 -c 0:"Root" /dev/sda
+partprobe /dev/sda
+echo "Partions made."
 mkfs.fat /dev/sda1 -n "ESP"
 mkfs.ext4 /dev/sda2 -L "Arch"
+echo "Filesystems created."
 mount /dev/sda2 /mnt
 mkdir /mnt/boot
 mount /dev/sda1 /mnt/boot
+echo "Mounting complete."
 pacman -Sy
 pacman -S reflector
 reflector --country 'US' -p http --sort rate --save /etc/pacman.d/mirrorlist
 pacstrap /mnt base base-devel intel-ucode networkmanager \
 	git openssh wget zip unzip unrar rsync archey3
+echo "Pacman mirrors synced and sorted."
 genfstab -U /mnt >> /mnt/etc/fstab
+echo "Filesystem table generated."
+echo -ne "Starting chroot in 3 seconds"
+for i in 1 2 3
+do
+  echo -ne "."
+  sleep 1
+done
 arch-chroot /mnt
