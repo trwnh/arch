@@ -3,26 +3,37 @@
 
 ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime
 hwclock --systohc
+echo "Set a root password."
 passwd
 # (set root password)
 useradd -m -g users -s /bin/bash trwnh
+usermod -aG wheel,ftp,http trwnh
+echo "Created user trwnh."
 passwd trwnh
 # (set user password)
 sed -i '/#\s%wheel\sALL=(ALL)\sALL/s/^#//g' /etc/sudoers
 echo "EDITOR=nano" > etc/environment
 echo "ux301" > /etc/hostname
-echo "127.0.0.1 localhost" > /etc/hosts
-echo "::1 localhost" >> /etc/hosts 
-echo "127.0.1.1 ux301.localdomain ux301" >> /etc/hosts
+echo "
+127.0.0.1 localhost
+::1 localhost
+127.0.1.1 ux301.localdomain ux301
+" > /etc/hosts
 bootctl install
-echo "title Arch Linux" > /boot/loader/entries/arch.conf
-echo "linux /vmlinuz-linux" >> /boot/loader/entries/arch.conf
-echo "initrd /intel-ucode.img" >> /boot/loader/entries/arch.conf
-echo "initrd /initramfs-linux.img" >> /boot/loader/entries/arch.conf
-echo "options root=LABEL=Arch rw" >> /boot/loader/entries/arch.conf
-echo "default arch" > /boot/loader/loader.conf
-echo "timeout 0" >> /boot/loader/loader.conf
-echo "editor yes" >> /boot/loader/loader.conf
+echo "
+title Arch Linux
+linux /vmlinuz-linux
+initrd /intel-ucode.img
+initrd /initramfs-linux.img
+options root=LABEL=Arch rw
+" >> /boot/loader/entries/arch.conf
+echo "
+default arch
+timeout 0
+editor yes
+" >> /boot/loader/loader.conf
 systemctl enable NetworkManager
 systemctl enable systemd-timesyncd
 sed -i '/#Color/s/^#//g' /etc/pacman.conf
+echo "Configuration complete."
+echo "You can now delete this script, exit chroot, unmount, and reboot."
