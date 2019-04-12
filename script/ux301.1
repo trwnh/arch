@@ -20,8 +20,6 @@ pacman -S reflector
 reflector --country 'US' -p http --sort rate --save /etc/pacman.d/mirrorlist
 pacstrap /mnt base base-devel intel-ucode \
 	networkmanager nm-connection-manager network-manager-applet \
-	xorg-server wayland xfce4 xfce4-whisker-menu \
-	lightdm lightdm-webkit2-greeter \
 	materia-gtk-theme faenza-icon-theme \
 	ttf-droid ttf-roboto noto-fonts noto-fonts-emoji noto-fonts-extra noto-fonts-cjk \
 	otf-fira-code otf-fira-sans otf-fira-mono ttf-inconsolata \
