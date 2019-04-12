@@ -18,13 +18,7 @@ mount /dev/sda1 /mnt/boot
 pacman -Sy
 pacman -S reflector
 reflector --country 'US' -p http --sort rate --save /etc/pacman.d/mirrorlist
-pacstrap /mnt base base-devel intel-ucode \
-	networkmanager nm-connection-manager network-manager-applet \
-	materia-gtk-theme faenza-icon-theme \
-	ttf-droid ttf-roboto noto-fonts noto-fonts-emoji noto-fonts-extra noto-fonts-cjk \
-	otf-fira-code otf-fira-sans otf-fira-mono ttf-inconsolata \
-	adobe-source-code-pro-fonts adobe-source-sans-pro-fonts adobe-source-serif-pro-fonts \
-	git openssh wget zip unzip unrar rsync archey3 \
-	epiphany quassel-client gnome-disk-utility 
+pacstrap /mnt base base-devel intel-ucode networkmanager \
+	git openssh wget zip unzip unrar rsync archey3
 genfstab -U /mnt >> /mnt/etc/fstab
 arch-chroot /mnt
