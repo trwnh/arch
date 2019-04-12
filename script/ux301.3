@@ -28,25 +28,13 @@ read DESKTOP
 case $DESKTOP in
   xfce)
     yay -S xorg-server xfce4 xfce4-goodies compton
-    curl https://github.com/trwnh/arch/config/compton.conf -O ~/.config/compton.conf
-    echo "
-    [Desktop Entry]
-    Encoding=UTF-8
-    Version=0.9.4
-    Type=Application
-    Name=Compton
-    Comment=X11 compositor
-    Exec=compton -b
-    OnlyShowIn=XFCE;
-    StartupNotify=false
-    Terminal=false
-    Hidden=false
-    " > ~/.config/autostart/compton.desktop
+    curl https://raw.githubusercontent.com/trwnh/arch/master/config/compton.conf -O ~/.config/compton.conf
     xfconf-query -c xfwm4 -p /general/use_compositing -t bool -s false
+    curl https://raw.githubusercontent.com/trwnh/arch/master/config/i3-gaps -O ~/.config/i3/config
   deepin)
     yay -S xorg-server deepin deepin-extra
   sway)
     yay -S sway wayland xwayland light playerctl
-    curl https://github.com/trwnh/arch/config/sway -O ~/.config/sway/config
-    curl https://github.com/trwnh/arch/config/swaystatus.sh -O ~/.config/sway/status.sh
+    curl https://raw.githubusercontent.com/trwnh/arch/master/config/sway -O ~/.config/sway/config
+    curl https://raw.githubusercontent.com/trwnh/arch/master/config/swaystatus.sh -O ~/.config/sway/status.sh
 esac
