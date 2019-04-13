@@ -3,22 +3,29 @@
 ## post
 # login as trwnh
 
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -sic
-yay --nodiffmenu --save
-cd ..
-sudo rm -r yay
-echo "Installed yay."
-yay -S \
-  ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-sil-scheherazade \
-  ttf-droid ttf-roboto ttf-roboto-slab ttf-roboto-mono noto-fonts noto-fonts-emoji noto-fonts-extra noto-fonts-cjk \
-  otf-fira-code otf-fira-sans otf-fira-mono ttf-inconsolata \
-  adobe-source-code-pro-fonts adobe-source-sans-pro-fonts adobe-source-serif-pro-fonts \
-  nm-connection-manager network-manager-applet \
-  materia-gtk-theme materia-kde faenza-icon-theme xfce-theme-greybird \
-  enpass-bin firefox-developer-edition quassel-client dino \
-  gnome-disk-utility
+if [$(which yay) != "/usr/bin/yay"]
+then
+  git clone https://aur.archlinux.org/yay.git
+  cd yay
+  makepkg -sic
+  yay --nodiffmenu --save
+  cd ..
+  sudo rm -r yay
+  echo "Installed yay."
+done
+
+if [$(yay -Qqe gnome-disk-utility) != "gnome-disk-utility"]
+then
+  yay -S \
+    ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-sil-scheherazade \
+    ttf-droid ttf-roboto ttf-roboto-slab ttf-roboto-mono noto-fonts noto-fonts-emoji noto-fonts-extra noto-fonts-cjk \
+    otf-fira-code otf-fira-sans otf-fira-mono ttf-inconsolata \
+    adobe-source-code-pro-fonts adobe-source-sans-pro-fonts adobe-source-serif-pro-fonts \
+    nm-connection-manager network-manager-applet \
+    materia-gtk-theme materia-kde faenza-icon-theme xfce-theme-greybird \
+    enpass-bin firefox-developer-edition quassel-client dino \
+    gnome-disk-utility
+done
 
 ## pick a de/wm
 echo "Install [xfce, xfi3, deepin, sway]: "
