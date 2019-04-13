@@ -18,7 +18,7 @@ fi
 
 if [ $(yay -Qqe gnome-disk-utility) != "gnome-disk-utility" ]
 then
-  yay -S \
+  yay -S --noconfirm \
     ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-sil-scheherazade \
     ttf-droid ttf-roboto ttf-roboto-slab ttf-roboto-mono noto-fonts noto-fonts-emoji noto-fonts-extra noto-fonts-cjk \
     otf-fira-code otf-fira-sans otf-fira-mono ttf-inconsolata \
@@ -26,7 +26,7 @@ then
     nm-connection-manager network-manager-applet \
     materia-gtk-theme materia-kde faenza-icon-theme xfce-theme-greybird \
     enpass-bin firefox-developer-edition quassel-client dino \
-    gnome-disk-utility --noconfirm
+    gnome-disk-utility
 else
   echo "Apps and fonts already installed."
 fi
@@ -37,20 +37,20 @@ read DESKTOP
 
 case $DESKTOP in
   xfce)
-    yay -S xorg-server xfce4 xfce4-goodies compton
+    yay -S --noconfirm xorg-server xfce4 xfce4-goodies compton
     curl https://raw.githubusercontent.com/trwnh/arch/master/config/compton.conf -o ~/.config/compton.conf
     #xfconf-query -c xsettings -p /Net/ThemeName -s "Materia-dark"
     ;;
   xfi3)
-    yay -S xorg-server xfce4 xfce4-goodies compton i3-gaps dmenu
+    yay -S --noconfirm xorg-server xfce4 xfce4-goodies compton i3-gaps dmenu
     curl https://raw.githubusercontent.com/trwnh/arch/master/config/compton.conf -o ~/.config/compton.conf
     curl https://raw.githubusercontent.com/trwnh/arch/master/config/i3-gaps -o ~/.config/i3/config
     ;;
   deepin)
-    yay -S xorg-server deepin deepin-extra
+    yay -S --noconfirm xorg-server deepin deepin-extra
     ;;
   sway)
-    yay -S sway wayland xorg-server-xwayland qt5-wayland light playerctl
+    yay -S --noconfirm sway wayland xorg-server-xwayland qt5-wayland light playerctl
     curl https://raw.githubusercontent.com/trwnh/arch/master/config/sway -o ~/.config/sway/config
     curl https://raw.githubusercontent.com/trwnh/arch/master/config/swaystatus.sh -o ~/.config/sway/status.sh
     ;;
