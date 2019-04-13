@@ -3,7 +3,7 @@
 ## post
 # login as trwnh
 
-if [$(which yay) != "/usr/bin/yay"]
+if [ $(which yay) != "/usr/bin/yay" ]
 then
   git clone https://aur.archlinux.org/yay.git
   cd yay
@@ -12,9 +12,11 @@ then
   cd ..
   sudo rm -r yay
   echo "Installed yay."
+else
+  echo "yay already installed."
 fi
 
-if [$(yay -Qqe gnome-disk-utility) != "gnome-disk-utility"]
+if [ $(yay -Qqe gnome-disk-utility) != "gnome-disk-utility" ]
 then
   yay -S \
     ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-sil-scheherazade \
@@ -25,6 +27,8 @@ then
     materia-gtk-theme materia-kde faenza-icon-theme xfce-theme-greybird \
     enpass-bin firefox-developer-edition quassel-client dino \
     gnome-disk-utility
+else
+  echo "Apps and fonts already installed."
 fi
 
 ## pick a de/wm
@@ -38,7 +42,7 @@ case $DESKTOP in
     #xfconf-query -c xsettings -p /Net/ThemeName -s "Materia-dark"
     ;;
   xfi3)
-    yay -S xorg-server xfce4 xfce4-goodies compton i3-gaps
+    yay -S xorg-server xfce4 xfce4-goodies compton i3-gaps dmenu
     curl https://raw.githubusercontent.com/trwnh/arch/master/config/compton.conf -o ~/.config/compton.conf
     curl https://raw.githubusercontent.com/trwnh/arch/master/config/i3-gaps -o ~/.config/i3/config
     ;;
