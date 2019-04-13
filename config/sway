@@ -25,12 +25,14 @@ input "2:14:ETPS/2_Elantech_Touchpad" {
 #gaps outer 1px
 #gaps inner 4px
 title_align center
-default_border pixel 8
+default_border pixel 4
 output eDP-1 scale 1
+
+################################################################################
 
 set $mod Mod4
 bindsym $mod+Return exec xfce4-terminal
-bindsym $mod+Space exec dmenu_path | dmenu | xargs swaymsg exec ###
+bindsym $mod+space exec dmenu_path | dmenu | xargs swaymsg exec ###
 bindsym $mod+f fullscreen
 bindsym $mod+q kill
 bindsym $mod+F5 reload
