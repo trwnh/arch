@@ -6,18 +6,20 @@ hwclock --systohc
 echo "Set a root password."
 passwd
 # (set root password)
-useradd -m -g users -s /bin/bash trwnh
-usermod -aG wheel,ftp,http trwnh
-echo "Created user trwnh."
-passwd trwnh
+USER=trwnh
+useradd -m -g users -s /bin/bash $USER
+usermod -aG wheel,ftp,http $USER
+echo "Created user $USER."
+passwd $USER
 # (set user password)
 sed -i '/#\s%wheel\sALL=(ALL)\sALL/s/^#//g' /etc/sudoers
 echo "EDITOR=nano" > etc/environment
-echo "ux301" > /etc/hostname
+HOSTNAME=ux301
+echo "$HOSTNAME" > /etc/hostname
 echo "
 127.0.0.1 localhost
 ::1 localhost
-127.0.1.1 ux301.localdomain ux301
+127.0.1.1 $HOSTNAME.localdomain $HOSTNAME
 " > /etc/hosts
 bootctl install
 echo "
