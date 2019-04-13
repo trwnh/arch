@@ -3,15 +3,6 @@
 
 ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime
 hwclock --systohc
-echo "Set a root password."
-passwd
-# (set root password)
-USER=trwnh
-useradd -m -g users -s /bin/bash $USER
-usermod -aG wheel,ftp,http $USER
-echo "Created user $USER."
-passwd $USER
-# (set user password)
 sed -i '/#\s%wheel\sALL=(ALL)\sALL/s/^#//g' /etc/sudoers
 echo "EDITOR=nano" > /etc/environment
 HOSTNAME=ux301
@@ -38,4 +29,15 @@ systemctl enable NetworkManager
 systemctl enable systemd-timesyncd
 sed -i '/#Color/s/^#//g' /etc/pacman.conf
 echo "Configuration complete."
+echo "To avoid having passwd timeout, press [enter] to continue when you're ready to input."
+read waitforinput
+echo "Set a root password."
+passwd
+# (set root password)
+USER=trwnh
+useradd -m -g users -s /bin/bash $USER
+usermod -aG wheel,ftp,http $USER
+echo "Created user $USER."
+passwd $USER
+# (set user password)
 echo "You can now delete this script, exit chroot, unmount, and reboot."
