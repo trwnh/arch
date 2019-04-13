@@ -23,7 +23,7 @@ then
     ttf-droid ttf-roboto ttf-roboto-slab ttf-roboto-mono noto-fonts noto-fonts-emoji noto-fonts-extra noto-fonts-cjk \
     otf-fira-code otf-fira-sans otf-fira-mono ttf-inconsolata \
     adobe-source-code-pro-fonts adobe-source-sans-pro-fonts adobe-source-serif-pro-fonts \
-    nm-connection-manager network-manager-applet \
+    nm-connection-editor network-manager-applet \
     materia-gtk-theme materia-kde faenza-icon-theme \
     enpass-bin firefox-developer-edition quassel-client dino \
     gnome-disk-utility
@@ -50,8 +50,9 @@ case $DESKTOP in
     ;;
   sway)
     yay -S --noconfirm sway wayland xorg-server-xwayland qt5-wayland light playerctl
+    mkdir ~/.config/sway
     curl https://raw.githubusercontent.com/trwnh/arch/master/config/sway -o ~/.config/sway/config
     curl https://raw.githubusercontent.com/trwnh/arch/master/config/swaystatus.sh -o ~/.config/sway/status.sh
-    echo "if [[ $(tty) = /dev/tty1 ]]; then exec sway; fi" >> ~/.bashrc
+    echo "if [[ -z "'$'"DISPLAY ]] && [[ "'$'"(tty) = /dev/tty1 ]]; then exec sway; fi" >> ~/.bashrc
     ;;
 esac
