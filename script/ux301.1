@@ -14,7 +14,7 @@ mkdir /mnt/boot
 mount /dev/sda1 /mnt/boot
 echo "Mounting complete."
 pacman -Sy
-pacman -S reflector
+pacman -S reflector --noconfirm
 reflector --country 'US' -p http --sort rate --save /etc/pacman.d/mirrorlist
 pacstrap /mnt base base-devel intel-ucode networkmanager \
 	git openssh wget zip unzip unrar rsync archey3
