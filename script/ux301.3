@@ -12,7 +12,7 @@ then
   cd ..
   sudo rm -r yay
   echo "Installed yay."
-done
+fi
 
 if [$(yay -Qqe gnome-disk-utility) != "gnome-disk-utility"]
 then
@@ -25,7 +25,7 @@ then
     materia-gtk-theme materia-kde faenza-icon-theme xfce-theme-greybird \
     enpass-bin firefox-developer-edition quassel-client dino \
     gnome-disk-utility
-done
+fi
 
 ## pick a de/wm
 echo "Install [xfce, xfi3, deepin, sway]: "
