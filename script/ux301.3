@@ -3,7 +3,7 @@
 ## post
 # login as trwnh
 
-if [ $(which yay) != "/usr/bin/yay" ]
+if [ "$(which yay)" != "/usr/bin/yay" ]
 then
   git clone https://aur.archlinux.org/yay.git
   cd yay
@@ -16,7 +16,7 @@ else
   echo "yay already installed."
 fi
 
-if [ $(yay -Qqe gnome-disk-utility) != "gnome-disk-utility" ]
+if [ "$(yay -Qqe gnome-disk-utility)" != "gnome-disk-utility" ]
 then
   yay -S --noconfirm \
     ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-sil-scheherazade \
