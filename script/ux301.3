@@ -24,7 +24,7 @@ then
     otf-fira-code otf-fira-sans otf-fira-mono ttf-inconsolata \
     adobe-source-code-pro-fonts adobe-source-sans-pro-fonts adobe-source-serif-pro-fonts \
     nm-connection-manager network-manager-applet \
-    materia-gtk-theme materia-kde faenza-icon-theme xfce-theme-greybird \
+    materia-gtk-theme materia-kde faenza-icon-theme \
     enpass-bin firefox-developer-edition quassel-client dino \
     gnome-disk-utility
 else
@@ -32,26 +32,26 @@ else
 fi
 
 ## pick a de/wm
-echo "Install [xfce, xfi3, deepin, sway]: "
+echo "Install [xfce, deepin, sway]: "
 read DESKTOP
 
 case $DESKTOP in
   xfce)
     yay -S --noconfirm xorg-server xfce4 xfce4-goodies compton
     curl https://raw.githubusercontent.com/trwnh/arch/master/config/compton.conf -o ~/.config/compton.conf
+    echo "exec startxfce4" > ~/.xinitrc
+    echo "startx" >> ~/.bashrc
     #xfconf-query -c xsettings -p /Net/ThemeName -s "Materia-dark"
-    ;;
-  xfi3)
-    yay -S --noconfirm xorg-server xfce4 xfce4-goodies compton i3-gaps dmenu
-    curl https://raw.githubusercontent.com/trwnh/arch/master/config/compton.conf -o ~/.config/compton.conf
-    curl https://raw.githubusercontent.com/trwnh/arch/master/config/i3-gaps -o ~/.config/i3/config
     ;;
   deepin)
     yay -S --noconfirm xorg-server deepin deepin-extra
+    echo "exec startdde" > ~/.xinitrc
+    echo "startx" >> ~/.bashrc
     ;;
   sway)
     yay -S --noconfirm sway wayland xorg-server-xwayland qt5-wayland light playerctl
     curl https://raw.githubusercontent.com/trwnh/arch/master/config/sway -o ~/.config/sway/config
     curl https://raw.githubusercontent.com/trwnh/arch/master/config/swaystatus.sh -o ~/.config/sway/status.sh
+    echo "if [[ $(tty) = /dev/tty1 ]]; then exec sway; fi" >> ~/.bashrc
     ;;
 esac
