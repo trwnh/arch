@@ -7,7 +7,7 @@ sgdisk -n 0:0:0 -t 0:8300 -c 0:"Root" /dev/sda
 partprobe /dev/sda
 echo "Partions made."
 mkfs.fat /dev/sda1 -n "ESP"
-mkfs.ext4 /dev/sda2 -L "Arch"
+mkfs.ext4 /dev/sda2 -L "Arch" -F
 echo "Filesystems created."
 mount /dev/sda2 /mnt
 mkdir /mnt/boot
