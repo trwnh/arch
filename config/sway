@@ -3,7 +3,7 @@ exec_always {
   gsettings set org.gnome.desktop.interface gtk-theme "Materia-dark"
   gsettings set org.gnome.desktop.interface font-name "Roboto 16"
   gsettings set org.gnome.desktop.interface monospace-font-name "Fira Code Retina 16"
-  exec --no-startup-id nm-applet --sm-disable
+  exec --no-startup-window enpass
 }
 bar {
   position top
