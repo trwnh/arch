@@ -13,7 +13,7 @@ echo "Created user $USER."
 passwd $USER
 # (set user password)
 sed -i '/#\s%wheel\sALL=(ALL)\sALL/s/^#//g' /etc/sudoers
-echo "EDITOR=nano" > etc/environment
+echo "EDITOR=nano" > /etc/environment
 HOSTNAME=ux301
 echo "$HOSTNAME" > /etc/hostname
 echo "
