@@ -25,6 +25,7 @@ default arch
 timeout 0
 editor yes
 " >> /boot/loader/loader.conf
+echo "FONT=\"ter-v32b\"" > /etc/vconsole.conf
 systemctl enable NetworkManager
 systemctl enable systemd-timesyncd
 sed -i '/#Color/s/^#//g' /etc/pacman.conf
