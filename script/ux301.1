@@ -1,5 +1,5 @@
 #!/bin/bash
-
+setfont latarcyrheb-sun32
 timedatectl set-ntp true
 parted -s /dev/sda mklabel gpt
 sgdisk -n 0:0:+512M -t 0:ef00 -c 0:"ESP" /dev/sda
