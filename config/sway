@@ -1,9 +1,9 @@
-output eDP-1 bg ~/.config/sway/wallpaper.jpg fill
+#output eDP-1 bg ~/.config/sway/wallpaper.jpg fill
 exec_always {
   gsettings set org.gnome.desktop.interface gtk-theme "Materia-dark"
   gsettings set org.gnome.desktop.interface font-name "Roboto 16"
   gsettings set org.gnome.desktop.interface monospace-font-name "Fira Code Retina 16"
-  exec --no-startup-window enpass
+  exec enpass -minimized
 }
 bar {
   position top
@@ -28,11 +28,9 @@ title_align center
 default_border pixel 4
 output eDP-1 scale 1
 
-################################################################################
-
 set $mod Mod4
 bindsym $mod+Return exec xfce4-terminal
-bindsym $mod+space exec dmenu_path | dmenu | xargs swaymsg exec ###
+bindsym $mod+Space exec dmenu_path | dmenu | xargs swaymsg exec ###
 bindsym $mod+f fullscreen
 bindsym $mod+q kill
 bindsym $mod+F5 reload
