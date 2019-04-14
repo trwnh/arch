@@ -17,7 +17,7 @@ pacman -Sy
 pacman -S reflector --noconfirm
 reflector --country 'US' -p http --sort rate --save /etc/pacman.d/mirrorlist
 pacstrap /mnt base base-devel \
-	intel-ucode vulkan-intel networkmanager \
+	intel-ucode vulkan-intel networkmanager acpi \
 	git openssh wget zip unzip unrar rsync archey3
 echo "Pacman mirrors synced and sorted."
 genfstab -U /mnt >> /mnt/etc/fstab
