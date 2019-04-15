@@ -18,7 +18,7 @@ pacman -S reflector --noconfirm
 reflector --country 'US' -p http --sort rate --save /etc/pacman.d/mirrorlist
 pacstrap /mnt base base-devel \
 	intel-ucode vulkan-intel networkmanager acpi \
-	pulseaudio pulseaudio-alsa pulseaudio-bluetooth \
+	pulseaudio pulseaudio-alsa pulseaudio-bluetooth pamixer \
 	git openssh wget zip unzip unrar rsync archey3 terminus-font \
 	mpv youtube-dl
 echo "Pacman mirrors synced and sorted."
