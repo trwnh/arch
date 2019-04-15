@@ -36,7 +36,7 @@ passwd
 # (set root password)
 USER=trwnh
 useradd -m -g users -s /bin/bash $USER
-usermod -aG wheel,ftp,http $USER
+usermod -aG wheel,ftp,http,input $USER
 echo "Created user $USER."
 passwd $USER
 # (set user password)
