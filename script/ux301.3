@@ -58,7 +58,7 @@ sudo chmod +x ~/.config/sway/status.sh
 mkdir ~/.config/fusuma
 echo "
 interval:
-pinch: 0.1
+  pinch: 0.1
 " > ~/.config/fusuma/config.yml 
 
 echo "if [[ -z "'$'"DISPLAY ]] && [[ "'$'"(tty) = /dev/tty1 ]]; then exec sway; fi" >> ~/.bashrc
