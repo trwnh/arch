@@ -1,27 +1,51 @@
-#output eDP-1 bg ~/.config/sway/wallpaper.jpg fill
+output eDP-1 bg ~/.config/sway/wallpaper.jpg fill
 exec_always {
+  gsettings set org.gnome.desktop.interface theme "Materia-dark"
   gsettings set org.gnome.desktop.interface gtk-theme "Materia-dark"
+  gsettings set org.gnome.desktop.interface icon-theme "Faenza-Darkest"
   gsettings set org.gnome.desktop.interface font-name "Roboto 16"
   gsettings set org.gnome.desktop.interface monospace-font-name "Fira Code Retina 16"
-  exec enpass -minimized
+  exec mako --background-color '#111111' --font 'Roboto 16' --border-size 0 --padding 16 --height 240 --width 460
+  exec fusuma -d
 }
-bar {
-  position top
-  height 32px
-  status_command while ~/.config/sway/status.sh; do sleep 1; done;
-  font "RobotoCondensed"
-  colors {
-    statusline #ffffff
-    background #000000
-    inactive_workspace #32323200 #32323200 #5c5c5c
-  }
-}
+exec waybar
+exec enpass -minimized
+for_window [class="enpass"] floating enable
+#bar {
+#  status_command waybar
+#}
+#bar {
+#  position bottom
+#  height 32px
+#  status_padding 0
+#  status_edge_padding 0
+#  tray_padding 2
+#  status_command while ~/.config/sway/status.sh; do sleep 1; done;
+#  font pango:RobotoCondensed 18
+#  icon_theme "Faenza-Darkest"
+#  colors {
+#    statusline #ffffff
+#    background #000000
+#    inactive_workspace #32323200 #32323200 #5c5c5c
+#  }
+#}
 input "2:14:ETPS/2_Elantech_Touchpad" {
   dwt enabled
   tap enabled
   natural_scroll enabled
   middle_emulation enabled
 }
+
+bindsym XF86MonBrightnessUp exec light -A 2.5
+bindsym XF86MonBrightnessDown exec light -U 2.5
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +2%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -2%
+bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+set $ssdir /home/trwnh/Pictures/Screenshots
+bindsym print exec grim $ssdir/$(date +'%Y%m%d-%H%M%S.png')
+bindsym Shift+print exec grim -g "$(slurp)" $ssdir/$(date +'%Y%m%d-%H%M%S.png')
+
 #gaps outer 1px
 #gaps inner 4px
 title_align center
@@ -30,12 +54,13 @@ output eDP-1 scale 1
 
 set $mod Mod4
 bindsym $mod+Return exec xfce4-terminal
-bindsym $mod+Space exec dmenu_path | dmenu | xargs swaymsg exec ###
+#bindsym $mod+Space exec dmenu_path | dmenu | xargs swaymsg exec
+bindsym $mod+Space exec --no-startup-id 'rofi -show drun  -theme "Arc-Dark" -font "Roboto 24"'
 bindsym $mod+f fullscreen
 bindsym $mod+q kill
 bindsym $mod+F5 reload
 bindsym $mod+Shift+F5 restart
-bindsym $mod+Escape exec swaynag -t warning -m "Do you want to exit Sway? This will end the Wayland session." -b "Exit" "swaymsg exit"
+bindsym $mod+Escape exec swaymsg exit
 
 # Move focus
   bindsym $mod+Left focus left
@@ -107,7 +132,8 @@ set $ws10 "10"
     bindsym $mod+e layout toggle split
 
     # Toggle the current focus between tiling and floating mode
-    bindsym $mod+Shift+space floating toggle
+    bindsym $mod+Shift+f floating toggle
+    floating_modifier $mod
 
     # move focus to the parent container
     bindsym $mod+a focus parent
