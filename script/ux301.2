@@ -26,8 +26,10 @@ timeout 0
 editor yes
 " >> /boot/loader/loader.conf
 echo "FONT=\"ter-v32b\"" > /etc/vconsole.conf
+sed -i '/SystemGroup\ssys\sroot/s/root/wheel/g' /etc/cups/cups-files.conf
 systemctl enable NetworkManager
 systemctl enable systemd-timesyncd
+systemctl enable org.cups.cupsd
 sed -i '/#Color/s/^#//g' /etc/pacman.conf
 echo "Configuration complete."
 read -p "To avoid having passwd timeout, press [enter] to continue when you're ready to input:" waitforinout
