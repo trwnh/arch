@@ -27,7 +27,8 @@ yay -S --noconfirm \
   nm-connection-editor network-manager-applet-indicator \
   materia-gtk-theme materia-kde faenza-icon-theme \
   enpass-bin firefox-developer-edition quassel-client dino \
-  gnome-disk-utility pacmanlogviewer gimp krita nmap
+  gnome-disk-utility pacmanlogviewer gimp krita nmap \
+  libreoffice-fresh
 else
 echo "Apps and fonts already installed."
 fi
@@ -38,9 +39,12 @@ read DESKTOP
 
 case $DESKTOP in
 xfce)
-  yay -S --noconfirm xorg-server xfce4 xfce4-goodies compton
+  yay -S --noconfirm xorg-server xfce4 xfce4-goodies compton plank
   curl https://raw.githubusercontent.com/trwnh/arch/master/config/compton.conf -o ~/.config/compton.conf
-  echo "exec startxfce4" > ~/.xinitrc
+  echo "
+export XDG_SESSION_TYPE=X11
+exec startxfce4
+  " > ~/.xinitrc
   echo "startx" >> ~/.bashrc
 ;;
 deepin)
