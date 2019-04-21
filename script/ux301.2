@@ -3,6 +3,10 @@
 
 ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime
 hwclock --systohc
+echo "en_US.UTF-8 UTF-8
+ar_JO.UTF-8 UTF-8" > /etc/locale.gen
+locale-gen
+echo "LANG=en_US.UTF-8" > /etc/locale.conf
 sed -i '/#\s%wheel\sALL=(ALL)\sALL/s/^#//g' /etc/sudoers
 echo "EDITOR=nano" > /etc/environment
 HOSTNAME=ux301
