@@ -29,4 +29,11 @@ mount /dev/sdb /mnt/mnt/disk2
 mount /dev/sdc /mnt/mnt/disk3
 mount /dev/sdd /mnt/mnt/disk4
 genfstab -U /mnt >> /mnt/etc/fstab
-arch-chroot /mnt
+
+echo -ne "Starting chroot in 3 seconds"
+for i in 1 2 3
+do
+  echo -ne "."
+  sleep 1
+done
+arch-chroot /mnt sh -c "$(curl https://raw.githubusercontent.com/trwnh/arch/master/script/x9dae.2)"
