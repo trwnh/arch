@@ -49,7 +49,10 @@ exec startxfce4
 ;;
 deepin)
   yay -S --noconfirm xorg-server deepin deepin-extra
-  echo "exec startdde" > ~/.xinitrc
+  echo "
+export XDG_SESSION_TYPE=X11
+exec startdde
+  " > ~/.xinitrc
   echo "startx" >> ~/.bashrc
 ;;
 sway)
@@ -71,4 +74,7 @@ interval:
   > ~/.config/fusuma/config.yml
   echo "if [[ -z "'$'"DISPLAY ]] && [[ "'$'"(tty) = /dev/tty1 ]]; then exec sway; fi" >> ~/.bashrc
 ;;
+# xfsway)
+# yay -S xfce4-pulseaudio-plugin
+# also need to replace thunar-extended with thunar if you want a desktop; use nautilus instead
 esac
