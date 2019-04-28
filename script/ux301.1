@@ -20,8 +20,7 @@ pacstrap /mnt base base-devel \
 	intel-ucode vulkan-intel networkmanager acpi \
 	pulseaudio pulseaudio-alsa pulseaudio-bluetooth pavucontrol \
 	git openssh wget zip unzip unrar rsync archey3 terminus-font \
-	cups cups-pdf \
-	mpv youtube-dl
+	cups cups-pdf
 echo "Pacman mirrors synced and sorted."
 genfstab -U /mnt >> /mnt/etc/fstab
 echo "Filesystem table generated."
