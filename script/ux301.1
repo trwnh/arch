@@ -1,6 +1,6 @@
 #!/bin/bash
-setfont latarcyrheb-sun32
-timedatectl set-ntp true
+setfont latarcyrheb-sun32 # readable tty font for hidpi
+timedatectl set-ntp true # network time
 parted -s /dev/sda mklabel gpt
 sgdisk -n 0:0:+512M -t 0:ef00 -c 0:"ESP" /dev/sda
 sgdisk -n 0:0:0 -t 0:8300 -c 0:"Root" /dev/sda
@@ -16,12 +16,42 @@ echo "Mounting complete."
 pacman -Sy
 pacman -S reflector --noconfirm
 reflector --country 'US' -p http --sort rate --save /etc/pacman.d/mirrorlist
-pacstrap /mnt base base-devel \
-	intel-ucode vulkan-intel networkmanager acpi \
-	pulseaudio pulseaudio-alsa pulseaudio-bluetooth pavucontrol \
-	git openssh wget zip unzip unrar rsync archey3 terminus-font \
-	cups cups-pdf
 echo "Pacman mirrors synced and sorted."
+
+PACKAGES=" ##################################################################
+# === System ===
+base
+base-devel
+## Utilities
+openssh
+wget
+rsync
+git
+zip
+unzip
+unrar
+## Rice
+archey3
+terminus-font # nicer readable HiDPI in tty
+
+# === Intel Iris 5100 GPU + i7-4558U CPU ===
+intel-ucode
+vulkan-intel
+
+# === Laptop ===
+networkmanager # for easier connectivity
+acpi # for battery management
+## Audio server
+pulseaudio
+pulseaudio-alsa
+pulseaudio-bluetooth
+pavucontrol # graphical management; consider moving to script.3?
+## Printing
+cups
+cups-pdf
+
+" ###########################################################################
+pacstrap /mnt $PACKAGES
 genfstab -U /mnt >> /mnt/etc/fstab
 echo "Filesystem table generated."
 echo -ne "Starting chroot in 3 seconds"
