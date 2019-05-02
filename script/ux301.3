@@ -17,7 +17,7 @@ echo "yay already installed."
 fi
 
 PACKAGES="
-# == Fonts ===
+# ====== Fonts ======
 # Arabic
 ttf-amiri
 ttf-arabeyes-fonts
@@ -42,62 +42,68 @@ adobe-source-code-pro-fonts
 adobe-source-sans-pro-fonts
 adobe-source-serif-pro-fonts
 
-# === Themes ===
+# ====== Theming ======
 materia-gtk-theme
 materia-kde
 faenza-icon-theme
 
-# === Apps ===
+# ====== Apps ======
 
-# Utilities
-## Graphical
+# === Necessary ===
 enpass-bin
-gnome-disk-utility
-pacmanlogviewer
-nm-connection-editor
-network-manager-applet-indicator
-## Console
-nmap
-htop
-
-# Internet
-## Browsers
 firefox-developer-edition
-epiphany
-## Communication
+# epiphany
 quassel-client
 dino
-tootle
-fractal
-geary
-## Torrent
+# tootle fractal # extra social/etc apps
+# geary evolution thunderbird-nightly # idk which email to use
 qbittorrent
-## feedreader liferea # if i ever decide to stop using inoreader
+# feedreader liferea # if i ever decide to stop using inoreader
 
-# Media
-## Creative
+# === Editors / IDEs ===
+brackets
+code
+pantheon-code
+gedit
+# notepadqq
+
+# === Creative ===
 gimp
 krita
 inkscape
+scribus
 blender
+# openscad
+# darktable digikam nufraw rawtherapee
 obs-studio
-## Playback
+# kdenlive cin openshot pitivi shotcut
+# audacity 
+# ardour lmms non rosegarden qtractor
+
+# === Viewers ===
 mpv
 youtube-dl
+# baka-mplayer mpc-qt 
 gpmdp
+# deadbeef deepin-music lollypop musique museeks-bin gnome-music pantheon-music elisa 
+# okular zathura
+# shotwell showfoto
+# yacreader
+# pantheon-camera cheese
 
-# Documents
+# === Office ===
 libreoffice-fresh
 texlive-most
-lyx
+# lyx
 texmaker
 
-# Development
-## text editors
-gedit
-notepadqq
-## ide
-brackets
+# === Utility ===
+gnome-disk-utility
+pacmanlogviewer
+nm-connection-editor
+# network-manager-applet-indicator
+nmap
+htop
 "
 
 yay -S --noconfirm --needed $PACKAGES
