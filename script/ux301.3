@@ -112,10 +112,11 @@ read DESKTOP
 
 case $DESKTOP in
 xfce)
-  yay -S --noconfirm xorg-server xfce4 xfce4-goodies compton plank
+  yay -S --noconfirm xorg-server xfce4 xfce4-goodies compton plank xmousepasteblock-git
   curl https://raw.githubusercontent.com/trwnh/arch/master/config/compton.conf -o ~/.config/compton.conf
   echo "
 export XDG_SESSION_TYPE=X11
+exec xmousepasteblock
 exec startxfce4
   " > ~/.xinitrc
   echo "startx" >> ~/.bashrc
