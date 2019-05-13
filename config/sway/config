@@ -9,7 +9,7 @@ exec_always {
   exec fusuma -d
 }
 exec waybar
-exec enpass -minimized
+exec enpass -minimize
 for_window [class="enpass"] floating enable
 #bar {
 #  status_command waybar
