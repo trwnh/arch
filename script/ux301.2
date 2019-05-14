@@ -31,7 +31,7 @@ timeout 0
 editor yes
 " >> /boot/loader/loader.conf
 
-pacman -S terminus-font
+pacman -S terminus-font --noconfirm
 echo "FONT=\"ter-v32b\"" > /etc/vconsole.conf
 
 sed -i '/SystemGroup\ssys\sroot/s/root/wheel/g' /etc/cups/cups-files.conf
@@ -55,13 +55,12 @@ echo "Created user $USER."
 passwd $USER
 # (set user password)
 
-su $USER
 cd /home/$USER
 git clone https://aur.archlinux.org/yay.git
 cd yay
-makepkg -sic
-yay --nodiffmenu --save
+su - $USER -c 'makepkg -sic'
+su - $USER -c 'yay --nodiffmenu --save'
 cd ..
-sudo rm -r yay
+rm -r yay
 
 echo "You can now unmount and reboot." # if not called via ux301.1, then you should also delete the script and exit chroot.
