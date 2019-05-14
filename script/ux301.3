@@ -3,6 +3,19 @@
 ## post
 # login as trwnh
 
+if [ "$(which yay)" != "/usr/bin/yay" ]
+then
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -sic
+yay --nodiffmenu --save
+cd ..
+sudo rm -r yay
+echo "Installed yay."
+else
+echo "yay already installed."
+fi
+
 PACKAGES="
 # ====== Fonts ======
 # Arabic
