@@ -63,9 +63,9 @@ ln -s /storage/Downloads /home/$USER/Downloads
 ln -s /storage/Music /home/$USER/Music
 ln -s /storage/Pictures /home/$USER/Pictures
 ln -s /storage/Videos /home/$USER/Videos
-sudio -Siu trwnh bash 'git config --global user.email a@trwnh.com'
-sudio -Siu trwnh bash 'git config --global user.name trwnh'
-sudio -Siu trwnh bash 'git config --global credential.helper store'
+sudio -Siu $USER bash 'git config --global user.email a@trwnh.com'
+sudio -Siu $USER bash 'git config --global user.name trwnh'
+sudio -Siu $USER bash 'git config --global credential.helper store'
 
 echo "User configuration complete."
 
