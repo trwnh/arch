@@ -55,4 +55,13 @@ echo "Created user $USER."
 passwd $USER
 # (set user password)
 
+su $USER
+cd /home/$USER
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -sic
+yay --nodiffmenu --save
+cd ..
+sudo rm -r yay
+
 echo "You can now unmount and reboot." # if not called via ux301.1, then you should also delete the script and exit chroot.
