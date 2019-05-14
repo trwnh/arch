@@ -132,7 +132,7 @@ exec startdde
 ;;
 sway)
   yay -S --noconfirm sway wayland xorg-server-xwayland qt5-wayland xfce4-terminal \
-    light playerctl pamixer mako ruby-fusuma slurp grim waybar imv rofi rofi-dmenu \
+    light playerctl pamixer mako slurp grim waybar imv rofi rofi-dmenu \
     thunar-extended thunar-volman thunar-archive-plugin thunar-vcs-plugin gvfs \
     powertop
   mkdir ~/.config/sway
@@ -140,16 +140,6 @@ sway)
   curl https://raw.githubusercontent.com/trwnh/arch/master/config/swaystatus.sh -o ~/.config/sway/status.sh
   curl https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-734403.jpg -o ~/.config/sway/wallpaper.jpg
   sudo chmod +x ~/.config/sway/status.sh
-  mkdir ~/.config/fusuma
-  echo \
-"
-interval:
-  pinch: 0.1
-" \
-  > ~/.config/fusuma/config.yml
   echo "if [[ -z "'$'"DISPLAY ]] && [[ "'$'"(tty) = /dev/tty1 ]]; then exec sway; fi" >> ~/.bashrc
 ;;
-# xfsway)
-# yay -S xfce4-pulseaudio-plugin
-# also need to replace thunar-extended with thunar if you want a desktop; use nautilus instead
 esac
