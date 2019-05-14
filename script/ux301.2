@@ -43,7 +43,7 @@ systemctl enable NetworkManager
 systemctl enable systemd-timesyncd
 systemctl enable org.cups.cupsd
 
-echo "Configuration complete."
+echo "System onfiguration complete."
 read -p "To avoid having passwd timeout, press [enter] to continue when you're ready to input:" waitforinput
 echo "Set a root password."
 passwd
@@ -57,5 +57,16 @@ passwd $USER
 
 sudo -Siu $USER bash 'git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -sic --noconfirm && yay --nodiffmenu --save'
 rm -r /home/$USER/yay
+
+ln -s /storage/Documents /home/$USER/Documents
+ln -s /storage/Downloads /home/$USER/Downloads
+ln -s /storage/Music /home/$USER/Music
+ln -s /storage/Pictures /home/$USER/Pictures
+ln -s /storage/Videos /home/$USER/Videos
+sudio -Siu trwnh bash 'git config --global user.email a@trwnh.com'
+sudio -Siu trwnh bash 'git config --global user.name trwnh'
+sudio -Siu trwnh bash 'git config --global credential.helper store'
+
+echo "User configuration complete."
 
 echo "You can now unmount and reboot." # if not called via ux301.1, then you should also delete the script and exit chroot.
