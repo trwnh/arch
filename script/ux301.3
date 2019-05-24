@@ -115,7 +115,7 @@ yay -S --noconfirm --needed $PACKAGES
 echo "Apps and fonts already installed."
 
 ## add printer
-lpadmin -p MFC7840W -E -v lpd://MFC7840/BINARY_P1 -P /usr/share/cups/model/MFC7840W.ppd
+lpadmin -p MFC7840W -E -v socket://192.168.1.15:9100 -P /usr/share/cups/model/MFC7840W.ppd
 
 ## pick a de/wm
 echo "Install [xfce, deepin, sway]: " # TODO: support sway fallbacks of xfce/deepin -- xfsway, ddesway
