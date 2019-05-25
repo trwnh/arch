@@ -150,3 +150,6 @@ sway)
   echo "if [[ -z "'$'"DISPLAY ]] && [[ "'$'"(tty) = /dev/tty1 ]]; then exec sway; fi" >> ~/.bashrc
 ;;
 esac
+
+yay -S python-requests python-pip
+sudo pip install requests-cache
