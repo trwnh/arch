@@ -141,9 +141,9 @@ exec startdde
   echo "startx" >> ~/.bashrc
 ;;
 sway)
-  yay -S --noconfirm sway wayland xorg-server-xwayland qt5-wayland xfce4-terminal \
+  yay -S --noconfirm sway wayland xorg-server-xwayland qt5-wayland gnome-terminal \
     light mako slurp grim jq wl-clipboard waybar imv rofi rofi-dmenu \
-    nautilus gvfs gvfs-{afc,goa,google,gphoto2,mtp,nfs,smb} polkit-gnome
+    nautilus file-roller gvfs gvfs-{afc,goa,google,gphoto2,mtp,nfs,smb} polkit-gnome
   sudo ln -s /storage/trwnh/sway ~/.config/sway
   sudo ln -s /storage/trwnh/waybar ~/.config/waybar
   curl https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-734403.jpg -o ~/.config/sway/wallpaper.jpg
