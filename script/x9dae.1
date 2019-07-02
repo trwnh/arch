@@ -22,7 +22,7 @@ fi
 pacman -Sy
 pacman -S reflector
 reflector --country 'US' -p http --sort rate --save /etc/pacman.d/mirrorlist
-pacstrap /mnt base base-devel linux-lts intel-ucode
+pacstrap /mnt base base-devel linux-lts intel-ucode igb
 mkdir /mnt/mnt/disk{1,2,3,4}
 mount /dev/sda /mnt/mnt/disk1
 mount /dev/sdb /mnt/mnt/disk2
