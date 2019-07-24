@@ -6,6 +6,9 @@ sudo pacman -S xorg xorg-server
 sudo pacman -S xfce4 xfce4-goodies
 echo "exec startxfce4" >> .bash_profile
 
+## User paths
+sudo pacman -S xdg-user-dirs  # if you want to auto-create folders like Documents and Downloads for users
+
 ## Fonts -- pick and choose
 yay -S all-repository-fonts
 # --- bitmap ---
