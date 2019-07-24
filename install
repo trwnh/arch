@@ -12,6 +12,9 @@ timedatectl set-ntp true                   # use network time
 ## Format disks (repeat for all devices as desired)
 
 # fdisk -l                                 # identify devices
+# lsblk -f                                 # identify partitions
+# smartctl -i /dev/sda                     # get serial number and other info
+
 parted /dev/sda mklabel gpt                # set /dev/sda to gpt disk
 cgdisk /dev/sda                            # pseudographical gdisk tool for partitions
 ######## Example cgdisk flow #########################################################
