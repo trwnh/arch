@@ -1,0 +1,9 @@
+set breaklonglines
+set nonewlines
+set tabsize 2
+set tabstospaces
+set autoindent
+set linenumbers
+set mouse
+
+include /usr/share/nano/*.nanorc
