@@ -36,3 +36,9 @@ modprobe igb
 ip link set eth0 up
 ip link set eth1 up
 dhcpcd
+
+# wanna install over ssh?
+passwd
+pacman -S openssh
+nano /etc/ssh/sshd_config # PermitRootLogin yes
+systemctl start sshd
