@@ -10,7 +10,7 @@ parted -s /dev/sda mklabel gpt
 sgdisk -n 0:0:+512M -t 0:ef00 -c 0:"ESP" /dev/sda
 sgdisk -n 0:0:0 -t 0:8300 -c 0:"Root" /dev/sda
 partprobe /dev/sda
-echo "Partions made."
+echo "Partitions made."
 mkfs.fat /dev/sda1 -n "ESP"
 mkfs.ext4 /dev/sda2 -L "Arch" -F
 echo "Filesystems created."
