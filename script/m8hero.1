@@ -1,0 +1,24 @@
+#!/bin/bash
+
+timedatectl set-ntp true
+
+lsblk -f
+read -p "Install on which drive? Give identifier in form /dev/id: " ROOTDEV
+
+parted -s $ROOTDEV mklabel gpt
+sgdisk -n 0:0:+512M -t 0:ef00 -c 0:"ESP" $ROOTDEV
+sgdisk -n 0:0:0 -t 0:8300 -c 0:"Root" $ROOTDEV
+partprobe $ROOTDEV
+echo "Partitions made."
+
+read -p "Use [ext, btrfs] for root partition: " ROOTFS
+
+case $ROOTFS in
+ext)
+  mkfs.fat $ROOTDEV1 -n "ESP"
+  mkfs.ext4 $ROOTDEV2 -L "Arch" -F
+  echo "Filesystems created."
+;;
+btrfs)
+;;
+esac
