@@ -39,6 +39,5 @@ dhcpcd
 
 # wanna install over ssh?
 passwd
-pacman -S openssh
 nano /etc/ssh/sshd_config # PermitRootLogin yes
 systemctl start sshd
