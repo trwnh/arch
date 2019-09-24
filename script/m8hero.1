@@ -3,22 +3,24 @@
 timedatectl set-ntp true
 
 lsblk -f
-read -p "Install on which drive? Give identifier in form /dev/id: " ROOTDEV
-
+read -p "Install on which drive? Give identifier in form /dev/name: " ROOTDEV
+sgdisk -Z $ROOTDEV
 parted -s $ROOTDEV mklabel gpt
-sgdisk -n 0:0:+512M -t 0:ef00 -c 0:"ESP" $ROOTDEV
-sgdisk -n 0:0:0 -t 0:8300 -c 0:"Root" $ROOTDEV
+sgdisk -n 1:0:+512M -t 1:ef00 -c 1:"ESP" $ROOTDEV
+sgdisk -n 2:0:0 -t 2:8300 -c 2:"Root" $ROOTDEV
 partprobe $ROOTDEV
 echo "Partitions made."
+lsblk -f $ROOTDEV
+read -p "Does this look right? Hit [enter] to move on if so, otherwise quit and start over" CONFIRM
 
 read -p "Use [ext, btrfs] for root partition: " ROOTFS
-
+mkfs.fat -F32 $ROOTDEV1 -n "ESP"
 case $ROOTFS in
 ext)
-  mkfs.fat $ROOTDEV1 -n "ESP"
   mkfs.ext4 $ROOTDEV2 -L "Arch" -F
-  echo "Filesystems created."
 ;;
 btrfs)
+  mkfs.btrfs $ROOTDEV2 --label Arch
 ;;
 esac
+echo "Filesystems created."
