@@ -7,8 +7,8 @@ read -p "Install on which drive? Give identifier in form /dev/name: " ROOTDEV
 
 sgdisk -Z $ROOTDEV
 parted -s $ROOTDEV mklabel gpt
-sgdisk -n 1:0:+512M -t 1:ef00 -c 1:"ESP" $ROOTDEV
-sgdisk -n 2:0:0 -t 2:8300 -c 2:"Root" $ROOTDEV
+sgdisk -n 1:0:+512M -t 1:ef00 -c 1:"ESP" $ROOTDEV \
+       -n 2:0:0 -t 2:8300 -c 2:"Root" $ROOTDEV
 partprobe $ROOTDEV
 echo "Partitions made."
 
@@ -31,8 +31,9 @@ BASE="base base-devel"
 UTIL="openssh wget git zip unzip unrar nmap htop"
 HW="intel-ucode vulkan-intel nvidia" # i7-6700k, gtx 1080
 PRINT="cups cups-pdf"
+FS="ntfs-3g exfat-utils dosfsutils"
 
-PACKAGES="$BASE $UTIL $HW $PRINT"
+PACKAGES="$BASE $UTIL $HW $PRINT $FS"
 pacstrap /mnt $PACKAGES 
-genfstab -U /mnt >> /mnt/etc/fstab
+genfstab -L /mnt >> /mnt/etc/fstab
 echo "Filesystem table generated."
