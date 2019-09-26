@@ -22,11 +22,41 @@ ext)
   mount -L "EFI" /mnt/boot
 ;;
 btrfs)
+# https://gist.github.com/artizirk/c5cd29b56c713257754c
   mkfs.fat -F32 -n "EFI" /dev/disk/by-partlabel/ESP
   mkfs.btrfs -L "Arch" -f /dev/disk/by-partlabel/Root
+  mount -L "Arch" /mnt
+  btrfs subvolume create /mnt/@root
+  btrfs subvolume create /mnt/@var
+  btrfs subvolume create /mnt/@home
+  btrfs subvolume create /mnt/@snapshots
+  umount /mnt
+  OPTIONS="noatime,compress=lzo,space_cache"
+  mount -L "Arch" -o ${OPTIONS},subvol=@root /mnt
+  mkdir /mnt/{boot,var,home,.snapshots}
+  mount -L "Arch" -o ${OPTIONS},subvol=@var /mnt/var
+  mount -L "Arch" -o ${OPTIONS},subvol=@home /mnt/home
+  mount -L "Arch" -o ${OPTIONS},subvol=@snapshots /mnt/.snapshots
+  mount -L "EFI" /mnt/boot
+  
 ;;
 esac
 echo "Drive setup done."
 
 lsblk -f $ROOTDEV
 read -p "Does this look right? Hit [enter] to move on if so, otherwise quit and start over" CONFIRM
+
+pacman -Sy
+pacman -S reflector --noconfirm
+reflector --country 'US' -p http --sort rate --save /etc/pacman.d/mirrorlist
+echo "Pacman mirrors synced and sorted."
+
+BASE="base base-devel"
+UTIL="openssh wget git zip unzip unrar nmap htop"
+HW="intel-ucode vulkan-intel nvidia" # i7-6700k, gtx 1080
+PRINT="cups cups-pdf"
+
+PACKAGES="$BASE $UTIL $HW $PRINT"
+pacstrap /mnt $PACKAGES 
+genfstab -U /mnt >> /mnt/etc/fstab
+echo "Filesystem table generated."
