@@ -1,5 +1,16 @@
 #!/bin/bash
 
+BASE="base base-devel"
+UTIL="openssh wget git zip unzip unrar nmap htop"
+HW="intel-ucode vulkan-intel nvidia" # i7-6700k, gtx 1080
+NET="networkmanager nm-connection-editor"
+PRINT="cups cups-pdf"
+FS="ntfs-3g exfat-utils dosfstools"
+
+PACKAGES="$BASE $UTIL $HW $PRINT $FS $NET"
+HOSTNAME=desktop
+USERNAME=trwnh
+
 timedatectl set-ntp true
 
 lsblk -f
@@ -30,86 +41,72 @@ echo "Sorting mirrorlist..."
 reflector --country 'US' -p https --sort rate --save /etc/pacman.d/mirrorlist
 echo "Pacman mirrors synced and sorted."
 
-# --- selected packages for installation ---
-BASE="base base-devel"
-UTIL="openssh wget git zip unzip unrar nmap htop"
-HW="intel-ucode vulkan-intel nvidia" # i7-6700k, gtx 1080
-NET="networkmanager nm-connection-editor"
-PRINT="cups cups-pdf"
-FS="ntfs-3g exfat-utils dosfstools"
-# --- selected packages for installation ---
-PACKAGES="$BASE $UTIL $HW $PRINT $FS $NET"
-
 echo "Bootstrapping mounted system..."
 pacstrap /mnt $PACKAGES
 echo "Packages installed."
+
+echo "Generating filesystem mount table... "
 genfstab -L /mnt >> /mnt/etc/fstab
-echo "Filesystem table generated."
+echo "done."
 
-echo "Entering new root..."
-arch-chroot /mnt /bin/bash <<EOF
-
-echo "Localizing system..."
-ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime
-echo "Timezone set."
-hwclock --systohc
-echo "Synced system clock to hardware clock."
-echo "en_US.UTF-8 UTF-8
-ar_JO.UTF-8 UTF-8" > /etc/locale.gen
-locale-gen
-localectl set-locale LANG=en_US.UTF-8
-echo "Locale generated and applied."
-
-echo "Setting hostname..."
-HOSTNAME=desktop
-echo "$HOSTNAME" > /etc/hostname
-echo "
+echo -n "Setting hostname... "
+echo "$HOSTNAME" > /mnt/etc/hostname
+cat <<EOF > /mnt/etc/hosts
 127.0.0.1 localhost
 ::1 localhost
 127.0.1.1 $HOSTNAME.localdomain $HOSTNAME
-" > /etc/hosts
+EOF
+echo "done."
 
-echo "Applying configuration changes..."
-sed -i '/SystemGroup\ssys\sroot/s/root/wheel/g' /etc/cups/cups-files.conf
-sed -i '/#Color/s/^#//g' /etc/pacman.conf
-sed -i '/#\s%wheel\sALL=(ALL)\sALL/s/^#//g' /etc/sudoers
-echo "EDITOR=nano" > /etc/environment
-
-echo "Enabling system services..."
-systemctl enable NetworkManager
-systemctl enable systemd-timesyncd
-systemctl enable org.cups.cupsd
+echo "Localizing system..."
+arch-chroot /mnt ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime
+echo "Timezone set."
+arch-chroot /mnt hwclock --systohc
+echo "Synced system clock to hardware clock."
+echo "en_US.UTF-8 UTF-8
+ar_JO.UTF-8 UTF-8" > /mnt/etc/locale.gen
+arch-chroot /mnt locale-gen
+echo "LANG=en_US.UTF-8" > /mnt/etc/locale.conf
+echo "Locale generated and applied."
 
 echo "Installing bootloader..."
-bootctl install
-echo "
+arch-chroot /mnt bootctl install
+cat <<EOF > /mnt/boot/loader/entries/arch.conf
 title Arch Linux
 linux /vmlinuz-linux
 initrd /intel-ucode.img
 initrd /initramfs-linux.img
 options root=LABEL=Arch rw
-" >> /boot/loader/entries/arch.conf
-echo "
+EOF
+cat <<EOF > /mnt/boot/loader/loader.conf
 default arch
 timeout 0
 editor yes
-" >> /boot/loader/loader.conf
-echo "Bootloader installed."
-echo "Exiting chroot..."
 EOF
+echo "Loader files written."
+
+echo -n "Enabling system services..."
+arch-chroot /mnt /bin/bash <<EOF
+systemctl enable NetworkManager
+systemctl enable systemd-timesyncd
+systemctl enable org.cups.cupsd
+EOF
+echo "done."
+
+echo -n "Changing configuration values..."
+sed -i '/SystemGroup\ssys\sroot/s/root/wheel/g' /mnt/etc/cups/cups-files.conf
+sed -i '/#Color/s/^#//g' /mnt/etc/pacman.conf
+sed -i '/#\s%wheel\sALL=(ALL)\sALL/s/^#//g' /mnt/etc/sudoers
+echo "EDITOR=nano" > /mnt/etc/environment
+echo "done."
 
 read -p "To avoid having passwd timeout, press [enter] to continue when you're ready to input:" waitforinput
 
-arch-chroot /mnt /bin/bash <<EOF
 echo "Set a root password."
-passwd
-# (set root password)
-USER=trwnh
-useradd -m -g users -s /bin/bash $USER
-usermod -aG wheel,ftp,http,sys $USER
-echo "Created user $USER."
-passwd $USER
-# (set user password)
+arch-chroot /mnt passwd
+arch-chroot /mnt useradd -m -g users -G wheel,ftp,http,sys -s /bin/bash "$USERNAME"
+echo "Created user $USERNAME."
+arch-chroot /mnt passwd $USERNAME
 
 echo "Installing AUR helper..."
 sudo -Siu $USER bash 'git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -sic --noconfirm && yay --nodiffmenu --save'
