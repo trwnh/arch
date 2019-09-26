@@ -48,7 +48,7 @@ read -p "Does this look right? Hit [enter] to move on if so, otherwise quit and 
 
 pacman -Sy
 pacman -S reflector --noconfirm
-reflector --country 'US' -p http --sort rate --save /etc/pacman.d/mirrorlist
+reflector --country 'US' -p https --sort rate --save /etc/pacman.d/mirrorlist
 echo "Pacman mirrors synced and sorted."
 
 BASE="base base-devel"
