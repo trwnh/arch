@@ -23,8 +23,8 @@ sgdisk -n 1:0:+512M -t 1:ef00 -c 1:"ESP" $ROOTDEV \
        -n 2:0:0 -t 2:8300 -c 2:"Root" $ROOTDEV
 partprobe $ROOTDEV
 echo "Making filesystems..."
-mkfs.fat -F32 -n "EFI" /dev/disk/by-partlabel/ESP
 mkfs.ext4 -L "Arch" -F /dev/disk/by-partlabel/Root
+mkfs.fat -F32 -n "EFI" /dev/disk/by-partlabel/ESP
 echo "Mounting partitions..."
 mount -L "Arch" /mnt
 mkdir /mnt/boot
