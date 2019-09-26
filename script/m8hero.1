@@ -60,3 +60,10 @@ PACKAGES="$BASE $UTIL $HW $PRINT"
 pacstrap /mnt $PACKAGES 
 genfstab -U /mnt >> /mnt/etc/fstab
 echo "Filesystem table generated."
+
+# for m8hero.2 with btrfs
+# - bootctl options needs
+#     rootflags=subvol=@root
+#   added to it in order for systemd-boot to work
+# - also need to install btrfs-progs,
+#   or add it when pacstrapping
