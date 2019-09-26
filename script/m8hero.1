@@ -35,12 +35,12 @@ UTIL="openssh wget git zip unzip unrar nmap htop"
 HW="intel-ucode vulkan-intel nvidia" # i7-6700k, gtx 1080
 NET="networkmanager nm-connection-editor"
 PRINT="cups cups-pdf"
-FS="ntfs-3g exfat-utils dosfsutils"
+FS="ntfs-3g exfat-utils dosfstools"
 # --- selected packages for installation ---
 PACKAGES="$BASE $UTIL $HW $PRINT $FS $NET"
 
 echo "Bootstrapping mounted system..."
-pacstrap /mnt $PACKAGES 
+pacstrap /mnt $PACKAGES
 echo "Packages installed."
 genfstab -L /mnt >> /mnt/etc/fstab
 echo "Filesystem table generated."
