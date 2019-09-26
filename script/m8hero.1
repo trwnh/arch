@@ -4,7 +4,6 @@ timedatectl set-ntp true
 
 lsblk -f
 read -p "Install on which drive? Give identifier in form /dev/name: " ROOTDEV
-read -p "Use [ext, btrfs] for root partition: " ROOTFS
 
 sgdisk -Z $ROOTDEV
 parted -s $ROOTDEV mklabel gpt
@@ -13,34 +12,11 @@ sgdisk -n 2:0:0 -t 2:8300 -c 2:"Root" $ROOTDEV
 partprobe $ROOTDEV
 echo "Partitions made."
 
-case $ROOTFS in
-ext)
-  mkfs.fat -F32 -n "EFI" /dev/disk/by-partlabel/ESP
-  mkfs.ext4 -L "Arch" -F /dev/disk/by-partlabel/Root
-  mount -L "Arch" /mnt
-  mkdir /mnt/boot
-  mount -L "EFI" /mnt/boot
-;;
-btrfs)
-# https://gist.github.com/artizirk/c5cd29b56c713257754c
-  mkfs.fat -F32 -n "EFI" /dev/disk/by-partlabel/ESP
-  mkfs.btrfs -L "Arch" -f /dev/disk/by-partlabel/Root
-  mount -L "Arch" /mnt
-  btrfs subvolume create /mnt/@root
-  btrfs subvolume create /mnt/@var
-  btrfs subvolume create /mnt/@home
-  btrfs subvolume create /mnt/@snapshots
-  umount /mnt
-  OPTIONS="noatime,compress=lzo,space_cache"
-  mount -L "Arch" -o ${OPTIONS},subvol=@root /mnt
-  mkdir /mnt/{boot,var,home,.snapshots}
-  mount -L "Arch" -o ${OPTIONS},subvol=@var /mnt/var
-  mount -L "Arch" -o ${OPTIONS},subvol=@home /mnt/home
-  mount -L "Arch" -o ${OPTIONS},subvol=@snapshots /mnt/.snapshots
-  mount -L "EFI" /mnt/boot
-  
-;;
-esac
+mkfs.fat -F32 -n "EFI" /dev/disk/by-partlabel/ESP
+mkfs.ext4 -L "Arch" -F /dev/disk/by-partlabel/Root
+mount -L "Arch" /mnt
+mkdir /mnt/boot
+mount -L "EFI" /mnt/boot
 echo "Drive setup done."
 
 lsblk -f $ROOTDEV
@@ -60,10 +36,3 @@ PACKAGES="$BASE $UTIL $HW $PRINT"
 pacstrap /mnt $PACKAGES 
 genfstab -U /mnt >> /mnt/etc/fstab
 echo "Filesystem table generated."
-
-# for m8hero.2 with btrfs
-# - bootctl options needs
-#     rootflags=subvol=@root
-#   added to it in order for systemd-boot to work
-# - also need to install btrfs-progs,
-#   or add it when pacstrapping
