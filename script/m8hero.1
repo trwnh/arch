@@ -95,8 +95,12 @@ timeout 0
 editor yes
 " >> /boot/loader/loader.conf
 echo "Bootloader installed."
+echo "Exiting chroot..."
+EOF
 
 read -p "To avoid having passwd timeout, press [enter] to continue when you're ready to input:" waitforinput
+
+arch-chroot /mnt /bin/bash <<EOF
 echo "Set a root password."
 passwd
 # (set root password)
@@ -110,8 +114,5 @@ passwd $USER
 echo "Installing AUR helper..."
 sudo -Siu $USER bash 'git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -sic --noconfirm && yay --nodiffmenu --save'
 rm -r /home/$USER/yay
-
-echo "Exiting chroot..."
-EOF
 
 echo "Arch Linux is now installed. You can now unmount and reboot."
