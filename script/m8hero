@@ -109,7 +109,15 @@ echo "Created user $USERNAME."
 arch-chroot /mnt passwd $USERNAME
 
 echo "Installing AUR helper..."
-sudo -Siu $USER bash 'git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -sic --noconfirm && yay --nodiffmenu --save'
-rm -r /home/$USER/yay
+arch-chroot /mnt /bin/bash <<EOF
+git clone https://aur.archlinux.org/yay-bin.git
+chmod -R 777 /yay-bin
+cd /yay-bin
+sudo -u $USERNAME makepkg -si --noconfirm
+yay --nodiffmenu --save
+cd ..
+rm -r /yay-bin
+exit
+EOF
 
 echo "Arch Linux is now installed. You can now unmount and reboot."
