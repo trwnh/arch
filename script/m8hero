@@ -120,4 +120,4 @@ rm -r /yay-bin
 exit
 EOF
 
-echo "Arch Linux is now installed. You can now unmount and reboot."
+echo "Installation finished! You can now unmount and reboot."
