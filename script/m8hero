@@ -7,7 +7,16 @@ ntfs-3g exfat-utils dosfstools
 cups cups-pdf
 networkmanager nm-connection-editor
 git openssh wget zip unzip unrar nmap htop
-xfce4 xfce4-goodies lightdm
+xfce4 xfce4-goodies lightdm plank
+gvfs
+materia-gtk-theme kvantum-qt5 kvantum-theme-materia 
+ttf-roboto noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra otf-fira-code
+quassel-client
+mpv 
+"
+AUR="
+firefox-developer-edition
+dino-git
 "
 HOSTNAME=desktop
 USERNAME=trwnh
