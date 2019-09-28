@@ -106,17 +106,6 @@ arch-chroot /mnt useradd -m -g users -G wheel,ftp,http,sys -s /bin/bash "$USERNA
 echo "Created user $USERNAME."
 arch-chroot /mnt passwd $USERNAME
 
-echo "Installing AUR helper..."
-arch-chroot /mnt /bin/bash <<EOF
-git clone https://aur.archlinux.org/yay-bin.git
-chmod -R 777 /yay-bin
-cd /yay-bin
-sudo -u $USERNAME makepkg -si --noconfirm
-cd ..
-rm -r /yay-bin
-exit
-EOF
-
 echo -n "Enabling system services..."
 arch-chroot /mnt /bin/bash <<EOF
 systemctl enable NetworkManager
@@ -131,7 +120,18 @@ sed -i '/SystemGroup\ssys\sroot/s/root/wheel/g' /mnt/etc/cups/cups-files.conf
 sed -i '/#Color/s/^#//g' /mnt/etc/pacman.conf
 sed -i '/#\s%wheel\sALL=(ALL)\sALL/s/^#//g' /mnt/etc/sudoers
 echo "EDITOR=nano" > /mnt/etc/environment
-
 echo "done."
+
+
+echo "Installing AUR helper..."
+arch-chroot /mnt /bin/bash <<EOF
+git clone https://aur.archlinux.org/yay-bin.git
+chmod -R 777 /yay-bin
+cd /yay-bin
+sudo -u $USERNAME makepkg -si --noconfirm
+cd ..
+rm -r /yay-bin
+exit
+EOF
 
 echo "Installation finished! You can now unmount and reboot."
