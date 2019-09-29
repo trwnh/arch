@@ -13,9 +13,8 @@ materia-gtk-theme kvantum-qt5 kvantum-theme-materia
 faenza-icon-theme papirus-icon-theme
 ttf-roboto noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra otf-fira-code
 quassel-client
-mpv
 nvidia-settings
-pulseaudio pulseaudio-alsa
+pulseaudio pulseaudio-alsa mpv obs-studio
 "
 AUR="
 firefox-developer-edition
