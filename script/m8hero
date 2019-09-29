@@ -3,23 +3,23 @@
 PACKAGES="
 base base-devel
 intel-ucode vulkan-intel nvidia
+git openssh wget zip unzip unrar nmap htop asp
 ntfs-3g exfat-utils dosfstools
 cups cups-pdf
-networkmanager nm-connection-editor
-git openssh wget zip unzip unrar nmap htop asp
-xfce4 xfce4-goodies lightdm lightdm-gtk-greeter plank
-gvfs
-materia-gtk-theme kvantum-qt5 kvantum-theme-materia 
-faenza-icon-theme papirus-icon-theme
+networkmanager
+xfce4 xfce4-goodies lightdm lightdm-gtk-greeter plank gvfs
+materia-gtk-theme kvantum-qt5 kvantum-theme-materia faenza-icon-theme papirus-icon-theme
 ttf-roboto noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra otf-fira-code
+pulseaudio pulseaudio-alsa mpv
+nvidia-settings nm-connection-editor
+obs-studio libva-intel-driver libva-mesa-driver vlc libmicrodns srt libnfs libshout aalib chromaprint projectm
 quassel-client
-nvidia-settings
-pulseaudio pulseaudio-alsa mpv obs-studio
 "
 AUR="
 firefox-developer-edition
 dino-git
 enpass-bin
+discord
 "
 HOSTNAME=desktop
 USERNAME=trwnh
