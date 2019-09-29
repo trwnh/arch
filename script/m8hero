@@ -7,7 +7,7 @@ ntfs-3g exfat-utils dosfstools
 cups cups-pdf
 networkmanager nm-connection-editor
 git openssh wget zip unzip unrar nmap htop asp
-xfce4 xfce4-goodies lightdm plank
+xfce4 xfce4-goodies lightdm lightdm-gtk-greeter plank
 gvfs
 materia-gtk-theme kvantum-qt5 kvantum-theme-materia 
 faenza-icon-theme papirus-icon-theme
@@ -15,6 +15,7 @@ ttf-roboto noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra otf-fira-
 quassel-client
 mpv
 nvidia-settings
+pulseaudio pulseaudio-alsa
 "
 AUR="
 firefox-developer-edition
@@ -120,6 +121,7 @@ sed -i '/SystemGroup\ssys\sroot/s/root/wheel/g' /mnt/etc/cups/cups-files.conf
 sed -i '/#Color/s/^#//g' /mnt/etc/pacman.conf
 sed -i '/#\s%wheel\sALL=(ALL)\sALL/s/^#//g' /mnt/etc/sudoers
 echo "EDITOR=nano" > /mnt/etc/environment
+sed -i '/#greeter-session=example-gtk-gnome/greeter-session=lightdm-gtk-greeter/g' /mnt/etc/lightdm/lightdm.conf
 echo "done."
 
 
