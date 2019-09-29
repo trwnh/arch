@@ -13,6 +13,8 @@ ttf-roboto noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra otf-fira-
 pulseaudio pulseaudio-alsa mpv
 nvidia-settings nm-connection-editor
 obs-studio libva-intel-driver libva-mesa-driver vlc libmicrodns srt libnfs libshout aalib chromaprint projectm
+krita gimp inkscape
+texlive-most texmaker
 quassel-client
 "
 AUR="
