@@ -15,7 +15,7 @@ nvidia-settings nm-connection-editor
 obs-studio libva-intel-driver libva-mesa-driver vlc libmicrodns srt libnfs libshout aalib chromaprint projectm
 krita gimp inkscape
 texlive-most texmaker
-quassel-client
+quassel-client claws-mail
 "
 AUR="
 firefox-developer-edition
