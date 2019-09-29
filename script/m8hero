@@ -6,7 +6,7 @@ intel-ucode vulkan-intel nvidia
 ntfs-3g exfat-utils dosfstools
 cups cups-pdf
 networkmanager nm-connection-editor
-git openssh wget zip unzip unrar nmap htop
+git openssh wget zip unzip unrar nmap htop asp
 xfce4 xfce4-goodies lightdm plank
 gvfs
 materia-gtk-theme kvantum-qt5 kvantum-theme-materia 
@@ -132,6 +132,18 @@ sudo -u $USERNAME makepkg -si --noconfirm
 cd ..
 rm -r /yay-bin
 exit
+EOF
+
+echo "Installing unofficial packages..."
+arch-chroot /mnt /bin/bash <<EOF
+sudo -u $USERNAME yay -S --noconfirm $AUR
+abs checkout pavucontrol
+cd /pavucontrol/trunk
+sed -i 's/pkgver=4\.0/pkgver=3\.0/g' PKGBUILD
+sed -i 's/_commit=.*/_commit=4dd4c0fb693f33a37156703a2754cc237cd08fc1' PKGBUILD
+sudo -u $USERNAME makepkg -si --noconfirm
+cd /
+rm -r /pavucontrol
 EOF
 
 echo "Installation finished! You can now unmount and reboot."
