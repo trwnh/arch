@@ -4,9 +4,16 @@ import sys
 import requests
 import pprint
 
-ACCEPT_JSONLD_AS2 = {'Accept': 'application/ld+json; profile="https://www.w3.org/ns/activitystreams"'} 
-uri = sys.argv[1]
-response = requests.get(uri,headers=ACCEPT_JSONLD_AS2)
-as2 = response.json()
+ACCEPT_JSONLD_AS2 = {'Accept': 'application/ld+json;profile="https://www.w3.org/ns/activitystreams"'}
+ACCEPT_JSONAS2 = {'Accept': 'application/activity+json'}
 
-pprint.PrettyPrinter(indent=2).pprint(as2)
+uri = sys.argv[1]
+
+try:
+  response = requests.get(uri,headers=ACCEPT_JSONAS2) # Misskey *only* does this, ugh
+  json = response.json()
+except:
+  response = requests.get(uri,headers=ACCEPT_JSONLD_AS2) # This is technically a MUST
+  json = response.json()
+
+pprint.PrettyPrinter(indent=2).pprint(json)
