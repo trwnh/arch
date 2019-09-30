@@ -1,0 +1,12 @@
+#!/bin/python
+
+import sys
+import requests
+import pprint
+
+ACCEPT_JSONLD_AS2 = {'Accept': 'application/ld+json; profile="https://www.w3.org/ns/activitystreams"'} 
+uri = sys.argv[1]
+response = requests.get(uri,headers=ACCEPT_JSONLD_AS2)
+as2 = response.json()
+
+pprint.PrettyPrinter(indent=2).pprint(as2)
