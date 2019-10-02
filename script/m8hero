@@ -123,6 +123,11 @@ sed -i '/#Color/s/^#//g' /mnt/etc/pacman.conf
 sed -i '/#\s%wheel\sALL=(ALL)\sALL/s/^#//g' /mnt/etc/sudoers
 echo "EDITOR=nano" > /mnt/etc/environment
 sed -i 's/#greeter-session=example-gtk-gnome/greeter-session=lightdm-gtk-greeter/g' /mnt/etc/lightdm/lightdm.conf
+arch-chroot /mnt /bin/bash <<EOF
+sudo -u $USERNAME git config --global user.name trwnh
+sudo -u $USERNAME git config --global user.email a@trwnh.com
+sudo -u $USERNAME git config --global credential.helper store
+EOF
 echo "done."
 
 
@@ -148,5 +153,6 @@ sudo -u $USERNAME makepkg -si --noconfirm
 cd /
 rm -r /pavucontrol
 EOF
+sed -i 's/#IgnorePkg   =/IgnorePkg = pavucontrol/g' /mnt/etc/pacman.conf
 
 echo "Installation finished! You can now unmount and reboot."
