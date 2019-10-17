@@ -138,6 +138,8 @@ cd /yay-bin
 sudo -u $USERNAME makepkg -si --noconfirm
 cd ..
 rm -r /yay-bin
+sudo -u $USERNAME yay --gendb
+sudo -u $USERNAME yay --devel --nodiff --save
 exit
 EOF
 
