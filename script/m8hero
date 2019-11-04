@@ -11,7 +11,7 @@ xfce4 xfce4-goodies lightdm lightdm-gtk-greeter plank gvfs
 materia-gtk-theme kvantum-qt5 kvantum-theme-materia faenza-icon-theme papirus-icon-theme
 ttf-roboto noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra otf-fira-code
 pulseaudio pulseaudio-alsa mpv
-nvidia-settings nm-connection-editor
+nvidia-settings nm-connection-editor pavucontrol
 obs-studio libva-intel-driver libva-mesa-driver vlc libmicrodns srt libnfs libshout aalib chromaprint projectm
 krita gimp inkscape
 texlive-most texmaker
