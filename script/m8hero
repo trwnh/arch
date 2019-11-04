@@ -16,6 +16,7 @@ obs-studio libva-intel-driver libva-mesa-driver vlc libmicrodns srt libnfs libsh
 krita gimp inkscape
 texlive-most texmaker
 quassel-client claws-mail
+youtube-dl
 "
 AUR="
 firefox-developer-edition
