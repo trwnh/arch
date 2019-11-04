@@ -139,7 +139,13 @@ sudo -u $USERNAME makepkg -si --noconfirm
 cd ..
 rm -r /yay-bin
 sudo -u $USERNAME yay --gendb
-sudo -u $USERNAME yay --devel --nodiff --save
+sudo -u $USERNAME yay --devel --nodiffmenu --save
+exit
+EOF
+
+echo "Installing AUR packages..."
+arch-chroot /mnt /bin/bash <<EOF
+sudo -u $USERNAME yay -S $AUR
 exit
 EOF
 
