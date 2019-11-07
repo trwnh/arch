@@ -1,9 +1,9 @@
 #!/bin/bash
 
 PACKAGES="
-base base-devel realtime-privileges
+base base-devel realtime-privileges linux
 intel-ucode vulkan-intel nvidia
-git openssh wget zip unzip unrar nmap htop asp
+git openssh wget zip unzip unrar nmap htop asp nano
 ntfs-3g exfat-utils dosfstools
 cups cups-pdf
 networkmanager
