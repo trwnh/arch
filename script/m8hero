@@ -13,9 +13,9 @@ ttf-roboto noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra otf-fira-
 pulseaudio pulseaudio-alsa mpv
 nvidia-settings nm-connection-editor pavucontrol
 obs-studio libva-intel-driver libva-mesa-driver vlc libmicrodns srt libnfs libshout aalib chromaprint projectm
-krita gimp inkscape
+krita gimp inkscape sweethome3d
 texlive-most texmaker
-quassel-client claws-mail
+quassel-client telegram-desktop claws-mail
 youtube-dl
 "
 AUR="
@@ -23,6 +23,7 @@ firefox-developer-edition
 dino-git
 enpass-bin
 discord
+mpc-qt
 "
 HOSTNAME=desktop
 USERNAME=trwnh
