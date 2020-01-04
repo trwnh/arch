@@ -124,6 +124,7 @@ sed -i '/SystemGroup\ssys\sroot/s/root/wheel/g' /mnt/etc/cups/cups-files.conf
 sed -i '/#Color/s/^#//g' /mnt/etc/pacman.conf
 sed -i '/#\s%wheel\sALL=(ALL)\sALL/s/^#//g' /mnt/etc/sudoers
 echo "EDITOR=nano" > /mnt/etc/environment
+echo "SWEETHOME3D_JAVA3D=1.5" >> /mnt/etc/environment
 sed -i 's/#greeter-session=example-gtk-gnome/greeter-session=lightdm-gtk-greeter/g' /mnt/etc/lightdm/lightdm.conf
 arch-chroot /mnt /bin/bash <<EOF
 sudo -u $USERNAME git config --global user.name trwnh
