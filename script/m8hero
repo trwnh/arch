@@ -1,9 +1,10 @@
 #!/bin/bash
 
 PACKAGES="
-base base-devel realtime-privileges linux
-intel-ucode vulkan-intel nvidia
-git openssh wget zip unzip unrar nmap htop asp nano
+base base-devel realtime-privileges linux linux-lts
+intel-ucode vulkan-intel
+mesa vulkan-radeon mesa-vdpau
+git openssh wget zip unzip unrar nmap htop asp nano reflector
 ntfs-3g exfat-utils dosfstools
 cups cups-pdf
 networkmanager
@@ -11,7 +12,7 @@ xfce4 xfce4-goodies lightdm lightdm-gtk-greeter plank gvfs
 materia-gtk-theme kvantum-qt5 kvantum-theme-materia faenza-icon-theme papirus-icon-theme
 ttf-roboto noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra otf-fira-code
 pulseaudio pulseaudio-alsa mpv
-nvidia-settings nm-connection-editor pavucontrol
+nm-connection-editor pavucontrol
 obs-studio libva-intel-driver libva-mesa-driver vlc libmicrodns srt libnfs libshout aalib chromaprint projectm
 krita gimp inkscape sweethome3d pitivi
 texlive-most texmaker
@@ -24,6 +25,15 @@ dino-git
 enpass-bin
 discord
 mpc-qt
+"
+STEAM="
+steam
+ttf-liberation
+xf86-video-amdgpu
+lib32-mesa
+lib32-vulkan-radeon
+lib32-libva-mesa-driver
+lib32-mesa-vdpau
 "
 HOSTNAME=desktop
 USERNAME=trwnh
@@ -95,6 +105,13 @@ initrd /intel-ucode.img
 initrd /initramfs-linux.img
 options root=LABEL=Arch rw
 EOF
+cat <<EOF > /mnt/boot/loader/entries/arch.conf
+title Arch Linux (LTS)
+linux /vmlinuz-linux-lts
+initrd /intel-ucode.img
+initrd /initramfs-linux-lts.img
+options root=LABEL=Arch rw
+EOF
 cat <<EOF > /mnt/boot/loader/loader.conf
 default arch
 timeout 0
@@ -147,9 +164,19 @@ exit
 EOF
 
 echo "Installing AUR packages..."
+sed -i "/\[multilib\]/,/Include/"'s/^#//' /mnt/etc/pacman.conf
 arch-chroot /mnt /bin/bash <<EOF
 sudo -u $USERNAME yay -S $AUR
 exit
 EOF
+
+echo "Enabling Early KMS for GPU..."
+sed -i '/MODULES=\(\)/s/\(\)/\(amdgpu i915\)/g' /mnt/etc/pacman.conf
+arch-chroot /mnt /bin/bash <<EOF
+mkinitcpio -p linux
+mkinitcpio -p linux-lts
+exit
+EOF
+
 
 echo "Installation finished! You can now unmount and reboot."
