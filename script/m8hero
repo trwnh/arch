@@ -8,7 +8,7 @@ git openssh wget zip unzip unrar nmap htop asp nano reflector
 ntfs-3g exfat-utils dosfstools
 cups cups-pdf
 networkmanager
-xfce4 xfce4-goodies lightdm lightdm-gtk-greeter plank gvfs
+xorg-server xfce4 xfce4-goodies lightdm lightdm-gtk-greeter plank gvfs
 materia-gtk-theme kvantum-qt5 kvantum-theme-materia faenza-icon-theme papirus-icon-theme
 ttf-roboto noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra otf-fira-code
 pulseaudio pulseaudio-alsa mpv
@@ -169,7 +169,7 @@ EOF
 echo "Installing AUR packages..."
 sed -i "/\[multilib\]/,/Include/"'s/^#//' /mnt/etc/pacman.conf
 arch-chroot /mnt /bin/bash <<EOF
-sudo -u $USERNAME yay -S $AUR $STEAM
+sudo -u $USERNAME yay -S $AUR
 exit
 EOF
 
