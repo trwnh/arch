@@ -169,7 +169,7 @@ EOF
 echo "Installing AUR packages..."
 sed -i "/\[multilib\]/,/Include/"'s/^#//' /mnt/etc/pacman.conf
 arch-chroot /mnt /bin/bash <<EOF
-sudo -u $USERNAME yay -S $AUR
+sudo -u $USERNAME yay -S $AUR $STEAM
 exit
 EOF
 
