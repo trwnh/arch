@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PACKAGES="
-base base-devel realtime-privileges linux linux-lts
+base base-devel realtime-privileges linux linux-lts linux-headers linux-firmware linux-lts-headers
 intel-ucode vulkan-intel
 mesa vulkan-radeon mesa-vdpau
 git openssh wget zip unzip unrar nmap htop asp nano reflector
@@ -174,7 +174,7 @@ exit
 EOF
 
 echo "Enabling Early KMS for GPU..."
-sed -i '/MODULES=\(\)/s/\(\)/\(amdgpu i915\)/g' /mnt/etc/pacman.conf
+sed -i 's/MODULES=\(\)/MODULES=(i915 amdgpu)/g' /mnt/etc/pacman.conf
 arch-chroot /mnt /bin/bash <<EOF
 mkinitcpio -p linux
 mkinitcpio -p linux-lts
