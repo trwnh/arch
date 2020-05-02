@@ -108,7 +108,7 @@ initrd /intel-ucode.img
 initrd /initramfs-linux.img
 options root=LABEL=Arch rw
 EOF
-cat <<EOF > /mnt/boot/loader/entries/arch.conf
+cat <<EOF > /mnt/boot/loader/entries/arch-lts.conf
 title Arch Linux (LTS)
 linux /vmlinuz-linux-lts
 initrd /intel-ucode.img
