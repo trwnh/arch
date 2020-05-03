@@ -37,6 +37,7 @@ foobar2000
 mp3tag
 gtk3-nocsd-git
 decklink
+xmousepasteblock-git
 "
 HOSTNAME=desktop
 USERNAME=trwnh
