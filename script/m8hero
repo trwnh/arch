@@ -65,6 +65,8 @@ echo "Drive setup done."
 lsblk -f $ROOTDEV
 read -p "Does this look right? Hit [enter] to move on if so, otherwise quit and start over" CONFIRM
 
+read -p "Enter a password:" $PASSWORD
+
 echo "Updating pacman mirrorlist..."
 pacman -Sy
 pacman -S reflector --noconfirm
@@ -125,11 +127,11 @@ echo "Loader files written."
 
 read -p "To avoid having passwd timeout, press [enter] to continue when you're ready to input:" waitforinput
 
-echo "Set a root password."
-arch-chroot /mnt passwd
+echo "Setting up users..."
 arch-chroot /mnt useradd -m -g users -G wheel,ftp,http,sys,audio,realtime -s /bin/bash "$USERNAME"
 echo "Created user $USERNAME."
-arch-chroot /mnt passwd $USERNAME
+arch-chroot /mnt echo "$USERNAME:$PASSWORD" | chpasswd
+arch-chroot /mnt echo "root:$PASSWORD" | chpasswd
 
 echo -n "Enabling system services..."
 arch-chroot /mnt /bin/bash <<EOF
