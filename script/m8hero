@@ -1,6 +1,5 @@
 #!/bin/bash
-
-PACKAGES="
+BASE="
 base base-devel realtime-privileges linux linux-lts linux-headers linux-firmware linux-lts-headers
 intel-ucode vulkan-intel
 mesa vulkan-radeon mesa-vdpau
@@ -18,7 +17,15 @@ krita gimp inkscape sweethome3d pitivi
 texlive-most texmaker code  
 quassel-client telegram-desktop claws-mail
 youtube-dl
-transmission-remote-gtk
+transmission-remote-gtk syncthing syncthing-gtk
+steam
+proton
+ttf-liberation
+xf86-video-amdgpu
+lib32-mesa
+lib32-vulkan-radeon
+lib32-libva-mesa-driver
+lib32-mesa-vdpau
 "
 AUR="
 firefox-developer-edition
@@ -29,15 +36,7 @@ mpc-qt
 foobar2000
 mp3tag
 gtk3-nocsd-git
-"
-STEAM="
-steam
-ttf-liberation
-xf86-video-amdgpu
-lib32-mesa
-lib32-vulkan-radeon
-lib32-libva-mesa-driver
-lib32-mesa-vdpau
+decklink
 "
 HOSTNAME=desktop
 USERNAME=trwnh
@@ -73,7 +72,7 @@ reflector --country 'US' -p https --sort rate --save /etc/pacman.d/mirrorlist
 echo "Pacman mirrors synced and sorted."
 
 echo "Bootstrapping mounted system..."
-pacstrap /mnt $PACKAGES
+pacstrap /mnt $BASE
 echo "Packages installed."
 
 echo "Generating filesystem mount table... "
@@ -147,6 +146,7 @@ sed -i '/#\s%wheel\sALL=(ALL)\sALL/s/^#//g' /mnt/etc/sudoers
 echo "EDITOR=nano" > /mnt/etc/environment
 echo "SWEETHOME3D_JAVA3D=1.5" >> /mnt/etc/environment
 sed -i 's/#greeter-session=example-gtk-gnome/greeter-session=lightdm-gtk-greeter/g' /mnt/etc/lightdm/lightdm.conf
+sed -i "/\[multilib\]/,/Include/"'s/^#//' /mnt/etc/pacman.conf
 arch-chroot /mnt /bin/bash <<EOF
 sudo -u $USERNAME git config --global user.name trwnh
 sudo -u $USERNAME git config --global user.email a@trwnh.com
@@ -168,7 +168,6 @@ exit
 EOF
 
 echo "Installing AUR packages..."
-sed -i "/\[multilib\]/,/Include/"'s/^#//' /mnt/etc/pacman.conf
 arch-chroot /mnt /bin/bash <<EOF
 sudo -u $USERNAME yay -S $AUR
 exit
