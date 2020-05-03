@@ -28,6 +28,7 @@ discord
 mpc-qt
 foobar2000
 mp3tag
+gtk3-nocsd-git
 "
 STEAM="
 steam
