@@ -1,38 +1,26 @@
 #!/bin/bash
 BASE="
 base base-devel realtime-privileges linux linux-lts linux-headers linux-firmware linux-lts-headers
-intel-ucode vulkan-intel
-mesa vulkan-radeon mesa-vdpau
+intel-ucode vulkan-intel mesa vulkan-radeon mesa-vdpau
 git openssh wget zip unzip unrar nmap htop asp nano reflector
 ntfs-3g exfat-utils dosfstools
 cups cups-pdf
-networkmanager nfs-utils
+networkmanager nfs-utils nm-connection-editor
 xorg-server xfce4 xfce4-goodies lightdm lightdm-gtk-greeter plank gvfs gvfs-nfs
 materia-gtk-theme kvantum-qt5 kvantum-theme-materia faenza-icon-theme papirus-icon-theme
 ttf-roboto noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra otf-fira-code
-pulseaudio pulseaudio-alsa mpv
-nm-connection-editor pavucontrol
+pulseaudio pulseaudio-alsa pavucontrol mpv youtube-dl
+firefox-developer-edition
 obs-studio libva-intel-driver libva-mesa-driver vlc libmicrodns srt libnfs libshout aalib chromaprint projectm
 krita gimp inkscape sweethome3d pitivi
-texlive-most texmaker code  
-quassel-client telegram-desktop claws-mail
-youtube-dl
-transmission-remote-gtk syncthing syncthing-gtk
-steam
-proton
-ttf-liberation
-xf86-video-amdgpu
-lib32-mesa
-lib32-vulkan-radeon
-lib32-libva-mesa-driver
-lib32-mesa-vdpau
+texlive-most texmaker code
+quassel-client telegram-desktop claws-mail discord
+syncthing syncthing-gtk transmission-remote-gtk
+steam proton ttf-liberation xf86-video-amdgpu lib32-mesa lib32-vulkan-radeon lib32-libva-mesa-driver lib32-mesa-vdpau
 "
 AUR="
-firefox-developer-edition
 dino-git
 enpass-bin
-discord
-mpc-qt
 foobar2000
 mp3tag
 gtk3-nocsd-git
