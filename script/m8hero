@@ -29,6 +29,7 @@ xmousepasteblock-git
 "
 HOSTNAME=desktop
 USERNAME=trwnh
+read -p "Enter a password:" $PASSWORD
 
 timedatectl set-ntp true
 
@@ -52,8 +53,6 @@ echo "Drive setup done."
 
 lsblk -f $ROOTDEV
 read -p "Does this look right? Hit [enter] to move on if so, otherwise quit and start over" CONFIRM
-
-read -p "Enter a password:" $PASSWORD
 
 echo "Updating pacman mirrorlist..."
 pacman -Sy
@@ -171,6 +170,5 @@ mkinitcpio -p linux
 mkinitcpio -p linux-lts
 exit
 EOF
-
 
 echo "Installation finished! You can now unmount and reboot."
