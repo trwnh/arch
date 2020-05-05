@@ -12,7 +12,7 @@ ttf-roboto noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra otf-fira-
 pulseaudio pulseaudio-alsa pavucontrol mpv youtube-dl
 firefox-developer-edition
 obs-studio libva-intel-driver libva-mesa-driver vlc libmicrodns srt libnfs libshout aalib chromaprint projectm
-krita gimp inkscape sweethome3d pitivi
+krita gimp inkscape sweethome3d pitivi audacity
 texlive-most texmaker code
 quassel-client telegram-desktop claws-mail discord
 syncthing syncthing-gtk transmission-remote-gtk
