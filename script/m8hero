@@ -6,7 +6,7 @@ git openssh wget zip unzip unrar nmap htop asp nano reflector
 ntfs-3g exfat-utils dosfstools
 cups cups-pdf
 networkmanager nfs-utils nm-connection-editor
-xorg-server xfce4 xfce4-goodies lightdm lightdm-gtk-greeter plank gvfs gvfs-nfs
+xorg-server xfce4 xfce4-goodies lightdm lightdm-gtk-greeter plank gvfs gvfs-nfs gvfs-mtp file-roller
 materia-gtk-theme kvantum-qt5 kvantum-theme-materia faenza-icon-theme papirus-icon-theme
 ttf-roboto noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra otf-fira-code
 pulseaudio pulseaudio-alsa pavucontrol mpv youtube-dl
