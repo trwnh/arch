@@ -6,7 +6,7 @@ git openssh wget zip unzip unrar nmap htop asp nano reflector
 ntfs-3g exfat-utils dosfstools
 cups cups-pdf
 networkmanager nfs-utils nm-connection-editor
-xorg-server xfce4 xfce4-goodies lightdm lightdm-gtk-greeter plank gvfs gvfs-nfs gvfs-mtp file-roller
+xorg-server xfce4 xfce4-goodies plank gvfs gvfs-nfs gvfs-mtp file-roller
 materia-gtk-theme kvantum-qt5 kvantum-theme-materia faenza-icon-theme papirus-icon-theme
 ttf-roboto noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra otf-fira-code
 pulseaudio pulseaudio-alsa pavucontrol mpv youtube-dl
@@ -126,7 +126,6 @@ arch-chroot /mnt /bin/bash <<EOF
 systemctl enable NetworkManager
 systemctl enable systemd-timesyncd
 systemctl enable org.cups.cupsd
-systemctl enable lightdm
 EOF
 echo "done."
 
@@ -136,7 +135,6 @@ sed -i '/#Color/s/^#//g' /mnt/etc/pacman.conf
 sed -i '/#\s%wheel\sALL=(ALL)\sALL/s/^#//g' /mnt/etc/sudoers
 echo "EDITOR=nano" > /mnt/etc/environment
 echo "SWEETHOME3D_JAVA3D=1.5" >> /mnt/etc/environment
-sed -i 's/#greeter-session=example-gtk-gnome/greeter-session=lightdm-gtk-greeter/g' /mnt/etc/lightdm/lightdm.conf
 sed -i "/\[multilib\]/,/Include/"'s/^#//' /mnt/etc/pacman.conf
 arch-chroot /mnt /bin/bash <<EOF
 sudo -u $USERNAME git config --global user.name trwnh
