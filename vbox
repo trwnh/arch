@@ -5,6 +5,11 @@ mkfs.ext4 /dev/sda2
 mount /dev/sda2 /mnt
 mkdir /mnt/boot
 mount /dev/sda1 /mnt/boot
+
+pacman -Sy
+pacman -S reflector
+reflector --country 'US' -p http --sort rate --save /etc/pacman.d/mirrorlist
+
 pacstrap /mnt base base-devel linux linux-firmware nano sudo grub efibootmgr
 
 genfstab -U -p /mnt >> /mnt/etc/fstab
