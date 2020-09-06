@@ -1,0 +1,26 @@
+parted mklabel /dev/sda gpt
+cfdisk    # 512M sda1, 9.5G sda2
+mkfs.fat /dev/sda1
+mkfs.ext4 /dev/sda2
+mount /dev/sda2 /mnt
+mkdir /mnt/boot
+mount /dev/sda1 /mnt/boot
+pacstrap /mnt base base-devel linux linux-firmware nano sudo grub efibootmgr
+
+genfstab -U -p /mnt >> /mnt/etc/fstab
+arch-chroot /mnt
+
+echo en_US.UTF-8 > /etc/locale.gen
+locale-gen
+timedatectl set-ntp true
+timedatectl set-timezone America/Chicago
+passwd root
+useradd -m -g users -G wheel -s /bin/bash trwnh
+passwd trwnh
+nano /etc/sudoers
+hostnamectl set-hostname arch-vbox
+
+grub-install /dev/sda --target=x86_64-efi --efi-directory=/boot
+exit
+umount -r /mnt
+shutdown -r now
