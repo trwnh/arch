@@ -1,4 +1,4 @@
-parted mklabel /dev/sda gpt
+parted /dev/sda mklabel gpt
 cfdisk    # 512M sda1, 9.5G sda2
 mkfs.fat /dev/sda1
 mkfs.ext4 /dev/sda2
