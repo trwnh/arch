@@ -1,4 +1,5 @@
 #!/bin/bash
+# $ iwctl --passphrase {PASSPHRASE} station wlan0 connect {SSID}
 BASE="
 base base-devel linux linux-lts linux-headers linux-lts-headers
 nano openssh wget git zip unzip unrar nmap htop
