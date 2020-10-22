@@ -19,7 +19,6 @@ ttf-fira-code otf-fira-sans otf-fira-mono ttf-inconsolata
 adobe-source-code-pro-fonts adobe-source-sans-pro-fonts adobe-source-serif-pro-fonts
 "
 AUR="
-iwlwifi iwlwifi-7265-ucode
 noto-fonts-emoji-blob ttf-roboto-slab ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-sil-scheherazade
 rofi-dmenu
 dino-git enpass-bin gtk3-nocsd-git xmousepasteblock-git
