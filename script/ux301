@@ -159,7 +159,7 @@ ln -s /mnt/storage/$USER/bashrc /mnt/home/$USER/.bashrc
 ln -s /mnt/storage/$USER/mozilla /mnt/home/$USER/.mozilla
 ln -s /mnt/storage/trwnh/sway /mnt/home/trwnh/.config/sway
 ln -s /mnt/storage/trwnh/waybar /mnt/home/trwnh/.config/waybar
-  curl https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-734403.jpg -o /mnt/home/trwnh/.config/sway/wallpaper.jpg
+curl https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-734403.jpg -o /mnt/home/trwnh/.config/sway/wallpaper.jpg
 
 echo "Installing AUR helper..."
 arch-chroot /mnt /bin/bash <<EOF
