@@ -117,7 +117,7 @@ read -p "To avoid having passwd timeout, press [enter] to continue when you're r
 
 echo "Setting up users..."
 arch-chroot /mnt useradd -m -g users -G wheel,ftp,http,sys,audio,realtime -s /bin/bash "$USERNAME"
-mkdir -p /mnt/home/$USERNAME
+ln -s /mnt/storage/home/trwnh /mnt/home/trwnh
 echo "Created user $USERNAME."
 arch-chroot /mnt echo "$USERNAME:$PASSWORD" | chpasswd
 arch-chroot /mnt echo "root:$PASSWORD" | chpasswd
@@ -145,22 +145,6 @@ sudo -u $USERNAME git config --global user.email a@trwnh.com
 sudo -u $USERNAME git config --global credential.helper store
 EOF
 echo "done."
-
-echo "Symlinking from storage drive..."
-
-ln -s /mnt/storage/Documents /mnt/home/$USERNAME/Documents
-ln -s /mnt/storage/Downloads /mnt/home/$USERNAME/Downloads
-ln -s /mnt/storage/Music /mnt/home/$USERNAME/Music
-ln -s /mnt/storage/Pictures /mnt/home/$USERNAME/Pictures
-ln -s /mnt/storage/Videos /mnt/home/$USERNAME/Videos
-ln -s /mnt/storage/$USER/bin /mnt/home/$USER/bin
-ln -s /mnt/storage/$USER/ssh /mnt/home/$USER/.ssh
-ln -s /mnt/storage/$USER/bashrc /mnt/home/$USER/.bashrc
-ln -s /mnt/storage/$USER/mozilla /mnt/home/$USER/.mozilla
-mkdir -p /mnt/home/trwnh/.config
-ln -s /mnt/storage/trwnh/sway /mnt/home/trwnh/.config/sway
-ln -s /mnt/storage/trwnh/waybar /mnt/home/trwnh/.config/waybar
-curl https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-734403.jpg -o /mnt/home/trwnh/.config/sway/wallpaper.jpg
 
 echo "Installing AUR helper..."
 arch-chroot /mnt /bin/bash <<EOF
