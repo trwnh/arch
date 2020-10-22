@@ -9,7 +9,8 @@ pulseaudio pulseaudio-alsa pulseaudio-bluetooth pavucontrol
 cups cups-pdf
 ntfs-3g exfat-utils android-tools android-udev
 terminus-font
-sway wayland xorg-server-xwayland qt5-wayland brightnessctl mako slurp grim jq wl-clipboard waybar imv mpv rofi xfce4-terminal thunar file-roller polkit-gnome
+sway wayland xorg-server-xwayland qt5-wayland brightnessctl mako slurp grim jq wl-clipboard waybar ttf-nerd-fonts-symbols
+imv mpv rofi xfce4-terminal thunar file-roller polkit-gnome
 gimp krita inkscape blender pitivi audacity
 obs-studio libva-intel-driver libva-mesa-driver vlc libmicrodns srt libnfs libshout aalib chromaprint projectm
 firefox-developer-edition chromium youtube-dl code quassel-client discord telegram-desktop
