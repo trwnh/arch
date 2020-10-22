@@ -1,7 +1,7 @@
 #!/bin/bash
 # $ iwctl --passphrase {PASSPHRASE} station wlan0 connect {SSID}
 BASE="
-base base-devel linux linux-lts linux-headers linux-lts-headers
+base base-devel linux linux-lts linux-headers linux-lts-headers realtime-privileges
 bash nano openssh wget git zip unzip unrar nmap htop
 intel-ucode vulkan-intel acpi bluez powertop
 networkmanager nm-connection-editor
