@@ -28,7 +28,8 @@ checkra1n-cli
 HOSTNAME=ux301
 USERNAME=trwnh
 setfont latarcyrheb-sun32
-read -p "Enter a password:" $PASSWORD
+echo "Enter a password:"
+read -s PASSWORD
 
 timedatectl set-ntp true
 
