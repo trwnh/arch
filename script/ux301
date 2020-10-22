@@ -122,18 +122,18 @@ arch-chroot /mnt echo "$USERNAME:$PASSWORD" | chpasswd
 arch-chroot /mnt echo "root:$PASSWORD" | chpasswd
 
 echo "Symlinking from storage drive..."
-ln -s /mnt/storage/Documents /mnt/home/$USERNAME/Documents
-ln -s /mnt/storage/Downloads /mnt/home/$USERNAME/Downloads
-ln -s /mnt/storage/Music /mnt/home/$USERNAME/Music
-ln -s /mnt/storage/Pictures /mnt/home/$USERNAME/Pictures
-ln -s /mnt/storage/Videos /mnt/home/$USERNAME/Videos
-ln -s /mnt/storage/$USER/bin /mnt/home/$USER/bin
-ln -s /mnt/storage/$USER/ssh /mnt/home/$USER/.ssh
-ln -s /mnt/storage/$USER/bashrc /mnt/home/$USER/.bashrc
-ln -s /mnt/storage/$USER/mozilla /mnt/home/$USER/.mozilla
+arch-chroot /mnt ln -s /storage/Documents /home/$USERNAME/Documents
+arch-chroot /mnt ln -s /storage/Downloads /home/$USERNAME/Downloads
+arch-chroot /mnt ln -s /storage/Music /home/$USERNAME/Music
+arch-chroot /mnt ln -s /storage/Pictures /home/$USERNAME/Pictures
+arch-chroot /mnt ln -s /storage/Videos /home/$USERNAME/Videos
+arch-chroot /mnt ln -s /storage/$USER/bin /home/$USER/bin
+arch-chroot /mnt ln -s /storage/$USER/ssh /home/$USER/.ssh
+arch-chroot /mnt ln -s /storage/$USER/bashrc /home/$USER/.bashrc
+arch-chroot /mnt ln -s /storage/$USER/mozilla /home/$USER/.mozilla
 mkdir -p /mnt/home/trwnh/.config
-ln -s /mnt/storage/trwnh/sway /mnt/home/trwnh/.config/sway
-ln -s /mnt/storage/trwnh/waybar /mnt/home/trwnh/.config/waybar
+arch-chroot /mnt ln -s /storage/trwnh/sway /home/trwnh/.config/sway
+arch-chroot /mnt ln -s /storage/trwnh/waybar /home/trwnh/.config/waybar
 
 echo -n "Enabling system services..."
 arch-chroot /mnt /bin/bash <<EOF
