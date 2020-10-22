@@ -4,7 +4,7 @@ BASE="
 base base-devel linux linux-lts linux-headers linux-lts-headers linux-firmware realtime-privileges
 bash nano openssh wget git zip unzip unrar nmap htop
 intel-ucode vulkan-intel acpi bluez powertop
-networkmanager nm-connection-editor 
+networkmanager nm-connection-editor iwd
 pulseaudio pulseaudio-alsa pulseaudio-bluetooth pavucontrol
 cups cups-pdf
 ntfs-3g exfat-utils android-tools android-udev
