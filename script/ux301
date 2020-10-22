@@ -1,7 +1,7 @@
 #!/bin/bash
 # $ iwctl --passphrase {PASSPHRASE} station wlan0 connect {SSID}
 BASE="
-base base-devel linux linux-lts linux-headers linux-lts-headers realtime-privileges
+base base-devel linux linux-lts linux-headers linux-lts-headers
 bash nano openssh wget git zip unzip unrar nmap htop
 intel-ucode vulkan-intel acpi bluez powertop
 networkmanager nm-connection-editor
@@ -28,8 +28,7 @@ checkra1n-cli
 HOSTNAME=ux301
 USERNAME=trwnh
 setfont latarcyrheb-sun32
-echo "Enter a password:"
-read -s PASSWORD
+read -p "Enter a password:" $PASSWORD
 
 timedatectl set-ntp true
 
@@ -117,7 +116,7 @@ echo "Loader files written."
 read -p "To avoid having passwd timeout, press [enter] to continue when you're ready to input:" waitforinput
 
 echo "Setting up users..."
-arch-chroot /mnt useradd -m -g users -G wheel,ftp,http,sys,audio,realtime -s /bin/bash "$USERNAME"
+arch-chroot /mnt useradd -m -g users -G wheel,ftp,http,sys,audio -s /bin/bash "$USERNAME"
 ln -s /mnt/storage/home/trwnh /mnt/home/trwnh
 echo "Created user $USERNAME."
 arch-chroot /mnt echo "$USERNAME:$PASSWORD" | chpasswd
