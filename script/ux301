@@ -2,7 +2,7 @@
 # $ iwctl --passphrase {PASSPHRASE} station wlan0 connect {SSID}
 BASE="
 base base-devel linux linux-lts linux-headers linux-lts-headers
-nano openssh wget git zip unzip unrar nmap htop
+bash nano openssh wget git zip unzip unrar nmap htop
 intel-ucode vulkan-intel acpi bluez powertop
 networkmanager nm-connection-editor
 pulseaudio pulseaudio-alsa pulseaudio-bluetooth pavucontrol
