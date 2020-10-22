@@ -9,18 +9,17 @@ pulseaudio pulseaudio-alsa pulseaudio-bluetooth pavucontrol
 cups cups-pdf
 ntfs-3g exfat-utils android-tools android-udev
 terminus-font
-sway wayland xorg-server-xwayland qt5-wayland brightnessctl mako slurp grim jq wl-clipboard waybar imv mpv rofi xfce4-terminal thunar
-nautilus file-roller gvfs gvfs-{afc,goa,google,gphoto2,mtp,nfs,smb} polkit-gnome
+sway wayland xorg-server-xwayland qt5-wayland brightnessctl mako slurp grim jq wl-clipboard waybar imv mpv rofi xfce4-terminal thunar file-roller polkit-gnome
 gimp krita inkscape blender pitivi audacity
 obs-studio libva-intel-driver libva-mesa-driver vlc libmicrodns srt libnfs libshout aalib chromaprint projectm
 firefox-developer-edition chromium youtube-dl code quassel-client discord telegram-desktop
 materia-gtk-theme materia-kde faenza-icon-theme kvantum-qt5 kvantum-theme-materia
-ttf-droid ttf-roboto ttf-roboto-slab ttf-roboto-mono noto-fonts noto-fonts-extra noto-fonts-cjk
+ttf-droid ttf-roboto ttf-roboto-mono noto-fonts noto-fonts-extra noto-fonts-cjk
 ttf-fira-code otf-fira-sans otf-fira-mono ttf-inconsolata
 adobe-source-code-pro-fonts adobe-source-sans-pro-fonts adobe-source-serif-pro-fonts
 "
 AUR="
-noto-fonts-emoji-blob ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-sil-scheherazade
+noto-fonts-emoji-blob ttf-roboto-slab ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-sil-scheherazade
 rofi-dmenu
 dino-git enpass-bin gtk3-nocsd-git xmousepasteblock-git
 brother-mfc-7840w brscan3
@@ -47,10 +46,10 @@ mkfs.ext4 -L "Arch" -F /dev/disk/by-partlabel/Root
 mkfs.fat -F32 -n "EFI" /dev/disk/by-partlabel/ESP
 echo "Mounting partitions..."
 mount -L "Arch" /mnt
-mkdir /mnt/boot
+mkdir -p /mnt/boot
 mount -L "EFI" /mnt/boot
-mkdir /mnt/storage
-mount /dev/sdb1 /mnt/storage
+mkdir -p /mnt/storage
+mount -L "Storage" /mnt/storage
 echo "Drive setup done."
 
 lsblk -f $ROOTDEV
@@ -147,6 +146,7 @@ EOF
 echo "done."
 
 echo "Symlinking from storage drive..."
+
 ln -s /mnt/storage/Documents /mnt/home/$USERNAME/Documents
 ln -s /mnt/storage/Downloads /mnt/home/$USERNAME/Downloads
 ln -s /mnt/storage/Music /mnt/home/$USERNAME/Music
