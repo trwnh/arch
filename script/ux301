@@ -117,6 +117,7 @@ read -p "To avoid having passwd timeout, press [enter] to continue when you're r
 
 echo "Setting up users..."
 arch-chroot /mnt useradd -m -g users -G wheel,ftp,http,sys,audio,realtime -s /bin/bash "$USERNAME"
+mkdir -p /mnt/home/$USERNAME
 echo "Created user $USERNAME."
 arch-chroot /mnt echo "$USERNAME:$PASSWORD" | chpasswd
 arch-chroot /mnt echo "root:$PASSWORD" | chpasswd
