@@ -18,6 +18,7 @@ materia-gtk-theme materia-kde faenza-icon-theme kvantum-qt5 kvantum-theme-materi
 ttf-droid ttf-roboto ttf-roboto-mono noto-fonts noto-fonts-extra noto-fonts-cjk
 ttf-fira-code otf-fira-sans otf-fira-mono ttf-inconsolata
 adobe-source-code-pro-fonts adobe-source-sans-pro-fonts adobe-source-serif-pro-fonts
+hugo zola
 "
 AUR="
 noto-fonts-emoji-blob ttf-roboto-slab ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-sil-scheherazade
