@@ -29,6 +29,7 @@ dino-git enpass-bin gtk3-nocsd-git xmousepasteblock-git
 brother-mfc-7840w brscan3
 checkra1n-cli
 v4l2loopback-dkms
+sublime-music
 "
 HOSTNAME=ux301
 USERNAME=trwnh
