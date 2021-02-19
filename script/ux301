@@ -180,4 +180,14 @@ mkinitcpio -p linux-lts
 exit
 EOF
 
+echo "Creating swap file..."
+arch-chroot /mnt /bin/bash <<EOF
+dd if=/dev/zero of=/swapfile bs=1M count=32768 status=progress
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+echo "/swapfile none swap defaults 0 0" >> /etc/fstab
+exit
+EOF
+
 echo "Installation finished! You can now unmount and reboot."
