@@ -5,11 +5,11 @@ base base-devel linux linux-lts linux-headers linux-lts-headers linux-firmware r
 bash nano openssh wget git zip unzip unrar nmap htop
 intel-ucode vulkan-intel acpi bluez powertop
 networkmanager nm-connection-editor network-manager-applet iwd
-pulseaudio pulseaudio-alsa pulseaudio-bluetooth pavucontrol
+pipewire pipewire-pulse pipewire-jack pipewire-alsa pavucontrol
 cups cups-pdf
 ntfs-3g exfat-utils android-tools android-udev
 terminus-font
-sway wayland xorg-server-xwayland qt5-wayland brightnessctl mako slurp grim jq wl-clipboard waybar ttf-nerd-fonts-symbols
+sway wayland xorg-xwayland qt5-wayland brightnessctl mako slurp grim jq wl-clipboard waybar ttf-nerd-fonts-symbols
 imv mpv rofi xfce4-terminal thunar file-roller polkit-gnome ffmpegthumbnailer
 gimp krita inkscape blender pitivi audacity
 firefox-developer-edition chromium youtube-dl code quassel-client discord telegram-desktop mumble
@@ -20,6 +20,7 @@ adobe-source-code-pro-fonts adobe-source-sans-pro-fonts adobe-source-serif-pro-f
 hugo zola
 archey3
 gdm xfce4 xfce4-goodies plank
+obs-studio libva-intel-driver
 "
 AUR="
 noto-fonts-emoji-blob ttf-roboto-slab ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-sil-scheherazade
@@ -27,7 +28,7 @@ rofi-dmenu
 dino-git enpass-bin gtk3-nocsd-git xmousepasteblock-git
 brother-mfc-7840w brscan3
 checkra1n-cli
-obs-studio-wayland wlrobs-hg v4l2loopback-dkms libva-intel-driver libva-mesa-driver vlc libmicrodns srt libnfs libshout aalib chromaprint projectm
+v4l2loopback-dkms
 "
 HOSTNAME=ux301
 USERNAME=trwnh
