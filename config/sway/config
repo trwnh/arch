@@ -11,24 +11,7 @@ exec_always {
 exec waybar
 exec enpass -minimize
 for_window [class="enpass"] floating enable
-#bar {
-#  status_command waybar
-#}
-#bar {
-#  position bottom
-#  height 32px
-#  status_padding 0
-#  status_edge_padding 0
-#  tray_padding 2
-#  status_command while ~/.config/sway/status.sh; do sleep 1; done;
-#  font pango:RobotoCondensed 18
-#  icon_theme "Faenza-Darkest"
-#  colors {
-#    statusline #ffffff
-#    background #000000
-#    inactive_workspace #32323200 #32323200 #5c5c5c
-#  }
-#}
+
 input "2:14:ETPS/2_Elantech_Touchpad" {
   dwt enabled
   tap enabled
@@ -36,8 +19,8 @@ input "2:14:ETPS/2_Elantech_Touchpad" {
   middle_emulation enabled
 }
 
-bindsym XF86MonBrightnessUp exec light -A 2.5
-bindsym XF86MonBrightnessDown exec light -U 2.5
+bindsym XF86MonBrightnessUp exec brightnessctl set +2%
+bindsym XF86MonBrightnessDown exec brightnessctl set 2%-
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +2%
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -2%
 bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
