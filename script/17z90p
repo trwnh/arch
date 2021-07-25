@@ -14,7 +14,9 @@ imv mpv rofi alacritty thunar file-roller polkit-gnome ffmpegthumbnailer
 gimp krita inkscape blender pitivi audacity
 firefox-developer-edition chromium youtube-dl code quassel-client discord telegram-desktop mumble
 materia-gtk-theme materia-kde faenza-icon-theme kvantum-qt5 kvantum-theme-materia
-ttf-droid ttf-roboto ttf-roboto-mono noto-fonts noto-fonts-extra noto-fonts-cjk
+ttf-droid ttf-roboto 
+ttf-roboto-mono
+noto-fonts noto-fonts-extra noto-fonts-cjk
 ttf-fira-code otf-fira-sans otf-fira-mono ttf-inconsolata
 adobe-source-code-pro-fonts adobe-source-sans-pro-fonts adobe-source-serif-pro-fonts
 hugo zola
@@ -59,12 +61,12 @@ echo "Drive setup done."
 lsblk -f /dev/nvme1
 read -p "Does this look right? Hit [enter] to move on if so, otherwise quit and start over" CONFIRM
 
-echo "Updating pacman mirrorlist..."
-pacman -Sy
-pacman -S reflector --noconfirm
-echo "Sorting mirrorlist..."
-reflector --country 'US' -p https --sort rate --save /etc/pacman.d/mirrorlist
-echo "Pacman mirrors synced and sorted."
+#echo "Updating pacman mirrorlist..."
+#pacman -Sy
+#pacman -S reflector --noconfirm
+#echo "Sorting mirrorlist..."
+#reflector --country 'US' -p https --sort rate --save /etc/pacman.d/mirrorlist
+#echo "Pacman mirrors synced and sorted."
 
 echo "Bootstrapping mounted system..."
 pacstrap /mnt $BASE
@@ -124,10 +126,6 @@ arch-chroot /mnt useradd -m -g users -G wheel,ftp,http,sys,audio,realtime -s /bi
 echo "Created user $USERNAME."
 arch-chroot /mnt echo "$USERNAME:$PASSWORD" | chpasswd
 arch-chroot /mnt echo "root:$PASSWORD" | chpasswd
-
-echo "Symlinking from storage drive..."
-rm -r /mnt/home/trwnh
-arch-chroot /mnt ln -s /storage/home/trwnh /home/trwnh
 
 echo -n "Enabling system services..."
 arch-chroot /mnt /bin/bash <<EOF
