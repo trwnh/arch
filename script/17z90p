@@ -131,12 +131,11 @@ echo -n "Enabling system services..."
 arch-chroot /mnt /bin/bash <<EOF
 systemctl enable NetworkManager
 systemctl enable systemd-timesyncd
-systemctl enable org.cups.cupsd
+systemctl enable cups
 EOF
 echo "done."
 
 echo -n "Changing configuration values..."
-sed -i '/SystemGroup\ssys\sroot/s/root/wheel/g' /mnt/etc/cups/cups-files.conf
 sed -i '/#Color/s/^#//g' /mnt/etc/pacman.conf
 sed -i '/#\s%wheel\sALL=(ALL)\sALL/s/^#//g' /mnt/etc/sudoers
 echo "EDITOR=nano" > /mnt/etc/environment
