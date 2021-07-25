@@ -135,21 +135,6 @@ systemctl enable cups
 EOF
 echo "done."
 
-echo -n "Changing configuration values..."
-sed -i '/#Color/s/^#//g' /mnt/etc/pacman.conf
-sed -i '/#\s%wheel\sALL=(ALL)\sALL/s/^#//g' /mnt/etc/sudoers
-echo "EDITOR=nano" > /mnt/etc/environment
-echo "FONT=\"ter-v32b\"" > /mnt/etc/vconsole.conf
-echo "SWEETHOME3D_JAVA3D=1.5" >> /mnt/etc/environment
-sed -i "/\[multilib\]/,/Include/"'s/^#//' /mnt/etc/pacman.conf
-lpadmin -p MFC7840W -E -v socket://192.168.1.15:9100 -P /usr/share/cups/model/MFC7840W.ppd
-arch-chroot /mnt /bin/bash <<EOF
-sudo -u $USERNAME git config --global user.name trwnh
-sudo -u $USERNAME git config --global user.email a@trwnh.com
-sudo -u $USERNAME git config --global credential.helper store
-EOF
-echo "done."
-
 echo "Installing AUR helper..."
 arch-chroot /mnt /bin/bash <<EOF
 git clone https://aur.archlinux.org/yay-bin.git
@@ -169,21 +154,27 @@ sudo -u $USERNAME yay -S $AUR
 exit
 EOF
 
+echo -n "Changing configuration values..."
+sed -i '/#Color/s/^#//g' /mnt/etc/pacman.conf
+sed -i '/#\s%wheel\sALL=(ALL)\sALL/s/^#//g' /mnt/etc/sudoers
+echo "EDITOR=nano" > /mnt/etc/environment
+echo "FONT=\"ter-v32b\"" > /mnt/etc/vconsole.conf
+echo "SWEETHOME3D_JAVA3D=1.5" >> /mnt/etc/environment
+sed -i "/\[multilib\]/,/Include/"'s/^#//' /mnt/etc/pacman.conf
+lpadmin -p MFC7840W -E -v socket://192.168.1.15:9100 -P /usr/share/cups/model/MFC7840W.ppd
+arch-chroot /mnt /bin/bash <<EOF
+sudo -u $USERNAME git config --global user.name trwnh
+sudo -u $USERNAME git config --global user.email a@trwnh.com
+sudo -u $USERNAME git config --global credential.helper store
+EOF
+echo "done."
+
+
 echo "Enabling Early KMS for GPU..."
 sed -i 's/MODULES=\(\)/MODULES=(i915)/g' /mnt/etc/pacman.conf
 arch-chroot /mnt /bin/bash <<EOF
 mkinitcpio -p linux
 mkinitcpio -p linux-lts
-exit
-EOF
-
-echo "Creating swap file..."
-arch-chroot /mnt /bin/bash <<EOF
-dd if=/dev/zero of=/swapfile bs=1M count=32768 status=progress
-chmod 600 /swapfile
-mkswap /swapfile
-swapon /swapfile
-echo "/swapfile none swap defaults 0 0" >> /etc/fstab
 exit
 EOF
 
