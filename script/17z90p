@@ -1,0 +1,193 @@
+#!/bin/bash
+# $ iwctl --passphrase {PASSPHRASE} station wlan0 connect {SSID}
+BASE="
+base base-devel linux linux-lts linux-headers linux-lts-headers linux-firmware realtime-privileges
+bash nano openssh wget git zip unzip unrar nmap htop
+intel-ucode vulkan-intel acpi bluez powertop
+networkmanager nm-connection-editor network-manager-applet iwd
+pipewire pipewire-pulse pipewire-jack pipewire-alsa pavucontrol
+cups cups-pdf
+ntfs-3g exfat-utils android-tools android-udev
+terminus-font
+sway wayland xorg-xwayland qt5-wayland brightnessctl mako slurp grim jq wl-clipboard waybar ttf-nerd-fonts-symbols
+imv mpv rofi alacritty thunar file-roller polkit-gnome ffmpegthumbnailer
+gimp krita inkscape blender pitivi audacity
+firefox-developer-edition chromium youtube-dl code quassel-client discord telegram-desktop mumble
+materia-gtk-theme materia-kde faenza-icon-theme kvantum-qt5 kvantum-theme-materia
+ttf-droid ttf-roboto ttf-roboto-mono noto-fonts noto-fonts-extra noto-fonts-cjk
+ttf-fira-code otf-fira-sans otf-fira-mono ttf-inconsolata
+adobe-source-code-pro-fonts adobe-source-sans-pro-fonts adobe-source-serif-pro-fonts
+hugo zola
+archey3
+gdm xfce4 xfce4-goodies plank
+obs-studio libva-intel-driver
+"
+AUR="
+noto-fonts-emoji-blob ttf-roboto-slab ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-sil-scheherazade
+rofi-dmenu
+dino-git enpass-bin gtk3-nocsd-git xmousepasteblock-git
+brother-mfc-7840w brscan3
+checkra1n-cli
+v4l2loopback-dkms
+sublime-music
+"
+HOSTNAME=17z90p
+USERNAME=trwnh
+setfont latarcyrheb-sun32
+read -p "Enter a password:" $PASSWORD
+
+timedatectl set-ntp true
+
+echo "Making partitions..."
+sgdisk -Z /dev/nvme1
+parted -s /dev/nvme1 mklabel gpt
+sgdisk -n 1:0:+512M -t 1:ef00 -c 1:"ESP" /dev/nvme1 \
+       -n 2:0:-32G -t 2:8300 -c 2:"Root" /dev/nvme1 \
+       -n 3:0:0 -t 3:8200 -c 3:"Swap" /dev/nvme1
+partprobe /dev/nvme1
+echo "Making filesystems..."
+mkfs.ext4 -L "Arch" -F /dev/disk/by-partlabel/Root
+mkfs.fat -F32 -n "EFI" /dev/disk/by-partlabel/ESP
+mkswap -L "Swap" /dev/disk/by-partlabel/Swap
+swapon -L "Swap"
+echo "Mounting partitions..."
+mount -L "Arch" /mnt
+mkdir -p /mnt/boot
+mount -L "EFI" /mnt/boot
+echo "Drive setup done."
+
+lsblk -f /dev/nvme1
+read -p "Does this look right? Hit [enter] to move on if so, otherwise quit and start over" CONFIRM
+
+echo "Updating pacman mirrorlist..."
+pacman -Sy
+pacman -S reflector --noconfirm
+echo "Sorting mirrorlist..."
+reflector --country 'US' -p https --sort rate --save /etc/pacman.d/mirrorlist
+echo "Pacman mirrors synced and sorted."
+
+echo "Bootstrapping mounted system..."
+pacstrap /mnt $BASE
+echo "Packages installed."
+
+echo "Generating filesystem mount table... "
+genfstab -L /mnt >> /mnt/etc/fstab
+echo "done."
+
+echo -n "Setting hostname... "
+echo "$HOSTNAME" > /mnt/etc/hostname
+cat <<EOF > /mnt/etc/hosts
+127.0.0.1 localhost
+::1 localhost
+127.0.1.1 $HOSTNAME.localdomain $HOSTNAME
+EOF
+echo "done."
+
+echo "Localizing system..."
+arch-chroot /mnt ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime
+echo "Timezone set."
+arch-chroot /mnt hwclock --systohc
+echo "Synced system clock to hardware clock."
+echo "en_US.UTF-8 UTF-8
+ar_JO.UTF-8 UTF-8" > /mnt/etc/locale.gen
+arch-chroot /mnt locale-gen
+echo "LANG=en_US.UTF-8" > /mnt/etc/locale.conf
+echo "Locale generated and applied."
+
+echo "Installing bootloader..."
+arch-chroot /mnt bootctl install
+cat <<EOF > /mnt/boot/loader/entries/arch.conf
+title Arch Linux
+linux /vmlinuz-linux
+initrd /intel-ucode.img
+initrd /initramfs-linux.img
+options root=LABEL=Arch rw
+EOF
+cat <<EOF > /mnt/boot/loader/entries/arch-lts.conf
+title Arch Linux (LTS)
+linux /vmlinuz-linux-lts
+initrd /intel-ucode.img
+initrd /initramfs-linux-lts.img
+options root=LABEL=Arch rw
+EOF
+cat <<EOF > /mnt/boot/loader/loader.conf
+default arch
+timeout 0
+editor yes
+EOF
+echo "Loader files written."
+
+read -p "To avoid having passwd timeout, press [enter] to continue when you're ready to input:" waitforinput
+
+echo "Setting up users..."
+arch-chroot /mnt useradd -m -g users -G wheel,ftp,http,sys,audio,realtime -s /bin/bash "$USERNAME"
+echo "Created user $USERNAME."
+arch-chroot /mnt echo "$USERNAME:$PASSWORD" | chpasswd
+arch-chroot /mnt echo "root:$PASSWORD" | chpasswd
+
+echo "Symlinking from storage drive..."
+rm -r /mnt/home/trwnh
+arch-chroot /mnt ln -s /storage/home/trwnh /home/trwnh
+
+echo -n "Enabling system services..."
+arch-chroot /mnt /bin/bash <<EOF
+systemctl enable NetworkManager
+systemctl enable systemd-timesyncd
+systemctl enable org.cups.cupsd
+EOF
+echo "done."
+
+echo -n "Changing configuration values..."
+sed -i '/SystemGroup\ssys\sroot/s/root/wheel/g' /mnt/etc/cups/cups-files.conf
+sed -i '/#Color/s/^#//g' /mnt/etc/pacman.conf
+sed -i '/#\s%wheel\sALL=(ALL)\sALL/s/^#//g' /mnt/etc/sudoers
+echo "EDITOR=nano" > /mnt/etc/environment
+echo "FONT=\"ter-v32b\"" > /mnt/etc/vconsole.conf
+echo "SWEETHOME3D_JAVA3D=1.5" >> /mnt/etc/environment
+sed -i "/\[multilib\]/,/Include/"'s/^#//' /mnt/etc/pacman.conf
+lpadmin -p MFC7840W -E -v socket://192.168.1.15:9100 -P /usr/share/cups/model/MFC7840W.ppd
+arch-chroot /mnt /bin/bash <<EOF
+sudo -u $USERNAME git config --global user.name trwnh
+sudo -u $USERNAME git config --global user.email a@trwnh.com
+sudo -u $USERNAME git config --global credential.helper store
+EOF
+echo "done."
+
+echo "Installing AUR helper..."
+arch-chroot /mnt /bin/bash <<EOF
+git clone https://aur.archlinux.org/yay-bin.git
+chmod -R 777 /yay-bin
+cd /yay-bin
+sudo -u $USERNAME makepkg -si --noconfirm
+cd ..
+rm -r /yay-bin
+sudo -u $USERNAME yay --gendb
+sudo -u $USERNAME yay --devel --nodiffmenu --save
+exit
+EOF
+
+echo "Installing AUR packages..."
+arch-chroot /mnt /bin/bash <<EOF
+sudo -u $USERNAME yay -S $AUR
+exit
+EOF
+
+echo "Enabling Early KMS for GPU..."
+sed -i 's/MODULES=\(\)/MODULES=(i915)/g' /mnt/etc/pacman.conf
+arch-chroot /mnt /bin/bash <<EOF
+mkinitcpio -p linux
+mkinitcpio -p linux-lts
+exit
+EOF
+
+echo "Creating swap file..."
+arch-chroot /mnt /bin/bash <<EOF
+dd if=/dev/zero of=/swapfile bs=1M count=32768 status=progress
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+echo "/swapfile none swap defaults 0 0" >> /etc/fstab
+exit
+EOF
+
+echo "Installation finished! You can now unmount and reboot."
