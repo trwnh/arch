@@ -39,7 +39,7 @@ read -p "Enter a password:" $PASSWORD
 timedatectl set-ntp true
 
 read -p "First time? [y/N]" FIRSTTIME
-if [$FIRSTTIME == y]
+if [$FIRSTTIME == "y"]
 then
 echo "Making partitions..."
 sgdisk -Z /dev/nvme1n1
