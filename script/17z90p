@@ -57,7 +57,7 @@ mkdir -p /mnt/boot
 mount -L "EFI" /mnt/boot
 echo "Drive setup done."
 
-lsblk -f /dev/nvme1
+lsblk -f /dev/nvme1n1
 read -p "Does this look right? Hit [enter] to move on if so, otherwise quit and start over" CONFIRM
 
 #echo "Updating pacman mirrorlist..."
