@@ -40,7 +40,7 @@ USERNAME=trwnh
 read -p "Enter a password:" $PASSWORD
 
 read -p "First time? [y/N]" $FIRSTTIME
-if [ $FIRSTTIME == "y" ]
+if [[ $FIRSTTIME == "y" ]]
 then
 echo "Making partitions..."
 sgdisk -Z /dev/nvme1n1
