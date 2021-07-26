@@ -1,7 +1,7 @@
 #!/bin/bash
 # $ iwctl --passphrase {PASSPHRASE} station wlan0 connect {SSID}
 BASE="
-base base-devel linux linux-lts linux-headers linux-lts-headers linux-firmware realtime-privileges
+base base-devel linux linux-lts linux-headers linux-lts-headers linux-firmware realtime-privileges sof-firmware
 bash nano openssh wget git zip unzip unrar nmap htop
 intel-ucode vulkan-intel acpi bluez powertop
 networkmanager nm-connection-editor network-manager-applet iwd
@@ -113,7 +113,8 @@ options root=LABEL=Arch rw
 EOF
 cat <<EOF > /mnt/boot/loader/loader.conf
 default arch
-timeout 0
+timeout 5
+auto-entries
 editor yes
 EOF
 echo "Loader files written."
