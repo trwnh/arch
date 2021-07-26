@@ -40,12 +40,12 @@ read -p "Enter a password:" $PASSWORD
 timedatectl set-ntp true
 
 echo "Making partitions..."
-sgdisk -Z /dev/nvme1
-parted -s /dev/nvme1 mklabel gpt
-sgdisk -n 1:0:+512M -t 1:ef00 -c 1:"ESP" /dev/nvme1 \
-       -n 2:0:-32G -t 2:8300 -c 2:"Root" /dev/nvme1 \
-       -n 3:0:0 -t 3:8200 -c 3:"Swap" /dev/nvme1
-partprobe /dev/nvme1
+sgdisk -Z /dev/nvme1n1
+parted -s /dev/nvme1n1 mklabel gpt
+sgdisk -n 1:0:+512M -t 1:ef00 -c 1:"ESP" /dev/nvme1n1 \
+       -n 2:0:-32G -t 2:8300 -c 2:"Root" /dev/nvme1n1 \
+       -n 3:0:0 -t 3:8200 -c 3:"Swap" /dev/nvme1n1
+partprobe /dev/nvme1n1
 echo "Making filesystems..."
 mkfs.ext4 -L "Arch" -F /dev/disk/by-partlabel/Root
 mkfs.fat -F32 -n "EFI" /dev/disk/by-partlabel/ESP
