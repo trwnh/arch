@@ -115,6 +115,7 @@ cat <<EOF > /mnt/boot/loader/loader.conf
 default arch
 timeout 5
 auto-entries
+auto-firmware
 editor yes
 EOF
 echo "Loader files written."
