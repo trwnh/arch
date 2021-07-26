@@ -37,7 +37,9 @@ timedatectl set-ntp true
 
 HOSTNAME=17z90p
 USERNAME=trwnh
-read -p "Enter a password:" $PASSWORD
+
+echo "Enter a password:"
+read PASSWORD
 
 echo "First time? [y/N]"
 read FIRSTTIME
