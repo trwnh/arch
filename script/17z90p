@@ -72,7 +72,7 @@ mount -L "Home" /mnt/home
 swapon -L "Swap"
 
 #echo "Updating pacman mirrorlist..."
-#pacman -Sy
+pacman -Sy
 #pacman -S reflector --noconfirm
 #echo "Sorting mirrorlist..."
 #reflector --country 'US' -p https --sort rate --save /etc/pacman.d/mirrorlist
