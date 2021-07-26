@@ -60,6 +60,7 @@ echo "Drive setup done."
 fi
 
 lsblk -f /dev/nvme1n1
+fdisk -l /dev/nvme1n1
 read -p "Does this look right? Hit [enter] to move on if so, otherwise quit and start over" CONFIRM
 
 echo "Mounting partitions..."
