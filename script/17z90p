@@ -48,7 +48,7 @@ sgdisk -Z /dev/nvme1n1
 parted -s /dev/nvme1n1 mklabel gpt
 sgdisk -n 1:0:+512M -t 1:ef00 -c 1:"ESP" /dev/nvme1n1 \
        -n 2:0:+32G -t 2:8200 -c 2:"Swap" /dev/nvme1n1 \
-       -n 3:0:0+64G -t 3:8300 -c 3:"Root" /dev/nvme1n1 \
+       -n 3:0:+64G -t 3:8300 -c 3:"Root" /dev/nvme1n1 \
        -n 4:0:0 -t 4:8300 -c 4:"Home" /dev/nvmen1
 partprobe /dev/nvme1n1
 echo "Making filesystems..."
