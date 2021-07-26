@@ -39,7 +39,8 @@ HOSTNAME=17z90p
 USERNAME=trwnh
 read -p "Enter a password:" $PASSWORD
 
-read -p "First time? [y/N]" $FIRSTTIME
+echo "First time? [y/N]"
+read FIRSTTIME
 if [[ $FIRSTTIME == "y" ]]
 then
 echo "Making partitions..."
