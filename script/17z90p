@@ -34,7 +34,6 @@ sublime-music
 "
 HOSTNAME=17z90p
 USERNAME=trwnh
-setfont latarcyrheb-sun32
 read -p "Enter a password:" $PASSWORD
 
 timedatectl set-ntp true
