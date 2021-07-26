@@ -171,7 +171,7 @@ echo "done."
 
 
 echo "Enabling Early KMS for GPU..."
-sed -i 's/MODULES=\(\)/MODULES=(i915)/g' /mnt/etc/pacman.conf
+sed -i 's/MODULES=\(\)/MODULES=(i915)/g' /mnt/etc/mkinitcpio.conf
 arch-chroot /mnt /bin/bash <<EOF
 mkinitcpio -p linux
 mkinitcpio -p linux-lts
