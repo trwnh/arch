@@ -12,8 +12,6 @@ AUR="
 brother-mfc-7840w brscan3
 "
 
-timedatectl set-ntp true
-
 USERNAME=trwnh
 
 echo "Enter a password:"
@@ -21,10 +19,6 @@ read PASSWORD
 
 DEVICE=/dev/nvme0n1
 
-echo "First time? [y/N]"
-read FIRSTTIME
-if [[ $FIRSTTIME == "y" ]]
-then
 echo "Making partitions..."
 sgdisk -Z $DEVICE
 parted -s $DEVICE mklabel gpt
@@ -35,140 +29,41 @@ echo "Making filesystems..."
 mkfs.fat -F32 -n "EFI" /dev/disk/by-partlabel/ESP
 mkfs.ext4 -L "Arch" -F /dev/disk/by-partlabel/Root
 echo "Drive setup done."
-fi
 
 lsblk -f $DEVICE
 fdisk -l $DEVICE
 read -p "Does this look right? Hit [enter] to move on if so, otherwise quit and start over" CONFIRM
 
 echo -n "Mounting partitions..."
-umount -R /mnt
 mkdir -p /mnt/install
 mount -L "Arch" /mnt/install
 mkdir -p /mnt/install/boot
 mount -L "EFI" /mnt/install/boot
 echo "done."
 
-echo -n "Mounting disk array..."
-mkdir -p /mnt/disk{1,2,3}
-mkdir -p /mnt/parity
-mount -L "DTNC" /mnt/disk1
-mount -L "SX6C" /mnt/disk2
-mount -L "XZ9C" /mnt/disk3
-mount -L "83HC" /mnt/parity
-echo "done."
-
-echo "Updating pacman mirrorlist..."
-pacman -Sy
-pacman -S reflector --noconfirm
-echo "Sorting mirrorlist..."
-reflector --country 'US' -p https --sort rate --save /etc/pacman.d/mirrorlist --verbose
-echo "Pacman mirrors synced and sorted."
-
 echo "Bootstrapping mounted system..."
 pacstrap /mnt/install $BASE
 echo "Packages installed."
 
-echo -n "Generating filesystem mount table... "
-genfstab -L /mnt/install >> /mnt/install/etc/fstab
-echo "done."
-
-echo -n "Setting up Snapraid and mergerfs... "
-cat <<EOF > /mnt/install/etc/snapraid.conf
-disk d1 /mnt/disk1
-disk d2 /mnt/disk2
-disk d3 /mnt/disk3
-
-parity /mnt/parity/.snapraid.parity
-
-content /mnt/disk1/.snapraid.content
-content /mnt/disk2/.snapraid.content
-content /mnt/disk3/.snapraid.content
-content /var/snapraid/.snapraid.content
-
-exclude /lost+found/
-exclude .DS_Store
-exclude .Thumbs.db
-exclude .fseventsd
-exclude .Spotlight-V100
-exclude .TemporaryItems
-exclude .Trashes
-exclude .AppleDB
-exclude .AppleDouble
-exclude ._AppleDouble
-exclude /tmp/
-EOF
-echo "/mnt/disk* /storage fuse.mergerfs defaults,allow_other,cache.files=off,use_ino,hard_remove,noforget,minfreespace=250G,fsname=mergerfs 0 0" >> /mnt/etc/fstab
-echo "done."
-
-echo -n "Setting up network... "
-cat <<EOF > /mnt/install/etc/systemd/network/00-br0.netdev
-[NetDev]
-Name=br0
-Kind=bridge
-EOF
-
-cat <<EOF > /mnt/install/etc/systemd/network/10-bind.network
-[Match]
-Name=enp0s31f6
-[Network]
-Bridge=br0
-EOF
-
-cat <<EOF > /mnt/install/etc/systemd/network/20-bridge.network
-[Match]
-Name=br0
-[Network]
-DHCP=ipv4
-#Address=192.168.1.66/24
-Gateway=192.168.1.1
-DNS=8.8.8.8
-EOF
-
-echo "done."
-
-echo -n "Setting hosts... "
+echo "Copying files over from old install..."
+cat /etc/fstab > /mnt/install/etc/fstab
+cat /etc/snapraid.conf > /mnt/install/etc/snapraid.conf
+cat /etc/systemd/network/00-br0.netdev > /mnt/install/etc/systemd/network/00-br0.netdev
+cat /etc/systemd/network/10-bind.network > /mnt/install/etc/systemd/network/10-bind.network
+cat /etc/systemd/network/20-bridge.network > /mnt/install/etc/systemd/network/20-bridge.network
 echo "home" > /mnt/install/etc/hostname
-cat <<EOF > /mnt/install/etc/hosts
-127.0.0.1 localhost
-::1 localhost
-127.0.1.1 home.localdomain home
-192.168.1.66 home.trwnh.com home
-192.168.1.66 cloud.trwnh.com cloud
-192.168.1.66 jellyfin.trwnh.com jellyfin
-192.168.1.66 rss.trwnh.com rss
-192.168.1.66 airsonic.trwnh.com airsonic
-192.168.1.66 komga.trwnh.com komga
-50.116.43.33 sites.trwnh.com sites
-192.168.1.66 mc.trwnh.com mc
-192.168.1.66 map.mc.trwnh.com map.mc
-192.168.1.66 mc.neozones.club map.mc.neozones.club
-EOF
+cat /etc/hosts > /mnt/install/etc/hosts
+cat /etc/dnsmasq.conf > /mnt/install/etc/dnsmasq.conf
+cat /etc/nginx/nginx.conf > /mnt/etc/nginx/nginx.conf
+cat /etc/samba/smb.conf > /mnt/etc/samba/smb.conf
+cat /etc/exports > /mnt/etc/exports
+cp -rfv /etc/nginx/sites /mnt/etc/nginx/sites
+cp -rfv /etc/nginx/snippets /mnt/etc/nginx/snippets
+cp -rfv /home/trwnh /mnt/home/trwnh
 echo "done."
 
 echo -n "Setting up DNS... "
-cat <<EOF > /mnt/install/etc/dnsmasq.conf
-port=53
 
-server=1.1.1.1
-server=8.8.8.8
-server=172.98.193.42
-server=155.138.240.237
-server=147.135.115.88
-server=147.135.113.37
-
-local=/lan/
-local=/use-application-dns.net/
-
-listen-address=::1,127.0.0.1,192.168.1.66
-
-expand-hosts
-
-domain=trwnh.com
-
-cache-size=5000
-EOF
-echo "done."
 
 echo "Localizing system..."
 arch-chroot /mnt/install ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime
@@ -182,22 +77,22 @@ echo "LANG=en_US.UTF-8" > /mnt/install/etc/locale.conf
 echo "Locale generated and applied."
 
 echo "Installing bootloader..."
-arch-chroot /mnt bootctl install
-cat <<EOF > /mnt/boot/loader/entries/arch.conf
+arch-chroot /mnt/install bootctl install
+cat <<EOF > /mnt/install/boot/loader/entries/arch.conf
 title Arch Linux
 linux /vmlinuz-linux
 initrd /intel-ucode.img
 initrd /initramfs-linux.img
 options root=LABEL=Arch rw
 EOF
-cat <<EOF > /mnt/boot/loader/entries/arch-lts.conf
+cat <<EOF > /mnt/install/boot/loader/entries/arch-lts.conf
 title Arch Linux (LTS)
 linux /vmlinuz-linux-lts
 initrd /intel-ucode.img
 initrd /initramfs-linux-lts.img
 options root=LABEL=Arch rw
 EOF
-cat <<EOF > /mnt/boot/loader/loader.conf
+cat <<EOF > /mnt/install/boot/loader/loader.conf
 default arch
 timeout 5
 auto-entries
@@ -209,32 +104,19 @@ echo "Loader files written."
 read -p "To avoid having passwd timeout, press [enter] to continue when you're ready to input:" waitforinput
 
 echo "Setting up users..."
-arch-chroot /mnt useradd -m -g users -G wheel,ftp,http,sys,docker -s /bin/bash "$USERNAME"
+arch-chroot /mnt/install useradd -m -g users -G wheel,ftp,http,sys,docker -s /bin/bash "$USERNAME"
 echo "Created user $USERNAME."
-arch-chroot /mnt echo "$USERNAME:$PASSWORD" | chpasswd
-arch-chroot /mnt echo "root:$PASSWORD" | chpasswd
+arch-chroot /mnt/install echo "$USERNAME:$PASSWORD" | chpasswd
+arch-chroot /mnt/install echo "root:$PASSWORD" | chpasswd
 
 echo -n "Changing configuration values... "
-sed -i '/#Color/s/^#//g' /mnt/etc/pacman.conf
-sed -i '/#\s%wheel\sALL=(ALL)\sALL/s/^#//g' /mnt/etc/sudoers
-echo "EDITOR=nano" > /mnt/etc/environment
-sed -i "/\[multilib\]/,/Include/"'s/^#//' /mnt/etc/pacman.conf
+sed -i '/#Color/s/^#//g' /mnt/install/etc/pacman.conf
+sed -i '/#\s%wheel\sALL=(ALL)\sALL/s/^#//g' /mnt/install/etc/sudoers
+echo "EDITOR=nano" > /mnt/install/etc/environment
+sed -i "/\[multilib\]/,/Include/"'s/^#//' /mnt/install/etc/pacman.conf
 # sed -i '/#PubKeyAuthentication/s/^#//g' /mnt/etc/ssh/sshd_config
 # sed -i '/PubKeyAuthentication/s/yes/no/g' /mnt/etc/ssh/sshd_config
-arch-chroot /mnt /bin/bash <<EOF
-sudo -u $USERNAME git config --global user.name a
-sudo -u $USERNAME git config --global user.email a@trwnh.com
-sudo -u $USERNAME git config --global credential.helper store
-EOF
-echo "done."
 
-echo -n "Copying files from old install..."
-cat /etc/nginx/nginx.conf > /mnt/etc/nginx/nginx.conf
-cat /etc/samba/smb.conf > /mnt/etc/samba/smb.conf
-cat /etc/exports > /mnt/etc/exports
-cp -rf /etc/nginx/sites /mnt/etc/nginx/sites
-cp -rf /etc/nginx/snippets /mnt/etc/nginx/snippets
-cp -rf /home/trwnh /mnt/home/trwnh
 echo "done."
 
 echo -n "Enabling system services... "
@@ -244,6 +126,7 @@ systemctl enable systemd-timesyncd
 systemctl enable dnsmasq
 systemctl enable sshd
 systemctl enable nginx
+systemctl enable docker
 EOF
 echo "done."
 
