@@ -4,12 +4,13 @@ base base-devel linux linux-lts linux-headers linux-lts-headers linux-firmware
 bash nano openssh wget git zip unzip unrar nmap htop
 intel-ucode vulkan-intel
 networkmanager nm-connection-editor network-manager-applet dnsmasq
-ntfs-3g exfat-utils snapraid mergerfs
+ntfs-3g exfat-utils
 youtube-dl hugo zola archey3
 docker docker-compose nginx certbot certbot-nginx
 "
 AUR="
 brother-mfc-7840w brscan3
+snapraid mergerfs
 "
 
 USERNAME=trwnh
