@@ -6,7 +6,7 @@ intel-ucode vulkan-intel
 networkmanager nm-connection-editor network-manager-applet dnsmasq
 ntfs-3g exfat-utils snapraid mergerfs
 youtube-dl hugo zola archey3
-docker docker-compose nginx
+docker docker-compose nginx certbot certbot-nginx
 "
 AUR="
 brother-mfc-7840w brscan3
@@ -43,9 +43,10 @@ read -p "Does this look right? Hit [enter] to move on if so, otherwise quit and 
 
 echo -n "Mounting partitions..."
 umount -R /mnt
-mount -L "Arch" /mnt
-mkdir -p /mnt/boot
-mount -L "EFI" /mnt/boot
+mkdir -p /mnt/install
+mount -L "Arch" /mnt/install
+mkdir -p /mnt/install/boot
+mount -L "EFI" /mnt/install/boot
 echo "done."
 
 echo -n "Mounting disk array..."
@@ -65,15 +66,15 @@ reflector --country 'US' -p https --sort rate --save /etc/pacman.d/mirrorlist --
 echo "Pacman mirrors synced and sorted."
 
 echo "Bootstrapping mounted system..."
-pacstrap /mnt $BASE
+pacstrap /mnt/install $BASE
 echo "Packages installed."
 
 echo -n "Generating filesystem mount table... "
-genfstab -L /mnt >> /mnt/etc/fstab
+genfstab -L /mnt/install >> /mnt/install/etc/fstab
 echo "done."
 
 echo -n "Setting up Snapraid and mergerfs... "
-cat <<EOF > /mnt/etc/snapraid.conf
+cat <<EOF > /mnt/install/etc/snapraid.conf
 disk d1 /mnt/disk1
 disk d2 /mnt/disk2
 disk d3 /mnt/disk3
@@ -100,9 +101,35 @@ EOF
 echo "/mnt/disk* /storage fuse.mergerfs defaults,allow_other,cache.files=off,use_ino,hard_remove,noforget,minfreespace=250G,fsname=mergerfs 0 0" >> /mnt/etc/fstab
 echo "done."
 
+echo -n "Setting up network... "
+cat <<EOF > /mnt/install/etc/systemd/network/00-br0.netdev
+[NetDev]
+Name=br0
+Kind=bridge
+EOF
+
+cat <<EOF > /mnt/install/etc/systemd/network/10-bind.network
+[Match]
+Name=enp0s31f6
+[Network]
+Bridge=br0
+EOF
+
+cat <<EOF > /mnt/install/etc/systemd/network/20-bridge.network
+[Match]
+Name=br0
+[Network]
+DHCP=ipv4
+#Address=192.168.1.66/24
+Gateway=192.168.1.1
+DNS=8.8.8.8
+EOF
+
+echo "done."
+
 echo -n "Setting hosts... "
-echo "home" > /mnt/etc/hostname
-cat <<EOF > /mnt/etc/hosts
+echo "home" > /mnt/install/etc/hostname
+cat <<EOF > /mnt/install/etc/hosts
 127.0.0.1 localhost
 ::1 localhost
 127.0.1.1 home.localdomain home
@@ -120,7 +147,7 @@ EOF
 echo "done."
 
 echo -n "Setting up DNS... "
-cat <<EOF > /mnt/etc/dnsmasq.conf
+cat <<EOF > /mnt/install/etc/dnsmasq.conf
 port=53
 
 server=1.1.1.1
@@ -144,14 +171,14 @@ EOF
 echo "done."
 
 echo "Localizing system..."
-arch-chroot /mnt ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime
+arch-chroot /mnt/install ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime
 echo "Timezone set."
-arch-chroot /mnt hwclock --systohc
+arch-chroot /mnt/install hwclock --systohc
 echo "Synced system clock to hardware clock."
 echo "en_US.UTF-8 UTF-8
-ar_JO.UTF-8 UTF-8" > /mnt/etc/locale.gen
-arch-chroot /mnt locale-gen
-echo "LANG=en_US.UTF-8" > /mnt/etc/locale.conf
+ar_JO.UTF-8 UTF-8" > /mnt/install/etc/locale.gen
+arch-chroot /mnt/install locale-gen
+echo "LANG=en_US.UTF-8" > /mnt/install/etc/locale.conf
 echo "Locale generated and applied."
 
 echo "Installing bootloader..."
@@ -187,23 +214,36 @@ echo "Created user $USERNAME."
 arch-chroot /mnt echo "$USERNAME:$PASSWORD" | chpasswd
 arch-chroot /mnt echo "root:$PASSWORD" | chpasswd
 
-echo -n "Enabling system services..."
-arch-chroot /mnt /bin/bash <<EOF
-systemctl enable NetworkManager
-systemctl enable systemd-timesyncd
-systemctl enable dnsmasq
-EOF
-echo "done."
-
-echo -n "Changing configuration values..."
+echo -n "Changing configuration values... "
 sed -i '/#Color/s/^#//g' /mnt/etc/pacman.conf
 sed -i '/#\s%wheel\sALL=(ALL)\sALL/s/^#//g' /mnt/etc/sudoers
 echo "EDITOR=nano" > /mnt/etc/environment
 sed -i "/\[multilib\]/,/Include/"'s/^#//' /mnt/etc/pacman.conf
+# sed -i '/#PubKeyAuthentication/s/^#//g' /mnt/etc/ssh/sshd_config
+# sed -i '/PubKeyAuthentication/s/yes/no/g' /mnt/etc/ssh/sshd_config
 arch-chroot /mnt /bin/bash <<EOF
 sudo -u $USERNAME git config --global user.name a
 sudo -u $USERNAME git config --global user.email a@trwnh.com
 sudo -u $USERNAME git config --global credential.helper store
+EOF
+echo "done."
+
+echo -n "Copying files from old install..."
+cat /etc/nginx/nginx.conf > /mnt/etc/nginx/nginx.conf
+cat /etc/samba/smb.conf > /mnt/etc/samba/smb.conf
+cat /etc/exports > /mnt/etc/exports
+cp -rf /etc/nginx/sites /mnt/etc/nginx/sites
+cp -rf /etc/nginx/snippets /mnt/etc/nginx/snippets
+cp -rf /home/trwnh /mnt/home/trwnh
+echo "done."
+
+echo -n "Enabling system services... "
+arch-chroot /mnt /bin/bash <<EOF
+systemctl enable NetworkManager
+systemctl enable systemd-timesyncd
+systemctl enable dnsmasq
+systemctl enable sshd
+systemctl enable nginx
 EOF
 echo "done."
 
