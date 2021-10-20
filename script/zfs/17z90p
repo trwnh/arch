@@ -1,0 +1,294 @@
+#!/bin/bash
+# $ iwctl --passphrase {PASSPHRASE} station wlan0 connect {SSID}
+BASE="
+base base-devel linux linux-lts linux-headers linux-lts-headers linux-firmware realtime-privileges sof-firmware
+bash nano openssh wget git zip unzip unrar nmap htop
+intel-ucode vulkan-intel acpi bluez powertop
+networkmanager nm-connection-editor network-manager-applet iwd
+pipewire pipewire-pulse pipewire-jack pipewire-alsa pavucontrol
+cups cups-pdf
+ntfs-3g exfat-utils android-tools android-udev
+terminus-font
+sway wayland xorg-xwayland qt5-wayland brightnessctl mako slurp grim jq wl-clipboard waybar ttf-nerd-fonts-symbols
+imv mpv rofi alacritty thunar file-roller polkit-gnome ffmpegthumbnailer
+gimp krita inkscape blender pitivi audacity
+firefox-developer-edition chromium youtube-dl code quassel-client discord telegram-desktop mumble
+materia-gtk-theme materia-kde faenza-icon-theme kvantum-qt5 kvantum-theme-materia
+ttf-droid ttf-roboto 
+noto-fonts noto-fonts-extra noto-fonts-cjk
+ttf-fira-code otf-fira-sans otf-fira-mono ttf-inconsolata
+adobe-source-code-pro-fonts adobe-source-sans-pro-fonts adobe-source-serif-pro-fonts
+hugo zola
+archey3
+gdm xfce4 xfce4-goodies plank
+obs-studio libva-intel-driver
+"
+AUR="
+noto-fonts-emoji-blob ttf-roboto-slab ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-sil-scheherazade
+rofi-dmenu
+dino-git enpass-bin gtk3-nocsd-git xmousepasteblock-git
+brother-mfc-7840w brscan3
+checkra1n-cli
+v4l2loopback-dkms
+sublime-music
+"
+
+
+HOSTNAME=17z90p
+USERNAME=trwnh
+echo "Enter a password:"
+read PASSWORD
+
+echo "Setting time sync..."
+timedatectl set-ntp true
+
+echo "Enabling archzfs..."
+curl -s https://eoli3n.github.io/archzfs/init | bash
+
+echo "Partitioning disk..."
+sgdisk -Z /dev/nvme1n1
+parted -s /dev/nvme1n1 mklabel gpt
+sgdisk -n 1:0:+512M -t 1:ef00 -c 1:"ESP" /dev/nvme1n1 \
+       -n 2:0:+32G -t 2:8200 -c 2:"SWAP" /dev/nvme1n1 \
+       -n 3:0:+2G -t 2:bf01 -c 3:"BPOOL" /dev/nvme1n1 \
+       -n 4:0:0 -t 3:bf00 -c 4:"RPOOL" /dev/nvme1n1 \
+partprobe /dev/nvme1n1
+
+echo "Making legacy filesystems..."
+mkfs.fat -F32 -n "EFI" /dev/disk/by-partlabel/ESP
+mkswap -L "SWAP" /dev/disk/by-partlabel/SWAP
+
+echo "Making bpool..."
+#================ bpool with grub-compatible flags ================#
+zpool create -f \
+	-o feature@allocation_classes=enabled \
+	-o feature@async_destroy=enabled      \
+	-o feature@bookmarks=enabled          \
+	-o feature@embedded_data=enabled      \
+	-o feature@empty_bpobj=enabled        \
+	-o feature@enabled_txg=enabled        \
+	-o feature@extensible_dataset=enabled \
+	-o feature@filesystem_limits=enabled  \
+	-o feature@hole_birth=enabled         \
+	-o feature@large_blocks=enabled       \
+	-o feature@lz4_compress=enabled       \
+	-o feature@project_quota=enabled      \
+	-o feature@resilver_defer=enabled     \
+	-o feature@spacemap_histogram=enabled \
+	-o feature@spacemap_v2=enabled        \
+	-o feature@userobj_accounting=enabled \
+	-o feature@zpool_checkpoint=enabled   \
+	-o cachefile=/etc/zfs/zpool.cache \
+	-o ashift=12 \
+	-o compatibility=grub2 \
+	-O acltype=posixacl -O canmount=off -O compression=lz4 \
+	-O devices=off -O normalization=formD -O relatime=on -O xattr=sa \
+	-R /mnt -O mountpoint=/boot \
+bpool /dev/disk/by-partlabel/BPOOL
+
+echo "Making rpool..."
+#================ rpool with compression and encryption ================#
+zpool create -f \
+	-o ashift=12              \
+	-O acltype=posixacl       \
+	-O relatime=on            \
+	-O xattr=sa               \
+	-O dnodesize=legacy       \
+	-O normalization=formD    \
+	-O mountpoint=none        \
+	-O canmount=off           \
+	-O devices=off            \
+	-O compression=lz4        \
+	-O encryption=aes-256-gcm \
+	-O keyformat=passphrase   \
+	-O keylocation=prompt     \
+	-R /mnt                   \
+zroot /dev/disk/by-partlabel/RPOOL
+
+echo "Making ZFS datasets..."
+#================================ boot environment = arch ================================#
+zfs create -o canmount=off -o mountpoint=none bpool/BOOT
+zfs create -o canmount=off -o mountpoint=none rpool/ROOT
+zfs create -o canmount=off -o mountpoint=none rpool/DATA
+zfs create -o canmount=noauto -o mountpoint=/boot bpool/BOOT/arch
+zfs create -o canmount=noauto -o mountpoint=/     rpool/ROOT/arch
+zpool set bootfs=rpool/ROOT/arch rpool
+zfs mount rpool/ROOT/arch
+zfs mount bpool/BOOT/arch
+#================================ persistent data ================================#
+zfs create -o mountpoint=/home rpool/DATA/home
+zfs create -o mountpoint=/root rpool/DATA/home/root
+chmod 700 /mnt/root
+zfs create -o mountpoint=none                     rpool/DATA/var
+zfs create -o mountpoint=/var/lib -o canmount=off rpool/DATA/var/lib
+zfs create                                        rpool/DATA/var/lib/AccountsService
+zfs create                                        rpool/DATA/var/lib/libvirt
+zfs create                                        rpool/DATA/var/lib/lxc
+zfs create                                        rpool/DATA/var/lib/portables
+zfs create                                        rpool/DATA/var/lib/machines
+zfs create                                        rpool/DATA/var/lib/pacman
+zfs create -o com.sun:auto-snapshot=false         rpool/DATA/var/lib/docker
+zfs create -o com.sun:auto-snapshot=false         rpool/DATA/var/lib/nfs
+zfs create -o mountpoint=/var/log                 rpool/DATA/var/log
+zfs create -o mountpoint=/var/spool               rpool/DATA/var/spool
+zfs create                                        rpool/DATA/var/spool/mail
+zfs create -o mountpoint=/var/snap                rpool/DATA/var/snap
+zfs create -o mountpoint=/var/games               rpool/DATA/var/games
+zfs create -o mountpoint=/var/www                 rpool/DATA/var/www
+zfs create -o mountpoint=/srv                     rpool/DATA/srv
+zfs create -o mountpoint=/opt                     rpool/DATA/opt
+zfs create -o mountpoint=/usr -o canmount=off     rpool/DATA/usr
+zfs create                                        rpool/DATA/usr/local
+#================================ cache and temporary files ================================#
+zfs create -o mountpoint=/var/cache -o com.sun:auto-snapshot=false rpool/DATA/var/cache
+zfs create -o mountpoint=/var/tmp   -o com.sun:auto-snapshot=false rpool/DATA/var/tmp
+zfs create -o mountpoint=/tmp       -o com.sun:auto-snapshot=false rpool/DATA/tmp
+chmod 1777 /mnt/tmp
+chmod 1777 /mnt/var/tmp
+zpool set cachefile=/etc/zfs/zpool.cache rpool
+cp /etc/zfs/zpool.cache /mnt/etc/zfs/zpool.cache
+
+#echo "Validating ZFS pool..."
+#zpool export rpool
+#zpool export bpool
+#zpool import -d /dev/disk/by-id -R /mnt rpool -N
+#zpool import -d /dev/disk/by-id -R /mnt bpool -N
+#zfs load-key rpool
+#zfs mount rpool/ROOT/arch
+#zfs mount -a
+#zfs mount bpool/BOOT/arch
+
+
+echo -n "Mounting legacy filesystems... "
+swapon -L "SWAP"
+mkdir -p /mnt/boot/efi
+mount -L "EFI" /mnt/boot/efi
+echo "done.
+
+echo "Updating pacman mirrorlist..."
+pacman -Sy
+pacman -S reflector --noconfirm
+echo "Sorting mirrorlist..."
+reflector --country 'US' -p https --sort rate --save /etc/pacman.d/mirrorlist --verbose
+echo "Pacman mirrors synced and sorted."
+
+echo "Bootstrapping mounted system..."
+pacstrap /mnt $BASE
+echo "Packages installed."
+
+echo -n "Generating filesystem mount table... "
+genfstab -U /mnt >> /mnt/etc/fstab
+echo "done."
+
+echo -n "Setting hostname... "
+echo "$HOSTNAME" > /mnt/etc/hostname
+cat <<EOF > /mnt/etc/hosts
+127.0.0.1 localhost
+::1 localhost
+127.0.1.1 $HOSTNAME.localdomain $HOSTNAME
+EOF
+arch-chroot /mnt hostnamectl set-hostname $HOSTNAME
+echo "done."
+
+echo "Localizing system..."
+arch-chroot /mnt ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime
+arch-chroot /mnt timedatectl set-timezone America/Chicago
+echo "* Timezone set."
+arch-chroot /mnt hwclock --systohc
+echo "* Synced system clock to hardware clock."
+echo "en_US.UTF-8 UTF-8
+ar_JO.UTF-8 UTF-8" > /mnt/etc/locale.gen
+arch-chroot /mnt locale-gen
+echo "LANG=en_US.UTF-8" > /mnt/etc/locale.conf
+arch-chroot /mnt localectl set-locale en_US.UTF-8
+echo "* Locale generated and applied."
+
+echo "Installing bootloader..."
+arch-chroot /mnt /bin/bash <<EOF
+ESP=/boot/efi
+source /etc/os-release
+grub-install --boot-directory ${ESP}/EFI/${ID} --efi-directory ${ESP}
+grub-mkconfig -o ${ESP}/EFI/${ID}/grub/grub.cfg
+cp ${ESP}/EFI/${ID}/grub/grub.cfg /boot/grub/grub.cfg
+EOF
+
+echo "Setting up users..."
+arch-chroot /mnt useradd -m -g users -G wheel,ftp,http,sys,audio,realtime,docker,minecraft -s /bin/bash "$USERNAME"
+echo "* Created user $USERNAME."
+arch-chroot /mnt echo "$USERNAME:$PASSWORD" | chpasswd
+arch-chroot /mnt echo "root:$PASSWORD" | chpasswd
+echo "* Set passwords."
+
+echo -n "Enabling system services... "
+arch-chroot /mnt /bin/bash <<EOF
+systemctl enable NetworkManager
+systemctl enable systemd-timesyncd
+systemctl enable cups
+EOF
+echo "done."
+
+echo -n "Changing configuration values... "
+sed -i '/#Color/s/^#//g' /mnt/etc/pacman.conf
+sed -i '/#\s%wheel\sALL=(ALL)\sALL/s/^#//g' /mnt/etc/sudoers
+echo "EDITOR=nano" > /mnt/etc/environment
+echo "FONT=\"ter-v32b\"" > /mnt/etc/vconsole.conf
+echo "SWEETHOME3D_JAVA3D=1.5" >> /mnt/etc/environment
+sed -i "/\[multilib\]/,/Include/"'s/^#//' /mnt/etc/pacman.conf
+echo "done."
+
+echo "Installing AUR helper..."
+arch-chroot /mnt /bin/bash <<EOF
+git clone https://aur.archlinux.org/yay-bin.git
+chmod -R 777 /yay-bin
+cd /yay-bin
+sudo -u $USERNAME makepkg -si --noconfirm
+cd ..
+rm -r /yay-bin
+sudo -u $USERNAME yay --gendb
+sudo -u $USERNAME yay --devel --nodiffmenu --save
+exit
+EOF
+
+echo "Installing AUR packages..."
+arch-chroot /mnt /bin/bash <<EOF
+sudo -u $USERNAME yay -S $AUR
+exit
+EOF
+
+lpadmin -p MFC7840W -E -v socket://192.168.1.15:9100 -P /usr/share/cups/model/MFC7840W.ppd
+
+echo "Enabling Early KMS for GPU..."
+sed -i 's/MODULES=\(\)/MODULES=(i915)/g' /mnt/etc/mkinitcpio.conf
+arch-chroot /mnt /bin/bash <<EOF
+mkinitcpio -p linux
+mkinitcpio -p linux-lts
+exit
+EOF
+
+echo "Doing ZFS-y things..."
+DISKID=nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NG0R621780A
+echo GRUB_CMDLINE_LINUX=\"zfs_import_dir=${DISKID%/*}\" >> /mnt/etc/default/grub
+tee /mnt/etc/mkinitcpio.conf <<EOF
+HOOKS=(base udev autodetect modconf block keyboard zfs filesystems)
+EOF
+zgenhostid $(hostid)
+systemctl enable zfs-import-scan.service zfs-import.target zfs-zed zfs.target --root=/mnt
+#systemctl disable zfs-mount --root=/mnt
+curl -L https://archzfs.com/archzfs.gpg |  pacman-key -a -
+curl -L https://git.io/JsfVS | xargs -i{} pacman-key --lsign-key {}
+curl -L https://git.io/Jsfw2 > /mnt/etc/pacman.d/mirrorlist-archzfs
+tee -a /mnt/etc/pacman.conf <<- 'EOF'
+#[archzfs-testing]
+#Include = /etc/pacman.d/mirrorlist-archzfs
+[archzfs]
+Include = /etc/pacman.d/mirrorlist-archzfs
+EOF
+arch-chroot /mnt pacman -Sy
+
+echo "Unmounting..."
+umount /mnt/boot/efi
+zfs umount -a
+zpool export rpool
+zpool export bpool
+
+echo "Done! You may now reboot."
