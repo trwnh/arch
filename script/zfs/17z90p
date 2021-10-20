@@ -2,6 +2,7 @@
 # $ iwctl --passphrase {PASSPHRASE} station wlan0 connect {SSID}
 BASE="
 base base-devel linux linux-lts linux-headers linux-lts-headers linux-firmware realtime-privileges sof-firmware
+zfs-linux zfs-linux-lts
 bash nano openssh wget git zip unzip unrar nmap htop
 intel-ucode vulkan-intel acpi bluez powertop
 networkmanager nm-connection-editor network-manager-applet iwd
@@ -12,7 +13,7 @@ terminus-font
 sway wayland xorg-xwayland qt5-wayland brightnessctl mako slurp grim jq wl-clipboard waybar ttf-nerd-fonts-symbols
 imv mpv rofi alacritty thunar file-roller polkit-gnome ffmpegthumbnailer
 gimp krita inkscape blender pitivi audacity
-firefox-developer-edition chromium youtube-dl code quassel-client discord telegram-desktop mumble
+firefox-developer-edition chromium youtube-dl code quassel-client discord telegram-desktop mumble dino
 materia-gtk-theme materia-kde faenza-icon-theme kvantum-qt5 kvantum-theme-materia
 ttf-droid ttf-roboto 
 noto-fonts noto-fonts-extra noto-fonts-cjk
@@ -21,12 +22,13 @@ adobe-source-code-pro-fonts adobe-source-sans-pro-fonts adobe-source-serif-pro-f
 hugo zola
 archey3
 gdm xfce4 xfce4-goodies plank
+gnome
 obs-studio libva-intel-driver
 "
 AUR="
 noto-fonts-emoji-blob ttf-roboto-slab ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-sil-scheherazade
 rofi-dmenu
-dino-git enpass-bin gtk3-nocsd-git xmousepasteblock-git
+enpass-bin xmousepasteblock-git
 brother-mfc-7840w brscan3
 checkra1n-cli
 v4l2loopback-dkms
@@ -163,7 +165,7 @@ echo -n "Mounting legacy filesystems... "
 swapon -L "SWAP"
 mkdir -p /mnt/boot/efi
 mount -L "EFI" /mnt/boot/efi
-echo "done.
+echo "done."
 
 echo "Updating pacman mirrorlist..."
 pacman -Sy
@@ -224,6 +226,7 @@ arch-chroot /mnt /bin/bash <<EOF
 systemctl enable NetworkManager
 systemctl enable systemd-timesyncd
 systemctl enable cups
+systemctl enable gdm
 EOF
 echo "done."
 
