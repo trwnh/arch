@@ -184,7 +184,7 @@ else
  pacstrap -U /mnt \
  https://archive.archlinux.org/packages/l/linux-lts/linux-lts-${VERSION_LTS}-x86_64.pkg.tar.zst
 fi
-pacstrap /mnt zfs-linux zfs-linux-headers zfs-linux-lts zfs-linux-lts-headers zfs-utils linux-firmware grub mkinitcpio
+pacstrap /mnt zfs-linux zfs-linux-lts zfs-utils linux-firmware grub mkinitcpio
 pacstrap /mnt $PACKAGES
 echo "Packages installed."
 
