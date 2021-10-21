@@ -184,7 +184,7 @@ else
  pacstrap -U /mnt \
  https://archive.archlinux.org/packages/l/linux-lts/linux-lts-${VERSION_LTS}-x86_64.pkg.tar.zst
 fi
-pacstrap /mnt zfs-linux zfs-linux-lts zfs-utils linux-firmware grub efibootmgr mkinitcpio
+pacstrap /mnt zfs-linux zfs-linux-lts zfs-utils linux-firmware grub efibootmgr os-prober mkinitcpio
 pacstrap /mnt $PACKAGES
 echo "Packages installed."
 
@@ -292,8 +292,12 @@ rm -f /etc/zfs/zpool.cache
 touch /etc/zfs/zpool.cache
 chmod a-w /etc/zfs/zpool.cache
 chattr +i /etc/zfs/zpool.cache
+echo "GRUB_DISABLE_OS_PROBER=no" >> /mnt/etc/default/grub
+echo 'GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3"' >> /mnt/etc/default/grub
+echo "GRUB_GFXMODE=2560x1600" >> /mnt/etc/default/grub
 grub-install --boot-directory /boot/efi/EFI/arch --efi-directory /boot/efi
-grub-mkconfig -o /boot/efi/EFI/arch/grub/grub.cfg
+ZPOOL_VDEV_NAME_PATH=1 grub-mkconfig -o /boot/efi/EFI/arch/grub/grub.cfg
+mkdir -p /boot/grub
 cp /boot/efi/EFI/arch/grub/grub.cfg /boot/grub/grub.cfg
 EOF
 
@@ -313,10 +317,10 @@ zfs snapshot -r rpool@install
 zfs snapshot -r bpool@install
 
 echo "Unmounting..."
-sleep 3
+sleep 5
 umount /mnt/boot/efi
 zfs umount -a
-zpool export rpool
 zpool export bpool
+zpool export rpool
 
 echo "Done! You may now reboot."
