@@ -270,9 +270,7 @@ lpadmin -p MFC7840W -E -v socket://192.168.1.15:9100 -P /usr/share/cups/model/MF
 echo "Doing ZFS-y things..."
 DISKID=nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NG0R621780A
 echo GRUB_CMDLINE_LINUX=\"zfs_import_dir=${DISKID%/*}\" >> /mnt/etc/default/grub
-tee /mnt/etc/mkinitcpio.conf <<EOF
-HOOKS=(base udev autodetect modconf block keyboard zfs filesystems)
-EOF
+sed -i 's/^HOOKS=\(.*\)/HOOKS=\(base udev autodetect modconf block keyboard zfs filesystems\)/g' /mnt/etc/mkinitcpio.conf
 zgenhostid $(hostid)
 systemctl enable zfs-import-scan.service zfs-import.target zfs-zed zfs.target --root=/mnt
 #systemctl disable zfs-mount --root=/mnt
@@ -284,6 +282,9 @@ Include = /etc/pacman.d/mirrorlist-archzfs
 #[archzfs-testing]
 #Include = /etc/pacman.d/mirrorlist-archzfs" >> /mnt/etc/pacman.conf
 arch-chroot /mnt pacman -Sy
+
+echo "Wait here"
+read VERIFY
 
 echo "Installing bootloader..."
 arch-chroot /mnt /bin/bash <<EOF
@@ -297,6 +298,9 @@ grub-install --boot-directory ${ESP}/EFI/arch --efi-directory ${ESP}
 grub-mkconfig -o ${ESP}/EFI/arch/grub/grub.cfg
 cp ${ESP}/EFI/arch/grub/grub.cfg /boot/grub/grub.cfg
 EOF
+
+echo "Did that work?"
+read VERIFY
 
 echo "Enabling Early KMS for GPU..."
 sed -i 's/MODULES=\(\)/MODULES=(i915)/g' /mnt/etc/mkinitcpio.conf
