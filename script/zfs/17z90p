@@ -52,8 +52,8 @@ sgdisk -Z /dev/nvme1n1
 parted -s /dev/nvme1n1 mklabel gpt
 sgdisk -n 1:0:+512M -t 1:ef00 -c 1:"ESP" /dev/nvme1n1 \
        -n 2:0:+32G -t 2:8200 -c 2:"SWAP" /dev/nvme1n1 \
-       -n 3:0:+2G -t 2:bf01 -c 3:"BPOOL" /dev/nvme1n1 \
-       -n 4:0:0 -t 3:bf00 -c 4:"RPOOL" /dev/nvme1n1 \
+       -n 3:0:+2G -t 3:bf01 -c 3:"BPOOL" /dev/nvme1n1 \
+       -n 4:0:0 -t 4:bf00 -c 4:"RPOOL" /dev/nvme1n1 \
 partprobe /dev/nvme1n1
 
 echo "Making legacy filesystems..."
@@ -105,7 +105,7 @@ zpool create -f \
 	-O keyformat=passphrase   \
 	-O keylocation=prompt     \
 	-R /mnt                   \
-zroot /dev/disk/by-partlabel/RPOOL
+rpool /dev/disk/by-partlabel/RPOOL
 
 echo "Making ZFS datasets..."
 #================================ boot environment = arch ================================#
