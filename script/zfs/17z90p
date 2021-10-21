@@ -2,7 +2,7 @@
 # $ iwctl station wlan0 connect {SSID}
 PACKAGES="
 realtime-privileges sof-firmware
-bash nano openssh wget git zip unzip unrar nmap htop
+bash nano openssh wget git zip unzip unrar nmap htop rsync
 intel-ucode vulkan-intel acpi bluez powertop
 networkmanager nm-connection-editor network-manager-applet iwd
 pipewire pipewire-pulse pipewire-jack pipewire-alsa pavucontrol
@@ -33,6 +33,7 @@ brother-mfc-7840w brscan3
 checkra1n-cli
 v4l2loopback-dkms
 sublime-music
+sanoid
 "
 
 sed -i '/#Color/s/^#//g' /etc/pacman.conf
