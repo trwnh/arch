@@ -182,7 +182,7 @@ else
  pacstrap -U /mnt \
  https://archive.archlinux.org/packages/l/linux-lts/linux-lts-${VERSION_LTS}-x86_64.pkg.tar.zst
 fi
-pacstrap /mnt zfs-linux zfs-linux-headers zfs-linux-lts zfs-linux-lts-headers zfs-utils linux-firmware
+pacstrap /mnt zfs-linux zfs-linux-headers zfs-linux-lts zfs-linux-lts-headers zfs-utils linux-firmware grub mkinitcpio
 pacstrap /mnt $PACKAGES
 echo "Packages installed."
 
@@ -263,13 +263,7 @@ EOF
 
 lpadmin -p MFC7840W -E -v socket://192.168.1.15:9100 -P /usr/share/cups/model/MFC7840W.ppd
 
-echo "Enabling Early KMS for GPU..."
-sed -i 's/MODULES=\(\)/MODULES=(i915)/g' /mnt/etc/mkinitcpio.conf
-arch-chroot /mnt /bin/bash <<EOF
-mkinitcpio -p linux
-mkinitcpio -p linux-lts
-exit
-EOF
+
 
 echo "Doing ZFS-y things..."
 DISKID=nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NG0R621780A
@@ -295,12 +289,19 @@ rm -f /etc/zfs/zpool.cache
 touch /etc/zfs/zpool.cache
 chmod a-w /etc/zfs/zpool.cache
 chattr +i /etc/zfs/zpool.cache
-mkinitcpio -P
 ESP=/boot/efi
 source /etc/os-release
 grub-install --boot-directory ${ESP}/EFI/arch --efi-directory ${ESP}
 grub-mkconfig -o ${ESP}/EFI/arch/grub/grub.cfg
 cp ${ESP}/EFI/arch/grub/grub.cfg /boot/grub/grub.cfg
+EOF
+
+echo "Enabling Early KMS for GPU..."
+sed -i 's/MODULES=\(\)/MODULES=(i915)/g' /mnt/etc/mkinitcpio.conf
+arch-chroot /mnt /bin/bash <<EOF
+mkinitcpio -p linux
+mkinitcpio -p linux-lts
+exit
 EOF
 
 echo "Taking snapshot of install..."
