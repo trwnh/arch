@@ -161,7 +161,7 @@ reflector --country 'US' -p https --sort rate --save /etc/pacman.d/mirrorlist --
 echo "Pacman mirrors synced and sorted."
 
 echo "Bootstrapping mounted system..."
-pacstrap /mnt base base-devel mkinitcpio
+pacstrap /mnt base base-devel
 VERSION=$(pacman -Si zfs-linux \
 | grep 'Depends On' \
 | sed "s|.*linux=||" \
@@ -184,7 +184,7 @@ else
  pacstrap -U /mnt \
  https://archive.archlinux.org/packages/l/linux-lts/linux-lts-${VERSION_LTS}-x86_64.pkg.tar.zst
 fi
-pacstrap /mnt zfs-linux zfs-linux-lts zfs-utils linux-firmware grub mkinitcpio
+pacstrap /mnt zfs-linux zfs-linux-lts zfs-utils linux-firmware grub efibootmgr mkinitcpio
 pacstrap /mnt $PACKAGES
 echo "Packages installed."
 
