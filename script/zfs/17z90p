@@ -40,8 +40,6 @@ sed -i '/#ParallelDownloads = 5/s/#ParallelDownloads = 5/ParallelDownloads = 20/
 
 HOSTNAME=17z90p
 USERNAME=trwnh
-echo "Enter a password:"
-read PASSWORD
 
 echo "Setting time sync..."
 timedatectl set-ntp true
