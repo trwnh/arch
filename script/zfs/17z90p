@@ -182,7 +182,7 @@ $(pacman -Si linux-lts | grep Version | awk '{ print $3 }') ]; then
  pacstrap /mnt linux-lts
 else
  pacstrap -U /mnt \
- https://archive.archlinux.org/packages/l/linux/linux-lts-${VERSION}-x86_64.pkg.tar.zst
+ https://archive.archlinux.org/packages/l/linux-lts/linux-lts-${VERSION}-x86_64.pkg.tar.zst
 fi
 pacstrap /mnt zfs-linux zfs-linux-headers zfs-linux-lts zfs-linux-lts-headers zfs-utils linux-firmware
 pacstrap /mnt $PACKAGES
