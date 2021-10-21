@@ -292,11 +292,9 @@ rm -f /etc/zfs/zpool.cache
 touch /etc/zfs/zpool.cache
 chmod a-w /etc/zfs/zpool.cache
 chattr +i /etc/zfs/zpool.cache
-ESP=/boot/efi
-source /etc/os-release
-grub-install --boot-directory ${ESP}/EFI/arch --efi-directory ${ESP}
-grub-mkconfig -o ${ESP}/EFI/arch/grub/grub.cfg
-cp ${ESP}/EFI/arch/grub/grub.cfg /boot/grub/grub.cfg
+grub-install --boot-directory /boot/efi/EFI/arch --efi-directory /boot/efi
+grub-mkconfig -o /boot/efi/EFI/arch/grub/grub.cfg
+cp /boot/efi/EFI/arch/grub/grub.cfg /boot/grub/grub.cfg
 EOF
 
 echo "Did that work?"
