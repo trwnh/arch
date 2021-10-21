@@ -182,7 +182,7 @@ $(pacman -Si linux-lts | grep Version | awk '{ print $3 }') ]; then
  pacstrap /mnt linux-lts
 else
  pacstrap -U /mnt \
- https://archive.archlinux.org/packages/l/linux-lts/linux-lts-${VERSION}-x86_64.pkg.tar.zst
+ https://archive.archlinux.org/packages/l/linux-lts/linux-lts-${VERSION_LTS}-x86_64.pkg.tar.zst
 fi
 pacstrap /mnt zfs-linux zfs-linux-headers zfs-linux-lts zfs-linux-lts-headers zfs-utils linux-firmware
 pacstrap /mnt $PACKAGES
@@ -215,11 +215,14 @@ echo "LANG=en_US.UTF-8" > /mnt/etc/locale.conf
 arch-chroot /mnt localectl set-locale en_US.UTF-8
 echo "* Locale generated and applied."
 
+echo "Avoid timeout -- press Enter when you are ready"
+read TIMEOUT
+
 echo "Setting up users..."
 arch-chroot /mnt useradd -m -g users -G wheel,ftp,http,sys,audio,realtime,docker -s /bin/bash "$USERNAME"
 echo "* Created user $USERNAME."
-arch-chroot /mnt echo "$USERNAME:$PASSWORD" | chpasswd
-arch-chroot /mnt echo "root:$PASSWORD" | chpasswd
+arch-chroot /mnt passwd $USERNAME
+arch-chroot /mnt passwd
 echo "* Set passwords."
 
 echo -n "Enabling system services... "
