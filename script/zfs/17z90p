@@ -65,7 +65,6 @@ mkswap -L "SWAP" /dev/disk/by-partlabel/SWAP
 echo "Making bpool..."
 #================ bpool with grub-compatible flags ================#
 zpool create -f \
-	-o cachefile=/etc/zfs/zpool.cache \
 	-o ashift=12 \
 	-o compatibility=grub2 \
 	-O acltype=posixacl -O canmount=off -O compression=lz4 \
@@ -295,8 +294,9 @@ chattr +i /etc/zfs/zpool.cache
 echo "GRUB_DISABLE_OS_PROBER=no" >> /mnt/etc/default/grub
 echo 'GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3"' >> /mnt/etc/default/grub
 echo "GRUB_GFXMODE=2560x1600" >> /mnt/etc/default/grub
+mkdir -p /boot/efi/EFI/arch
 grub-install --boot-directory /boot/efi/EFI/arch --efi-directory /boot/efi
-ZPOOL_VDEV_NAME_PATH=1 grub-mkconfig -o /boot/efi/EFI/arch/grub/grub.cfg
+ZPOOL_VDEV_NAME_PATH=YES grub-mkconfig -o /boot/efi/EFI/arch/grub/grub.cfg
 mkdir -p /boot/grub
 cp /boot/efi/EFI/arch/grub/grub.cfg /boot/grub/grub.cfg
 EOF
