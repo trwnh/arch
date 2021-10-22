@@ -238,8 +238,10 @@ arch-chroot /mnt timedatectl set-timezone America/Chicago
 echo "* Timezone set."
 arch-chroot /mnt hwclock --systohc
 echo "* Synced system clock to hardware clock."
-echo "en_US.UTF-8 UTF-8
-ar_JO.UTF-8 UTF-8" > /mnt/etc/locale.gen
+cat <<EOF > /mnt/etc/locale.gen
+en_US.UTF-8 UTF-8
+ar_JO.UTF-8 UTF-8
+EOF
 arch-chroot /mnt locale-gen
 echo "LANG=en_US.UTF-8" > /mnt/etc/locale.conf
 arch-chroot /mnt localectl set-locale en_US.UTF-8
@@ -265,13 +267,15 @@ EOF
 echo "done."
 
 echo -n "Changing configuration values... "
-sed -i '/#Color/s/^#//g' /mnt/etc/pacman.conf
-sed -i '/#ParallelDownloads = 5/s/#ParallelDownloads = 5/ParallelDownloads = 20/g' /mnt/etc/pacman.conf
-sed -i '/#\s%wheel\sALL=(ALL)\sALL/s/^#//g' /mnt/etc/sudoers
-echo "EDITOR=nano" > /mnt/etc/environment
-echo "FONT=\"ter-v32b\"" > /mnt/etc/vconsole.conf
-echo "SWEETHOME3D_JAVA3D=1.5" >> /mnt/etc/environment
+sed -i 's/^#Color/Color\nILoveCandy/g' /mnt/etc/pacman.conf
+sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 20/' /mnt/etc/pacman.conf
 sed -i "/\[multilib\]/,/Include/"'s/^#//' /mnt/etc/pacman.conf
+echo '%wheel      ALL=(ALL) ALL' /mnt/etc/sudoers.d/10_wheel
+echo "FONT=\"ter-v32b\"" > /mnt/etc/vconsole.conf
+cat <<EOF > /mnt/etc/environment
+EDITOR=nano
+SWEETHOME3D_JAVA3D=1.5
+EOF
 echo "done."
 
 echo "Installing AUR helper..."
@@ -321,7 +325,7 @@ arch-chroot /mnt /bin/bash <<EOF
 DISKID=nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NG0R621780A
 echo 'GRUB_CMDLINE_LINUX=\"zfs_import_dir=${DISKID%/*}\"' >> /etc/default/grub
 echo "GRUB_DISABLE_OS_PROBER=no" >> /etc/default/grub
-echo 'GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3"' >> /etc/default/grub
+echo 'GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 video=2560x1600"' >> /etc/default/grub
 echo "GRUB_GFXMODE=2560x1600" >> /etc/default/grub
 sed -i "s|rpool=.*|rpool=\`zdb -l \${GRUB_DEVICE} \| grep -E '[[:blank:]]name' \| cut -d\\\' -f 2\`|"  /etc/grub.d/10_linux
 sed -i "s/linux=`version_find_latest\s\$list`/linux=`echo \$list \| tr ' ' '\\\n' \| sort -V | head -1 | cat`/" /etc/grub.d/linux
