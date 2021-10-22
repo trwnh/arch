@@ -22,7 +22,7 @@ archey3
 gdm xfce4 xfce4-goodies plank
 gnome gnome-tweaks
 obs-studio libva-intel-driver
-docker go rust hugo zola
+docker docker-compose go rust hugo zola
 "
 AUR="
 noto-fonts-emoji-blob ttf-roboto-slab ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-sil-scheherazade
