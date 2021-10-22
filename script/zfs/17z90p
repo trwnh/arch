@@ -69,8 +69,8 @@ AUR="
 	sanoid
 "
 
-sed -i '/#Color/s/^#//g' /etc/pacman.conf
-sed -i '/#ParallelDownloads = 5/s/#ParallelDownloads = 5/ParallelDownloads = 20/g' /etc/pacman.conf
+sed -i 's/^#Color/Color/g' /mnt/etc/pacman.conf
+sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 20/' /mnt/etc/pacman.conf
 
 echo "Setting time sync..."
 timedatectl set-ntp true
@@ -184,7 +184,7 @@ echo "Updating pacman mirrorlist..."
 pacman -Sy
 pacman -S reflector --noconfirm
 echo "Sorting mirrorlist..."
-reflector --country 'US' -p https --sort rate --save /etc/pacman.d/mirrorlist --verbose
+reflector --country 'US' -p https --sort rate --save /etc/pacman.d/mirrorlist --verbose -n 10
 echo "Pacman mirrors synced and sorted."
 
 echo "Bootstrapping mounted system..."
@@ -270,10 +270,10 @@ EOF
 echo "done."
 
 echo -n "Changing configuration values... "
-sed -i 's/^#Color/Color\nILoveCandy/g' /mnt/etc/pacman.conf
+sed -i 's/^#Color/Color/g' /mnt/etc/pacman.conf
 sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 20/' /mnt/etc/pacman.conf
 sed -i "/\[multilib\]/,/Include/"'s/^#//' /mnt/etc/pacman.conf
-echo '%wheel      ALL=(ALL) ALL' /mnt/etc/sudoers.d/10_wheel
+echo '%wheel      ALL=(ALL) ALL' > /mnt/etc/sudoers.d/wheel
 echo "FONT=\"ter-v32b\"" > /mnt/etc/vconsole.conf
 cat <<EOF > /mnt/etc/environment
 EDITOR=nano
@@ -317,8 +317,8 @@ Include = /etc/pacman.d/mirrorlist-archzfs
 #[archzfs-testing]
 #Include = /etc/pacman.d/mirrorlist-archzfs" >> /mnt/etc/pacman.conf
 arch-chroot /mnt pacman -Sy
-echo 'export ZPOOL_VDEV_NAME_PATH=1' >> /etc/profile.d/zpool_vdev_name_path.sh
-echo 'Defaults env_keep += "ZPOOL_VDEV_NAME_PATH"' >> /mnt/etc/sudoers
+echo 'export ZPOOL_VDEV_NAME_PATH=1' >> /etc/profile.d/zfs
+echo 'Defaults env_keep += "ZPOOL_VDEV_NAME_PATH"' > /mnt/etc/sudoers.d/zfs
 
 echo "Wait here"
 read VERIFY
@@ -344,7 +344,7 @@ echo "Did that work?"
 read VERIFY
 
 echo "Enabling Early KMS for GPU..."
-sed -i 's/MODULES=\(\)/MODULES=(i915)/g' /mnt/etc/mkinitcpio.conf
+sed -i 's/^MODULES=\(\)/MODULES=(i915)/' /mnt/etc/mkinitcpio.conf
 arch-chroot /mnt /bin/bash <<EOF
 mkinitcpio -p linux
 mkinitcpio -p linux-lts
