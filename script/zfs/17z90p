@@ -218,7 +218,12 @@ pacstrap /mnt $PACKAGES
 echo "Packages installed."
 
 echo -n "Generating filesystem mount table... "
-genfstab -U /mnt >> /mnt/etc/fstab
+#genfstab -U /mnt >> /mnt/etc/fstab
+cat <<EOF > /mnt/etc/fstab
+bpool/BOOT/arch /boot zfs rw,nodev,xattr,posixacl 0 0
+LABEL=EFI /boot/efi vfat rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro 0 2
+LABEL=SWAP none swap defaults 0 0
+EOF
 echo "done."
 
 echo -n "Setting hostname... "
@@ -321,7 +326,7 @@ read VERIFY
 
 echo "Installing bootloader..."
 arch-chroot /mnt /bin/bash <<EOF
-echo 'GRUB_CMDLINE_LINUX=\"zfs_import_dir=${DISKID%/*}\"' >> /etc/default/grub
+#echo 'GRUB_CMDLINE_LINUX=\"zfs_import_dir=${DISKID%/*}\"' >> /etc/default/grub
 echo "GRUB_DISABLE_OS_PROBER=no" >> /etc/default/grub
 echo 'GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 video=2560x1600"' >> /etc/default/grub
 echo "GRUB_GFXMODE=2560x1600" >> /etc/default/grub
