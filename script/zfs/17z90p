@@ -316,6 +316,9 @@ exit
 EOF
 
 echo "Taking snapshot of install..."
+zpool set cachefile=/etc/zfs/zpool.cache bpool
+zpool set cachefile=/etc/zfs/zpool.cache rpool
+cp /etc/zfs/zpool.cache /mnt/etc/zfs/zpool.cache
 zfs snapshot -r rpool@install
 zfs snapshot -r bpool@install
 
