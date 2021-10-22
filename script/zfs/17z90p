@@ -100,7 +100,7 @@ zpool create -f \
 	-o compatibility=grub2 \
 	-O acltype=posixacl -O canmount=off -O compression=lz4 \
 	-O devices=off -O normalization=formD -O relatime=on -O xattr=sa \
-	-R /mnt -O mountpoint=/bpool \
+	-R /mnt -O mountpoint=none \
 bpool /dev/disk/by-partlabel/BPOOL
 
 echo "Making rpool..."
