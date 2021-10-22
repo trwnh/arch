@@ -282,6 +282,8 @@ Include = /etc/pacman.d/mirrorlist-archzfs
 #[archzfs-testing]
 #Include = /etc/pacman.d/mirrorlist-archzfs" >> /mnt/etc/pacman.conf
 arch-chroot /mnt pacman -Sy
+echo 'export ZPOOL_VDEV_NAME_PATH=YES' >> /etc/profile.d/zpool_vdev_name_path.sh
+echo 'Defaults env_keep += "ZPOOL_VDEV_NAME_PATH"' >> /mnt/etc/sudoers
 
 echo "Wait here"
 read VERIFY
@@ -293,6 +295,8 @@ echo 'GRUB_CMDLINE_LINUX=\"zfs_import_dir=${DISKID%/*}\"' >> /etc/default/grub
 echo "GRUB_DISABLE_OS_PROBER=no" >> /etc/default/grub
 echo 'GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3"' >> /etc/default/grub
 echo "GRUB_GFXMODE=2560x1600" >> /etc/default/grub
+sed -i "s|rpool=.*|rpool=\`zdb -l \${GRUB_DEVICE} \| grep -E '[[:blank:]]name' \| cut -d\\\' -f 2\`|"  /etc/grub.d/10_linux
+sed -i "s/linux=`version_find_latest\s\$list`/linux=`echo \$list \| tr ' ' '\\\n' \| sort -V | head -1 | cat`/" /etc/grub.d/linux
 mkdir -p /boot/efi/EFI/arch
 grub-install --boot-directory /boot/efi/EFI/arch --efi-directory /boot/efi
 ZPOOL_VDEV_NAME_PATH=YES grub-mkconfig -o /boot/efi/EFI/arch/grub/grub.cfg
