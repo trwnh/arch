@@ -100,7 +100,7 @@ zpool create -f \
 	-o compatibility=grub2 \
 	-O acltype=posixacl -O canmount=off -O compression=lz4 \
 	-O devices=off -O normalization=formD -O relatime=on -O xattr=sa \
-	-R /mnt -O mountpoint=/boot \
+	-R /mnt -O mountpoint=/bpool \
 bpool /dev/disk/by-partlabel/BPOOL
 
 echo "Making rpool..."
@@ -220,7 +220,6 @@ echo "Packages installed."
 echo -n "Generating filesystem mount table... "
 #genfstab -U /mnt >> /mnt/etc/fstab
 cat <<EOF > /mnt/etc/fstab
-bpool/BOOT/arch /boot zfs rw,nodev,xattr,posixacl 0 0
 LABEL=EFI /boot/efi vfat rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro 0 2
 LABEL=SWAP none swap defaults 0 0
 EOF
