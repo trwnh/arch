@@ -81,7 +81,7 @@ curl -s https://eoli3n.github.io/archzfs/init | bash
 echo "Partitioning disk..."
 sgdisk -Z $DEV
 parted -s /dev/nvme1n1 mklabel gpt
-sgdisk -n 1:0:+512M -t 1:ef00 -c 1:"ESP" $DEV \
+sgdisk -n 1:0:+2G -t 1:ef00 -c 1:"ESP" $DEV \
        -n 2:0:+32G -t 2:8200 -c 2:"SWAP" $DEV \
        -n 3:0:+2G -t 3:bf01 -c 3:"BPOOL" $DEV \
        -n 4:0:0 -t 4:bf00 -c 4:"RPOOL" $DEV \
@@ -100,7 +100,7 @@ zpool create -f \
 	-o compatibility=grub2 \
 	-O acltype=posixacl -O canmount=off -O compression=lz4 \
 	-O devices=off -O normalization=formD -O relatime=on -O xattr=sa \
-	-R /mnt -O mountpoint=none \
+	-R /mnt -O mountpoint=/boot \
 bpool /dev/disk/by-partlabel/BPOOL
 
 echo "Making rpool..."
@@ -307,7 +307,7 @@ lpadmin -p MFC7840W -E -v socket://192.168.1.15:9100 -P /usr/share/cups/model/MF
 echo "Doing ZFS-y things..."
 sed -i 's/^HOOKS=\(.*\)/HOOKS=\(base udev autodetect modconf block keyboard zfs filesystems\)/g' /mnt/etc/mkinitcpio.conf
 zgenhostid $(hostid)
-systemctl enable zfs-import-scan.service zfs-import.target zfs-zed zfs.target --root=/mnt
+systemctl enable zfs-import-scan zfs-import-cache zfs-import.target zfs-zed zfs.target --root=/mnt
 systemctl enable zfs-mount --root=/mnt
 curl -L https://archzfs.com/archzfs.gpg |  pacman-key -a -
 curl -L https://git.io/JsfVS | xargs -i{} pacman-key --lsign-key {}
@@ -317,7 +317,7 @@ Include = /etc/pacman.d/mirrorlist-archzfs
 #[archzfs-testing]
 #Include = /etc/pacman.d/mirrorlist-archzfs" >> /mnt/etc/pacman.conf
 arch-chroot /mnt pacman -Sy
-echo 'export ZPOOL_VDEV_NAME_PATH=YES' >> /etc/profile.d/zpool_vdev_name_path.sh
+echo 'export ZPOOL_VDEV_NAME_PATH=1' >> /etc/profile.d/zpool_vdev_name_path.sh
 echo 'Defaults env_keep += "ZPOOL_VDEV_NAME_PATH"' >> /mnt/etc/sudoers
 
 echo "Wait here"
