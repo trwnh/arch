@@ -219,7 +219,7 @@ echo "Packages installed."
 echo -n "Generating filesystem mount table... "
 #genfstab -U /mnt >> /mnt/etc/fstab
 cat <<EOF > /mnt/etc/fstab
-LABEL=EFI /boot/efi vfat rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro,x-systemd.idle-timeout=1min,x-systemd.automount,noauto 0 2
+LABEL=EFI /boot/efi vfat rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro 0 2
 LABEL=SWAP none swap defaults 0 0
 EOF
 echo "done."
