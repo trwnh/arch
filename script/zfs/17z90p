@@ -1,5 +1,7 @@
 #!/bin/bash
 # $ iwctl station wlan0 connect {SSID}
+HOSTNAME=17z90p
+USERNAME=trwnh
 PACKAGES="
 `#hardware support`
 	  intel-ucode vulkan-intel acpi bluez powertop iwd
@@ -66,9 +68,6 @@ AUR="
 
 sed -i '/#Color/s/^#//g' /etc/pacman.conf
 sed -i '/#ParallelDownloads = 5/s/#ParallelDownloads = 5/ParallelDownloads = 20/g' /etc/pacman.conf
-
-HOSTNAME=17z90p
-USERNAME=trwnh
 
 echo "Setting time sync..."
 timedatectl set-ntp true
