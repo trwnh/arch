@@ -27,8 +27,9 @@ docker go rust hugo zola
 AUR="
 noto-fonts-emoji-blob ttf-roboto-slab ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-sil-scheherazade
 rofi-dmenu
+mugshot xmousepasteblock-git
 gnome-shell-extension-dash-to-dock
-enpass-bin xmousepasteblock-git
+enpass-bin
 brother-mfc-7840w brscan3
 checkra1n-cli
 v4l2loopback-dkms
