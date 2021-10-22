@@ -219,7 +219,7 @@ echo "Packages installed."
 echo -n "Generating filesystem mount table... "
 #genfstab -U /mnt >> /mnt/etc/fstab
 cat <<EOF > /mnt/etc/fstab
-LABEL=EFI /boot/efi vfat rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro 0 2
+LABEL=EFI /boot/efi vfat rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro,x-system.after=zfs-mount.service 0 2
 LABEL=SWAP none swap defaults 0 0
 EOF
 echo "done."
@@ -318,10 +318,6 @@ Include = /etc/pacman.d/mirrorlist-archzfs
 arch-chroot /mnt pacman -Sy
 echo 'export ZPOOL_VDEV_NAME_PATH=1' >> /etc/profile.d/zfs
 echo 'Defaults env_keep += "ZPOOL_VDEV_NAME_PATH"' > /mnt/etc/sudoers.d/zfs
-SYSTEMD_EDITOR=tee systemctl edit boot-efi.mount <<EOF
-[Unit]
-RequiresMountsFor=/boot
-EOF
 
 echo "Wait here"
 read VERIFY
