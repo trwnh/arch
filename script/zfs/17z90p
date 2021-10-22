@@ -2,6 +2,9 @@
 # $ iwctl station wlan0 connect {SSID}
 HOSTNAME=17z90p
 USERNAME=trwnh
+TIMEZONE=America/Chicago
+DISKID=nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NG0R621780A
+DEV=/dev/disk/by-id/$DISKID
 PACKAGES="
 `#hardware support`
 	  intel-ucode vulkan-intel acpi bluez powertop iwd
@@ -76,14 +79,14 @@ echo "Enabling archzfs..."
 curl -s https://eoli3n.github.io/archzfs/init | bash
 
 echo "Partitioning disk..."
-sgdisk -Z /dev/nvme1n1
+sgdisk -Z $DEV
 parted -s /dev/nvme1n1 mklabel gpt
-sgdisk -n 1:0:+512M -t 1:ef00 -c 1:"ESP" /dev/nvme1n1 \
-       -n 2:0:+32G -t 2:8200 -c 2:"SWAP" /dev/nvme1n1 \
-       -n 3:0:+2G -t 3:bf01 -c 3:"BPOOL" /dev/nvme1n1 \
-       -n 4:0:0 -t 4:bf00 -c 4:"RPOOL" /dev/nvme1n1 \
+sgdisk -n 1:0:+512M -t 1:ef00 -c 1:"ESP" $DEV \
+       -n 2:0:+32G -t 2:8200 -c 2:"SWAP" $DEV \
+       -n 3:0:+2G -t 3:bf01 -c 3:"BPOOL" $DEV \
+       -n 4:0:0 -t 4:bf00 -c 4:"RPOOL" $DEV \
 sleep 3
-partprobe /dev/nvme1n1
+partprobe $DEV
 sleep 3
 
 echo "Making legacy filesystems..."
@@ -159,9 +162,6 @@ zfs create -o mountpoint=/var/tmp   -o com.sun:auto-snapshot=false rpool/DATA/va
 zfs create -o mountpoint=/tmp       -o com.sun:auto-snapshot=false rpool/DATA/tmp
 chmod 1777 /mnt/tmp
 chmod 1777 /mnt/var/tmp
-zpool set cachefile=/etc/zfs/zpool.cache rpool
-mkdir -p /mnt/etc/zfs
-cp /etc/zfs/zpool.cache /mnt/etc/zfs/zpool.cache
 
 #echo "Validating ZFS pool..."
 #zpool export rpool
@@ -232,8 +232,8 @@ arch-chroot /mnt hostnamectl set-hostname $HOSTNAME
 echo "done."
 
 echo "Localizing system..."
-arch-chroot /mnt ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime
-arch-chroot /mnt timedatectl set-timezone America/Chicago
+arch-chroot /mnt ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
+arch-chroot /mnt timedatectl set-timezone $TIMEZONE
 echo "* Timezone set."
 arch-chroot /mnt hwclock --systohc
 echo "* Synced system clock to hardware clock."
@@ -321,7 +321,6 @@ read VERIFY
 
 echo "Installing bootloader..."
 arch-chroot /mnt /bin/bash <<EOF
-DISKID=nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NG0R621780A
 echo 'GRUB_CMDLINE_LINUX=\"zfs_import_dir=${DISKID%/*}\"' >> /etc/default/grub
 echo "GRUB_DISABLE_OS_PROBER=no" >> /etc/default/grub
 echo 'GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 video=2560x1600"' >> /etc/default/grub
@@ -349,6 +348,7 @@ EOF
 echo "Taking snapshot of install..."
 zpool set cachefile=/etc/zfs/zpool.cache bpool
 zpool set cachefile=/etc/zfs/zpool.cache rpool
+mkdir -p /mnt/etc/zfs
 cp /etc/zfs/zpool.cache /mnt/etc/zfs/zpool.cache
 zfs snapshot -r rpool@install
 zfs snapshot -r bpool@install
