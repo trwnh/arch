@@ -270,12 +270,10 @@ lpadmin -p MFC7840W -E -v socket://192.168.1.15:9100 -P /usr/share/cups/model/MF
 
 
 echo "Doing ZFS-y things..."
-DISKID=nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NG0R621780A
-echo GRUB_CMDLINE_LINUX=\"zfs_import_dir=${DISKID%/*}\" >> /mnt/etc/default/grub
 sed -i 's/^HOOKS=\(.*\)/HOOKS=\(base udev autodetect modconf block keyboard zfs filesystems\)/g' /mnt/etc/mkinitcpio.conf
 zgenhostid $(hostid)
 systemctl enable zfs-import-scan.service zfs-import.target zfs-zed zfs.target --root=/mnt
-#systemctl disable zfs-mount --root=/mnt
+systemctl enable zfs-mount --root=/mnt
 curl -L https://archzfs.com/archzfs.gpg |  pacman-key -a -
 curl -L https://git.io/JsfVS | xargs -i{} pacman-key --lsign-key {}
 curl -L https://git.io/Jsfw2 > /mnt/etc/pacman.d/mirrorlist-archzfs
@@ -290,13 +288,11 @@ read VERIFY
 
 echo "Installing bootloader..."
 arch-chroot /mnt /bin/bash <<EOF
-rm -f /etc/zfs/zpool.cache
-touch /etc/zfs/zpool.cache
-chmod a-w /etc/zfs/zpool.cache
-chattr +i /etc/zfs/zpool.cache
-echo "GRUB_DISABLE_OS_PROBER=no" >> /mnt/etc/default/grub
-echo 'GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3"' >> /mnt/etc/default/grub
-echo "GRUB_GFXMODE=2560x1600" >> /mnt/etc/default/grub
+DISKID=nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NG0R621780A
+echo 'GRUB_CMDLINE_LINUX=\"zfs_import_dir=${DISKID%/*}\"' >> /etc/default/grub
+echo "GRUB_DISABLE_OS_PROBER=no" >> /etc/default/grub
+echo 'GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3"' >> /etc/default/grub
+echo "GRUB_GFXMODE=2560x1600" >> /etc/default/grub
 mkdir -p /boot/efi/EFI/arch
 grub-install --boot-directory /boot/efi/EFI/arch --efi-directory /boot/efi
 ZPOOL_VDEV_NAME_PATH=YES grub-mkconfig -o /boot/efi/EFI/arch/grub/grub.cfg
