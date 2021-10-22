@@ -319,6 +319,10 @@ Include = /etc/pacman.d/mirrorlist-archzfs
 arch-chroot /mnt pacman -Sy
 echo 'export ZPOOL_VDEV_NAME_PATH=1' >> /etc/profile.d/zfs
 echo 'Defaults env_keep += "ZPOOL_VDEV_NAME_PATH"' > /mnt/etc/sudoers.d/zfs
+SYSTEMD_EDITOR=tee systemctl edit boot-efi.mount <<EOF
+[Unit]
+RequiresMountsFor=/boot
+EOF
 
 echo "Wait here"
 read VERIFY
@@ -335,7 +339,7 @@ sed -i "s|rpool=.*|rpool=\`zdb -l \${GRUB_DEVICE} \| grep -E '[[:blank:]]name' \
 sed -i "s|^  linux=.*|  linux=\`echo \$list \| tr ' ' '\\\n' \| sort -V \| head -1 \| cat\`|" /etc/grub.d/10_linux
 mkdir -p /boot/efi/EFI/arch
 grub-install --boot-directory /boot/efi/EFI/arch --efi-directory /boot/efi
-ZPOOL_VDEV_NAME_PATH=YES grub-mkconfig -o /boot/efi/EFI/arch/grub/grub.cfg
+ZPOOL_VDEV_NAME_PATH=1 grub-mkconfig -o /boot/efi/EFI/arch/grub/grub.cfg
 mkdir -p /boot/grub
 cp /boot/efi/EFI/arch/grub/grub.cfg /boot/grub/grub.cfg
 EOF
@@ -346,8 +350,7 @@ read VERIFY
 echo "Enabling Early KMS for GPU..."
 sed -i 's/^MODULES=\(\)/MODULES=(i915)/' /mnt/etc/mkinitcpio.conf
 arch-chroot /mnt /bin/bash <<EOF
-mkinitcpio -p linux
-mkinitcpio -p linux-lts
+mkinitcpio -P
 exit
 EOF
 
