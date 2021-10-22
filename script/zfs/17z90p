@@ -28,6 +28,7 @@ docker go rust
 AUR="
 noto-fonts-emoji-blob ttf-roboto-slab ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-sil-scheherazade
 rofi-dmenu
+gnome-shell-extension-dash-to-dock
 enpass-bin xmousepasteblock-git
 brother-mfc-7840w brscan3
 checkra1n-cli
