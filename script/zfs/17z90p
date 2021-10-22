@@ -56,7 +56,7 @@ AUR="
 `#more sway`
 	rofi-dmenu
 `#more xfce`
-	mugshot xfce4-docklike-plugin xmousepasteblock-git vala-panel-appmenu-xfce xfce4-windowck-plugin-xfwm4-theme-support
+	mugshot xfce4-docklike-plugin xmousepasteblock-git xfce4-windowck-plugin-xfwm4-theme-support `#vala-panel-appmenu-xfce is causing build errors`
 `#more gnome`
 	gnome-shell-extension-dash-to-dock
 `#more printing`
