@@ -1,4 +1,5 @@
 #!/bin/bash
-# destroy all BEs and keep last N, where N is the argument passed to this script
+# destroy all BEs and keep last N, where N is the argument passed to this script.
+# must be run as root.
 N=$1
 bieaz list | grep -oP 'pac-[a-z0-9]{5,6}' | tail -n $((N+1)) |xargs -I '{}' bieaz destroy '{}'
