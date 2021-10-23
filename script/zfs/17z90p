@@ -356,6 +356,19 @@ mkinitcpio -P
 exit
 EOF
 
+echo "Installing vala-panel-appmenu-xfce from AUR because building it fails..."
+arch-chroot /mnt /bin/bash <<EOF
+cd /home/$USERNAME/
+mkdir -p build
+cd build
+sudo -u $USERNAME yay -G vala-panel-appmenu
+cd vala-panel-appmenu
+sed -i '_disable_mate=false/s/false/true' PKGBUILD
+sed -i '_disable_vala=false/s/false/true' PKGBUILD
+sed -i '_disable_budgie=false/s/false/true' PKGBUILD
+sudo -u $USERNAME makepkg -sic --noconfirm
+EOF
+
 echo "Taking snapshot of install..."
 zpool set cachefile=/etc/zfs/zpool.cache bpool
 zpool set cachefile=/etc/zfs/zpool.cache rpool
