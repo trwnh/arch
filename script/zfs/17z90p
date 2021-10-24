@@ -47,6 +47,7 @@ PACKAGES="
 	quassel-client discord telegram-desktop mumble dino
 	obs-studio libva-intel-driver v4l2loopback-dkms
 	gimp krita inkscape blender pitivi audacity
+	bitwarden trash-cli
 `#theming`
 	materia-gtk-theme materia-kde faenza-icon-theme kvantum-qt5 kvantum-theme-materia
 "
