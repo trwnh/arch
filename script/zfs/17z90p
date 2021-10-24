@@ -66,6 +66,7 @@ AUR="
 `#more desktop`
 	enpass-bin sublime-music
 	checkra1n-cli
+	syncthing-gtk
 `#zfs snapshots and replication`
 	sanoid
 "
