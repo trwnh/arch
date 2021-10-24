@@ -26,6 +26,7 @@ PACKAGES="
 	adobe-source-code-pro-fonts adobe-source-sans-pro-fonts adobe-source-serif-pro-fonts
 	ttf-nerd-fonts-symbols
 	ttf-dejavu
+	inter-font
 `#sway`
 	sway
 	wayland xorg-xwayland qt5-wayland
