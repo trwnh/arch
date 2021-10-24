@@ -17,7 +17,7 @@ PACKAGES="
 `#audio`
 	pipewire pipewire-pulse pipewire-jack pipewire-alsa sof-firmware realtime-privileges
 `#files and devices`
-	ntfs-3g exfat-utils android-tools android-udev cups cups-pdf
+	ntfs-3g exfat-utils android-tools android-udev cups cups-pdf qmk
 `#fonts`
 	terminus-font
 	ttf-droid ttf-roboto noto-fonts noto-fonts-extra noto-fonts-cjk
