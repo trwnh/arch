@@ -33,7 +33,7 @@ curl -s https://eoli3n.github.io/archzfs/init | bash
 
 echo "Partitioning disk..."
 sgdisk -Z $DEV
-parted -s /dev/nvme1n1 mklabel gpt
+parted -s $DEV mklabel gpt
 sgdisk -n 1:0:+2G -t 1:ef00 -c 1:"ESP" $DEV \
        -n 2:0:+2G -t 2:bf01 -c 2:"BPOOL" $DEV \
        -n 3:0:0 -t 3:bf00 -c 3:"RPOOL" $DEV \
