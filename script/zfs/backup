@@ -212,13 +212,20 @@ Name=en*
 [Network]
 Bridge=br0
 EOF
-cat <<EOF > /mnt/etc/systemd/network/20_br0.network
+cat <<EOF > /mnt/etc/systemd/network/20_bridge.network
 [Match]
 Name=br0
 
 [Network]
 DHCP=ipv4
 EOF
+
+#cat /etc/dnsmasq.conf > /mnt/install/etc/dnsmasq.conf
+#cat /etc/nginx/nginx.conf > /mnt/etc/nginx/nginx.conf
+#cat /etc/samba/smb.conf > /mnt/etc/samba/smb.conf
+#cat /etc/exports > /mnt/etc/exports
+#cp -rfv /etc/nginx/sites /mnt/etc/nginx/sites
+#cp -rfv /etc/nginx/snippets /mnt/etc/nginx/snippets
 
 echo "Avoid timeout -- press Enter when you are ready"
 read TIMEOUT
@@ -272,7 +279,7 @@ EOF
 echo "done."
 
 echo -n "Changing configuration values... "
-sed -i 's/^#Color/Color/g' /mnt/etc/pacman.conf
+sed -i 's/^#Color/Color\nILoveCandy/g' /mnt/etc/pacman.conf
 sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 20/' /mnt/etc/pacman.conf
 sed -i "/\[multilib\]/,/Include/"'s/^#//' /mnt/etc/pacman.conf
 echo '%wheel      ALL=(ALL) ALL' > /mnt/etc/sudoers.d/wheel
