@@ -22,7 +22,7 @@ AUR="
 	sanoid
 "
 
-sed -i 's/^#Color/Color/g' /etc/pacman.conf
+sed -i 's/^#Color/Color\nILoveCandy/g' /etc/pacman.conf
 sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 20/' /etc/pacman.conf
 
 echo "Setting time sync..."
