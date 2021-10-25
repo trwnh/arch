@@ -68,7 +68,7 @@ AUR="
 	checkra1n-cli
 	syncthing-gtk
 `#zfs snapshots and replication`
-	sanoid
+	sanoid lzop mbuffer pv
 "
 
 sed -i 's/^#Color/Color/g' /etc/pacman.conf
