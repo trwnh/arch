@@ -359,8 +359,10 @@ exit
 EOF
 
 echo "Taking snapshot of install..."
+zpool import -R /mnt storage
 zpool set cachefile=/etc/zfs/zpool.cache bpool
 zpool set cachefile=/etc/zfs/zpool.cache rpool
+zpool set cachefile=/etc/zfs/zpool.cache storage
 mkdir -p /mnt/etc/zfs
 cp /etc/zfs/zpool.cache /mnt/etc/zfs/zpool.cache
 zfs snapshot -r rpool@install
@@ -372,5 +374,5 @@ umount /mnt/boot/efi
 zfs umount -a
 zpool export bpool
 zpool export rpool
-
+zpool export storage
 echo "Done! You may now reboot."
