@@ -19,7 +19,7 @@ PACKAGES="
 "
 AUR="
 `#zfs snapshots and replication`
-	sanoid
+	sanoid lzop mbuffer pv
 "
 
 sed -i 's/^#Color/Color\nILoveCandy/g' /etc/pacman.conf
