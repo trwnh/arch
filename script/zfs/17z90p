@@ -256,6 +256,7 @@ echo "Avoid timeout -- press Enter when you are ready"
 read TIMEOUT
 
 echo "Setting up users..."
+zfs create rpool/DATA/home/$USERNAME
 arch-chroot /mnt useradd -m -g users -G wheel,ftp,http,sys,audio,realtime,docker -s /bin/bash "$USERNAME"
 echo "* Created user $USERNAME."
 arch-chroot /mnt passwd $USERNAME
