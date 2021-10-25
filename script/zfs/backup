@@ -131,7 +131,7 @@ echo "Updating pacman mirrorlist..."
 pacman -Sy
 pacman -S reflector --noconfirm
 echo "Sorting mirrorlist..."
-reflector --country 'US' -p https --sort rate --save /etc/pacman.d/mirrorlist --verbose -n 10
+reflector --country 'US' -p https --sort rate --save /etc/pacman.d/mirrorlist --verbose
 echo "Pacman mirrors synced and sorted."
 
 echo "Bootstrapping mounted system..."
