@@ -262,6 +262,7 @@ ExecStop=/usr/bin/echo '%i server stopped.'
 [Install]
 WantedBy=multi-user.target
 EOF
+zfs create rpool/DATA/home/$USERNAME
 arch-chroot /mnt useradd -m -g users -G wheel,ftp,http,sys,audio,docker,minecraft -s /bin/bash "$USERNAME"
 echo "* Created user $USERNAME."
 arch-chroot /mnt passwd $USERNAME
