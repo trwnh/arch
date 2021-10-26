@@ -7,7 +7,7 @@ DISKID=nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NG0R621780A
 DEV=/dev/disk/by-id/$DISKID
 PACKAGES="
 `#hardware support`
-	intel-ucode vulkan-intel acpi bluez powertop iwd fprint
+	intel-ucode vulkan-intel acpi bluez powertop iwd fprint solaar
 `#basic utilities`
 	bash nano openssh wget rsync git zip unzip unrar nmap htop archey3 bash-completion
 `#dev`
