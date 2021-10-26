@@ -9,7 +9,7 @@ PACKAGES="
 `#hardware support`
 	intel-ucode vulkan-intel acpi bluez powertop iwd
 `#basic utilities`
-	bash nano openssh wget rsync git zip unzip unrar nmap htop archey3
+	bash nano openssh wget rsync git zip unzip unrar nmap htop archey3 bash-completion
 `#dev`
 	docker docker-compose go rust hugo zola
 `#networking`
@@ -36,6 +36,7 @@ PACKAGES="
 	waybar
 	imv mpv rofi alacritty
 	thunar thunar-volman gvfs file-roller ffmpegthumbnailer
+	zathura zathura-cb zathura-djvu zathura-pdf-mupdf
 `#xfce`
 	gdm xfce4 xfce4-goodies plank
 `#gnome`
@@ -49,6 +50,9 @@ PACKAGES="
 	gimp krita inkscape blender pitivi audacity
 	bitwarden trash-cli nextcloud-client nextcloud-client-cloudproviders
 	jre-opendjk sweethome3d
+	curtail
+	darktable rawtherapee shotwell
+	texmaker texlive-most libreoffice-fresh
 `#theming`
 	materia-gtk-theme materia-kde faenza-icon-theme kvantum-qt5 kvantum-theme-materia
 "
