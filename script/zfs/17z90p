@@ -306,7 +306,19 @@ echo "Installing bootloader..."
 arch-chroot /mnt /bin/bash <<EOF
 mkdir -p /boot/efi/EFI/zbm
 curl https://github.com/zbm-dev/zfsbootmenu/releases/download/v1.10.1/zfsbootmenu-x86_64-v1.10.1.EFI -o /boot/efi/EFI/zbm/zfsbootmenu.EFI
+
 refind-install
+EOF
+cat <<EOF > /mnt/etc/pacman.d/hooks/refind.hook
+[Trigger]
+Operation=Upgrade
+Type=Package
+Target=refind
+
+[Action]
+Description = Updating rEFInd on ESP
+When=PostTransaction
+Exec=/usr/bin/refind-install
 EOF
 
 echo "Did that work?"
