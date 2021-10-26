@@ -346,7 +346,7 @@ echo "GRUB_SAVEDEFAULT=true" >> /etc/default/grub
 sed -i "s|rpool=.*|rpool=\`zdb -l \${GRUB_DEVICE} \| grep -E '[[:blank:]]name' \| cut -d\\\' -f 2\`|"  /etc/grub.d/10_linux
 sed -i "s|^  linux=.*|  linux=\`echo \$list \| tr ' ' '\\\n' \| sort -V \| head -1 \| cat\`|" /etc/grub.d/10_linux
 mkdir -p /boot/efi/EFI/arch
-grub-install --boot-directory /boot/efi/EFI/arch --efi-directory /boot/efi
+ZPOOL_VDEV_NAME_PATH=1 grub-install --boot-directory /boot/efi/EFI/arch --efi-directory /boot/efi
 ZPOOL_VDEV_NAME_PATH=1 grub-mkconfig -o /boot/efi/EFI/arch/grub/grub.cfg
 mkdir -p /boot/grub
 cp /boot/efi/EFI/arch/grub/grub.cfg /boot/grub/grub.cfg
