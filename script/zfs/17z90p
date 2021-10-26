@@ -53,6 +53,7 @@ PACKAGES="
 	curtail
 	darktable rawtherapee shotwell
 	texmaker texlive-most libreoffice-fresh
+	steam lib32-vulkan-intel
 `#theming`
 	materia-gtk-theme materia-kde faenza-icon-theme kvantum-qt5 kvantum-theme-materia
 "
