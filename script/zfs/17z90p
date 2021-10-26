@@ -7,7 +7,7 @@ DISKID=nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NG0R621780A
 DEV=/dev/disk/by-id/$DISKID
 PACKAGES="
 `#hardware support`
-	intel-ucode vulkan-intel acpi bluez powertop iwd
+	intel-ucode vulkan-intel acpi bluez powertop iwd fprint
 `#basic utilities`
 	bash nano openssh wget rsync git zip unzip unrar nmap htop archey3 bash-completion
 `#dev`
@@ -53,7 +53,8 @@ PACKAGES="
 	curtail
 	darktable rawtherapee shotwell
 	texmaker texlive-most libreoffice-fresh
-	steam lib32-vulkan-intel
+	steam lib32-vulkan-intel gnome-games libretro dolphin-emu mgba-qt
+	transmission-remote-gtk
 `#theming`
 	materia-gtk-theme materia-kde faenza-icon-theme kvantum-qt5 kvantum-theme-materia
 "
