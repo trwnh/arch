@@ -306,7 +306,8 @@ echo "Installing bootloader..."
 arch-chroot /mnt /bin/bash <<EOF
 mkdir -p /boot/efi/EFI/zbm
 curl https://github.com/zbm-dev/zfsbootmenu/releases/download/v1.10.1/zfsbootmenu-x86_64-v1.10.1.EFI -o /boot/efi/EFI/zbm/zfsbootmenu.EFI
-
+efibootmgr --disk $DEV --part 1 --create --label "ZFSBootMenu" --loader '\EFI\zbm\zfsbootmenu.EFI' --unicode "spl_hostid=$(hostid) zbm.timeout=3 zbm.prefer=rpool zbm.import_policy=hostid" --verbose
+zfs set org.zfsbootmenu:commandline="rw" rpool/ROOT
 refind-install
 EOF
 cat <<EOF > /mnt/etc/pacman.d/hooks/refind.hook
