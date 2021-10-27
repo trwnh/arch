@@ -176,7 +176,8 @@ echo "$HOSTNAME" > /mnt/etc/hostname
 cat <<EOF > /mnt/etc/hosts
 127.0.0.1 localhost
 ::1 localhost
-127.0.1.1 $HOSTNAME.localdomain $HOSTNAME
+192.168.1.2 home
+192.168.1.3 backup
 EOF
 arch-chroot /mnt hostnamectl set-hostname $HOSTNAME
 echo "done."
@@ -217,7 +218,11 @@ Name=br0
 DHCP=ipv4
 EOF
 
-#cat /etc/dnsmasq.conf > /mnt/install/etc/dnsmasq.conf
+cat <<EOF > /mnt/etc/dnsmasq.conf
+expand-hosts
+domain=trwnh.com
+server=192.168.1.1
+EOF
 #cat /etc/nginx/nginx.conf > /mnt/etc/nginx/nginx.conf
 #cat /etc/samba/smb.conf > /mnt/etc/samba/smb.conf
 #cat /etc/exports > /mnt/etc/exports
