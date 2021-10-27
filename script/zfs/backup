@@ -13,7 +13,7 @@ PACKAGES="
 `#server`
 	docker docker-compose hugo zola nginx certbot certbot-nginx jre-openjdk-headless
 `#networking`
-	dnsmasq syncthing
+	dnsmasq syncthing polkit
 `#files and devices`
 	ntfs-3g exfat-utils
 "
@@ -272,6 +272,7 @@ echo "* Set passwords."
 echo -n "Enabling system services... "
 arch-chroot /mnt /bin/bash <<EOF
 systemctl enable systemd-networkd
+systemctl enable systemd-resolved
 systemctl enable systemd-timesyncd
 EOF
 echo "done."
