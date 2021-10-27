@@ -13,7 +13,7 @@ PACKAGES="
 `#server`
 	docker docker-compose hugo zola nginx certbot certbot-nginx jre-openjdk-headless
 `#networking`
-	dnsmasq syncthing polkit
+	dnsmasq syncthing polkit samba nfs-utils
 `#files and devices`
 	ntfs-3g exfat-utils
 "
@@ -333,15 +333,13 @@ cp -arv /storage/users/trwnh/.ssh /home/trwnh
 cp -arv /storage/users/trwnh/.gitconfig /home/trwnh
 cp -arv /storage/users/trwnh/.bashrc /home/trwnh
 cp -arv /storage/users/trwnh/.nanorc /home/trwnh
-cp -arv /storage/users/root@backup/ /root
-rsync -avvzh home:/etc/hosts /etc/hosts
-rsync -avvzh home:/etc/dnsmasq.conf /etc/dnsmasq.conf
-rsync -avvzh home:/etc/samba/smb.conf /etc/samba/smb.conf
-rsync -avvzh home:/etc/exports /etc/exports
-rsync -avvzh home:/etc/nginx/nginx.conf /etc/nginx/nginx.conf
-rsync -avvzh home:/etc/nginx/sites /etc/nginx/sites
-rsync -avvzh home:/etc/nginx/snippets /etc/nginx/snippets
-rsync -avvzh home:/srv /srv
+cp -arv /storage/users/root.backup/ /root
+cp -arv /storage/config/etc/hosts /etc/hosts
+cp -arv /storage/config/etc/dnsmasq.conf /etc/dnsmasq.conf
+cp -arv /storage/config/etc/samba/smb.conf /etc/samba/smb.conf
+cp -arv /storage/config/etc/exports /etc/exports
+cp -arv /storage/config/etc/nginx /etc/
+cp -arv /storage/backup/srv /
 EOF
 
 echo "Taking snapshot of install..."
