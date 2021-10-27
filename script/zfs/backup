@@ -228,6 +228,7 @@ echo "Avoid timeout -- press Enter when you are ready"
 read TIMEOUT
 
 echo "Setting up users..."
+arch-chroot /mnt useradd -r -d /srv/minecraft minecraft
 zfs create rpool/DATA/home/$USERNAME
 arch-chroot /mnt useradd -m -g users -G wheel,ftp,http,sys,audio,docker,minecraft -s /bin/bash "$USERNAME"
 echo "* Created user $USERNAME."
@@ -333,11 +334,14 @@ cp -arv /storage/users/trwnh/.gitconfig /home/trwnh
 cp -arv /storage/users/trwnh/.bashrc /home/trwnh
 cp -arv /storage/users/trwnh/.nanorc /home/trwnh
 cp -arv /storage/users/root@backup/ /root
-rsync -avvzh home:/etc/nginx/nginx.conf /etc/nginx/nginx.conf
+rsync -avvzh home:/etc/hosts /etc/hosts
+rsync -avvzh home:/etc/dnsmasq.conf /etc/dnsmasq.conf
 rsync -avvzh home:/etc/samba/smb.conf /etc/samba/smb.conf
 rsync -avvzh home:/etc/exports /etc/exports
+rsync -avvzh home:/etc/nginx/nginx.conf /etc/nginx/nginx.conf
 rsync -avvzh home:/etc/nginx/sites /etc/nginx/sites
 rsync -avvzh home:/etc/nginx/snippets /etc/nginx/snippets
+rsync -avvzh home:/srv /srv
 EOF
 
 echo "Taking snapshot of install..."
