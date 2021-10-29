@@ -9,7 +9,7 @@ PACKAGES="
 `#hardware support`
 	intel-ucode vulkan-intel
 `#basic utilities`
-	bash nano openssh wget rsync git zip unzip unrar nmap htop archey3 youtube-dl
+	bash nano openssh wget rsync git zip unzip unrar nmap htop archey3 dnsutils youtube-dl
 `#server`
 	docker docker-compose hugo zola nginx certbot certbot-nginx jre-openjdk-headless
 `#networking`
