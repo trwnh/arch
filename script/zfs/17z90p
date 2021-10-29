@@ -48,7 +48,8 @@ PACKAGES="
 	quassel-client discord telegram-desktop mumble dino
 	obs-studio libva-intel-driver v4l2loopback-dkms
 	gimp krita inkscape blender pitivi audacity
-	bitwarden trash-cli nextcloud-client nextcloud-client-cloudproviders
+	bitwarden
+	nextcloud-client nextcloud-client-cloudproviders python-nautilus trash-cli
 	jre-opendjk sweethome3d
 	curtail
 	darktable rawtherapee shotwell
