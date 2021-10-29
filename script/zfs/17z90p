@@ -34,7 +34,7 @@ PACKAGES="
 	mako
 	slurp grim jq wl-clipboard
 	waybar
-	imv mpv rofi alacritty
+	imv mpv wofi alacritty
 	thunar thunar-volman gvfs file-roller ffmpegthumbnailer
 	zathura zathura-cb zathura-djvu zathura-pdf-mupdf
 `#xfce`
