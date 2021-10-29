@@ -275,6 +275,7 @@ arch-chroot /mnt /bin/bash <<EOF
 systemctl enable NetworkManager
 systemctl enable systemd-timesyncd
 systemctl enable cups
+systemctl enable bluetooth
 systemctl enable gdm
 EOF
 echo "done."
