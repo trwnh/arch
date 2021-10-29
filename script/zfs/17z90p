@@ -9,7 +9,7 @@ PACKAGES="
 `#hardware support`
 	intel-ucode vulkan-intel acpi bluez powertop iwd fprint solaar
 `#basic utilities`
-	bash nano openssh wget rsync git zip unzip unrar nmap htop archey3 bash-completion pacman-contrib
+	bash nano openssh wget rsync git zip unzip unrar nmap htop archey3 dnsutils bash-completion pacman-contrib
 `#dev`
 	docker docker-compose go rust hugo zola
 `#networking`
