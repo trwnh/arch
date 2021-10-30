@@ -73,6 +73,8 @@ AUR="
 	enpass-bin sublime-music
 	checkra1n-cli
 	syncthing-gtk
+`#more printing`
+	epson-inkjet-printer-escpr2
 `#zfs snapshots and replication`
 	sanoid lzop mbuffer pv
 "
@@ -377,6 +379,20 @@ sed -i '_disable_vala=false/s/false/true' PKGBUILD
 sed -i '_disable_budgie=false/s/false/true' PKGBUILD
 sudo -u $USERNAME makepkg -sic --noconfirm
 EOF
+
+echo "Setting up printers..."
+lpadmin -p "ET-3850" \
+	-D "Epson ET-3850" \
+	-L "Downstairs" \
+	-v lpd://192.168.1.15:515/PASSTHRU \
+	-P /usr/share/ppd/epson-inkjet-printer-escpr2/Epson-ET-3850_Series-epson-escpr2-en.ppd \
+	-E
+lpadmin -p "CUPS-PDF" \
+	-D "Virtual PDF printer" \
+	-L "$HOSTNAME" \
+	-v cups-pdf:/ \
+	-P /usr/share/cups/model/CUPS-PDF_opt.ppd \
+	-E
 
 echo "Taking snapshot of install..."
 zpool set cachefile=/etc/zfs/zpool.cache bpool
