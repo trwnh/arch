@@ -236,14 +236,6 @@ arch-chroot /mnt passwd $USERNAME
 arch-chroot /mnt passwd
 echo "* Set passwords."
 
-echo -n "Enabling system services... "
-arch-chroot /mnt /bin/bash <<EOF
-systemctl enable systemd-networkd
-systemctl enable systemd-resolved
-systemctl enable systemd-timesyncd
-EOF
-echo "done."
-
 echo -n "Changing configuration values... "
 sed -i 's/^#Color/Color\nILoveCandy/g' /mnt/etc/pacman.conf
 sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 20/' /mnt/etc/pacman.conf
@@ -253,6 +245,12 @@ echo '%wheel      ALL=(ALL) ALL' > /mnt/etc/sudoers.d/wheel
 cat <<EOF > /mnt/etc/environment
 EDITOR=nano
 EOF
+echo "done."
+
+echo -n "Enabling system services... "
+systemctl enable systemd-networkd --root=/mnt
+systemctl enable systemd-resolved --root=/mnt
+systemctl enable systemd-timesyncd --root=/mnt
 echo "done."
 
 echo "Installing AUR helper..."
@@ -341,6 +339,10 @@ cp -arv /storage/config/etc/exports /etc/exports
 cp -arv /storage/config/etc/nginx /etc/
 cp -arv /storage/backup/srv /
 EOF
+
+echo "Configuring syncthing..."
+sed -i '/127\.0\.0\.1:8384/s/127\.0\.0\.1/0\.0\.0\.0/' /mnt/home/$USERNAME/.config/syncthing/config.xml
+systemctl enable syncthing@$USERNAME --root=/mnt
 
 echo "Taking snapshot of install..."
 zpool set cachefile=/etc/zfs/zpool.cache bpool
