@@ -17,7 +17,9 @@ PACKAGES="
 `#audio`
 	pipewire pipewire-pulse pipewire-jack pipewire-alsa sof-firmware realtime-privileges
 `#files and devices`
-	ntfs-3g exfat-utils android-tools android-udev cups cups-pdf qmk
+	ntfs-3g exfat-utils android-tools android-udev qmk
+`#printer`
+	cups cups-pdf sane-airscan imagescan
 `#fonts`
 	terminus-font
 	ttf-droid ttf-roboto noto-fonts noto-fonts-extra noto-fonts-cjk
@@ -67,8 +69,6 @@ AUR="
 	mugshot xfce4-docklike-plugin xmousepasteblock-git xfce4-windowck-plugin-xfwm4-theme-support `#vala-panel-appmenu-xfce is causing build errors`
 `#more gnome`
 	gnome-shell-extension-dash-to-dock chrome-gnome-shell
-`#more printing`
-	brother-mfc-7840w brscan3
 `#more desktop`
 	enpass-bin sublime-music
 	checkra1n-cli
@@ -311,10 +311,6 @@ arch-chroot /mnt /bin/bash <<EOF
 sudo -u $USERNAME yay -S $AUR
 exit
 EOF
-
-lpadmin -p MFC7840W -E -v socket://192.168.1.15:9100 -P /usr/share/cups/model/MFC7840W.ppd
-
-
 
 echo "Doing ZFS-y things..."
 sed -i 's/^HOOKS=\(.*\)/HOOKS=\(base udev autodetect modconf block keyboard zfs filesystems\)/g' /mnt/etc/mkinitcpio.conf
