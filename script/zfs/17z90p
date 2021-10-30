@@ -19,7 +19,7 @@ PACKAGES="
 `#files and devices`
 	ntfs-3g exfat-utils android-tools android-udev qmk
 `#printer`
-	cups cups-pdf sane-airscan imagescan
+	cups cups-pdf sane-airscan
 `#fonts`
 	terminus-font
 	ttf-droid ttf-roboto noto-fonts noto-fonts-extra noto-fonts-cjk
