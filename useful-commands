@@ -41,3 +41,6 @@ dhcpcd
 passwd
 nano /etc/ssh/sshd_config # PermitRootLogin yes
 systemctl start sshd
+
+# link a systemctl service from somewhere else?
+systemctl link /srv/minecraft/minecraft\@.service
