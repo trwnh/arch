@@ -73,6 +73,7 @@ AUR="
 	enpass-bin sublime-music
 	checkra1n-cli
 	syncthing-gtk
+	caffeine-ng
 `#more printing`
 	epson-inkjet-printer-escpr2
 `#zfs snapshots and replication`
