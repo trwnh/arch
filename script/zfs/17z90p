@@ -52,7 +52,7 @@ PACKAGES="
 	gimp krita inkscape blender pitivi audacity
 	bitwarden
 	nextcloud-client nextcloud-client-cloudproviders python-nautilus trash-cli
-	jre-opendjk sweethome3d
+	jre-openjdk sweethome3d
 	curtail
 	darktable rawtherapee shotwell
 	texmaker texlive-most libreoffice-fresh
