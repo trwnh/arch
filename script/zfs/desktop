@@ -1,6 +1,6 @@
 #!/bin/bash
 # $ iwctl station wlan0 connect {SSID}
-HOSTNAME=DESKTOP
+HOSTNAME=desktop
 USERNAME=trwnh
 TIMEZONE=America/Chicago
 DISKID=nvme-WDS200T1X0E-00AFY0_211464801575
