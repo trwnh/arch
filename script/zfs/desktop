@@ -266,6 +266,7 @@ read TIMEOUT
 echo "Setting up users..."
 zfs create rpool/DATA/home/$USERNAME
 arch-chroot /mnt useradd -m -g users -G wheel,ftp,http,sys,audio,realtime,docker -s /bin/bash "$USERNAME"
+arch-chroot /mnt chown -R $USERNAME:users /home/$USERNAME
 echo "* Created user $USERNAME."
 arch-chroot /mnt passwd $USERNAME
 arch-chroot /mnt passwd
@@ -372,9 +373,9 @@ mkdir -p build
 cd build
 sudo -u $USERNAME yay -G vala-panel-appmenu
 cd vala-panel-appmenu
-sed -i '_disable_mate=false/s/false/true' PKGBUILD
-sed -i '_disable_vala=false/s/false/true' PKGBUILD
-sed -i '_disable_budgie=false/s/false/true' PKGBUILD
+sed -i '/_disable_mate=false/s/false/true/' PKGBUILD
+sed -i '/_disable_vala=false/s/false/true/' PKGBUILD
+sed -i '/_disable_budgie=false/s/false/true/' PKGBUILD
 sudo -u $USERNAME makepkg -sic --noconfirm
 EOF
 
