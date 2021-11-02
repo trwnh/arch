@@ -328,6 +328,7 @@ Include = /etc/pacman.d/mirrorlist-archzfs
 arch-chroot /mnt pacman -Sy
 echo 'export ZPOOL_VDEV_NAME_PATH=1' >> /mnt/etc/profile.d/zfs
 echo 'Defaults env_keep += "ZPOOL_VDEV_NAME_PATH"' > /mnt/etc/sudoers.d/zfs
+arch-chroot /mnt /bin/bash <<EOF
 mkdir /etc/zfs/zfs-list.cache
 touch /etc/zfs/zfs-list.cache/bpool
 touch /etc/zfs/zfs-list.cache/rpool
@@ -335,6 +336,7 @@ touch /etc/zfs/zfs-list.cache/rpool
 zed -F &
 zfs set canmount=noauto bpool/BOOT/arch
 zfs set canmount=noauto rpool/ROOT/arch
+EOF
 
 echo "Wait here"
 read VERIFY
@@ -344,7 +346,7 @@ arch-chroot /mnt /bin/bash <<EOF
 #echo 'GRUB_CMDLINE_LINUX=\"zfs_import_dir=${DISKID%/*}\"' >> /etc/default/grub
 echo "GRUB_DISABLE_OS_PROBER=no" >> /etc/default/grub
 echo 'GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 video=2560x1600"' >> /etc/default/grub
-echo "GRUB_GFXMODE=2560x1600" >> /etc/default/grub
+echo "GRUB_GFXMODE=2560x1600x32" >> /etc/default/grub
 echo "GRUB_DEFAULT=saved" >> /etc/default/grub
 echo "GRUB_SAVEDEFAULT=true" >> /etc/default/grub
 sed -i "s|rpool=.*|rpool=\`zdb -l \${GRUB_DEVICE} \| grep -E '[[:blank:]]name' \| cut -d\\\' -f 2\`|"  /etc/grub.d/10_linux
