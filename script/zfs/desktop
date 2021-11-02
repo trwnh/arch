@@ -1,13 +1,12 @@
 #!/bin/bash
 # $ iwctl station wlan0 connect {SSID}
-HOSTNAME=17z90p
+HOSTNAME=DESKTOP
 USERNAME=trwnh
 TIMEZONE=America/Chicago
-DISKID=nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NG0R621780A
-DEV=/dev/disk/by-id/$DISKID
+DISKID=nvme-WDS200T1X0E-00AFY0_211464801575
 PACKAGES="
 `#hardware support`
-	intel-ucode vulkan-intel acpi bluez powertop iwd fprint solaar
+	amd-ucode vulkan-radeon amdvlk acpi bluez iwd solaar
 `#basic utilities`
 	bash nano openssh wget rsync git zip unzip unrar nmap htop archey3 dnsutils bash-completion pacman-contrib
 `#dev`
@@ -56,7 +55,7 @@ PACKAGES="
 	curtail
 	darktable rawtherapee shotwell
 	texmaker texlive-most libreoffice-fresh
-	steam lib32-vulkan-intel gnome-games libretro dolphin-emu mgba-qt
+	steam lib32-vulkan-radeon lib32-amdvlk gnome-games libretro dolphin-emu mgba-qt
 	transmission-remote-gtk
 `#theming`
 	materia-gtk-theme materia-kde faenza-icon-theme kvantum-qt5 kvantum-theme-materia
@@ -76,6 +75,8 @@ AUR="
 	caffeine-ng
 `#more printing`
 	epson-inkjet-printer-escpr2
+`#more hardware`
+	vulkan-amdgpu-pro lib32-vulkan-amdgpu-pro
 `#zfs snapshots and replication`
 	sanoid lzop mbuffer pv
 "
