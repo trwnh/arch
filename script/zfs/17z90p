@@ -347,7 +347,7 @@ echo "Installing bootloader..."
 arch-chroot /mnt /bin/bash <<EOF
 #echo 'GRUB_CMDLINE_LINUX=\"zfs_import_dir=${DISKID%/*}\"' >> /etc/default/grub
 echo "GRUB_DISABLE_OS_PROBER=no" >> /etc/default/grub
-echo 'GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3"' >> /etc/default/grub
+echo 'GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 video=2560x1600"' >> /etc/default/grub
 echo "GRUB_GFXMODE=2560x1600" >> /etc/default/grub
 echo "GRUB_DEFAULT=saved" >> /etc/default/grub
 echo "GRUB_SAVEDEFAULT=true" >> /etc/default/grub
