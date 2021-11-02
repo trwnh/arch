@@ -59,7 +59,7 @@ PACKAGES="
 	steam lib32-vulkan-intel gnome-games libretro dolphin-emu mgba-qt
 	transmission-remote-gtk
 `#theming`
-	materia-gtk-theme materia-kde faenza-icon-theme kvantum-qt5 kvantum-theme-materia
+	materia-gtk-theme materia-kde faenza-icon-theme papirus-icon-theme kvantum-qt5 kvantum-theme-materia
 "
 AUR="
 `#more fonts`
