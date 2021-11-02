@@ -359,7 +359,7 @@ echo "Did that work?"
 read VERIFY
 
 echo "Enabling Early KMS for GPU..."
-sed -i 's/^MODULES=.*/MODULES=(i915)/' /mnt/etc/mkinitcpio.conf
+sed -i 's/^MODULES=.*/MODULES=(amdgpu)/' /mnt/etc/mkinitcpio.conf
 arch-chroot /mnt /bin/bash <<EOF
 mkinitcpio -P
 exit
