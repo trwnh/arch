@@ -15,7 +15,7 @@ PACKAGES="
 `#networking`
 	networkmanager
 `#audio`
-	pipewire pipewire-pulse pipewire-jack pipewire-alsa sof-firmware realtime-privileges
+	pipewire wireplumber pipewire-pulse pipewire-jack pipewire-alsa sof-firmware realtime-privileges
 `#files and devices`
 	ntfs-3g exfat-utils android-tools android-udev qmk
 `#printer`
