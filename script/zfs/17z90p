@@ -330,6 +330,7 @@ Include = /etc/pacman.d/mirrorlist-archzfs
 arch-chroot /mnt pacman -Sy
 echo 'export ZPOOL_VDEV_NAME_PATH=1' >> /mnt/etc/profile.d/zfs
 echo 'Defaults env_keep += "ZPOOL_VDEV_NAME_PATH"' > /mnt/etc/sudoers.d/zfs
+arch-chroot /mnt /bin/bash <<EOF
 mkdir /etc/zfs/zfs-list.cache
 touch /etc/zfs/zfs-list.cache/bpool
 touch /etc/zfs/zfs-list.cache/rpool
@@ -337,6 +338,7 @@ touch /etc/zfs/zfs-list.cache/rpool
 zed -F &
 zfs set canmount=noauto bpool/BOOT/arch
 zfs set canmount=noauto rpool/ROOT/arch
+EOF
 
 echo "Wait here"
 read VERIFY
