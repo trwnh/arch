@@ -103,7 +103,6 @@ sleep 3
 
 echo "Making legacy filesystems..."
 mkfs.fat -F32 -n "EFI" /dev/disk/by-partlabel/ESP
-mkswap -L "SWAP" /dev/disk/by-partlabel/SWAP
 
 echo "Making bpool..."
 #================ bpool with grub-compatible flags ================#
@@ -187,7 +186,6 @@ chmod 1777 /mnt/var/tmp
 
 
 echo -n "Mounting legacy filesystems... "
-swapon -L "SWAP"
 mkdir -p /mnt/boot/efi
 mount -L "EFI" /mnt/boot/efi
 echo "done."
@@ -233,7 +231,6 @@ echo -n "Generating filesystem mount table... "
 #genfstab -U /mnt >> /mnt/etc/fstab
 cat <<EOF > /mnt/etc/fstab
 LABEL=EFI /boot/efi vfat rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro 0 2
-LABEL=SWAP none swap defaults 0 0
 EOF
 echo "done."
 
