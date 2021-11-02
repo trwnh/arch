@@ -4,6 +4,7 @@ HOSTNAME=DESKTOP
 USERNAME=trwnh
 TIMEZONE=America/Chicago
 DISKID=nvme-WDS200T1X0E-00AFY0_211464801575
+DEV=/dev/disk/by-id/$DISKID
 PACKAGES="
 `#hardware support`
 	amd-ucode vulkan-radeon amdvlk acpi bluez iwd solaar
