@@ -82,6 +82,7 @@ AUR="
 
 sed -i 's/^#Color/Color/g' /etc/pacman.conf
 sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 20/' /etc/pacman.conf
+sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 
 echo "Setting time sync..."
 timedatectl set-ntp true
