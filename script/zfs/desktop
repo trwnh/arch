@@ -61,7 +61,7 @@ PACKAGES="
 `#theming`
 	materia-gtk-theme materia-kde faenza-icon-theme papirus-icon-theme kvantum-qt5 kvantum-theme-materia
 `#virtualization`
-	virt-manager qemu vde2 ebtables dnsmasq bridge-utils openbsd-netcat ovmf
+	virt-manager qemu vde2 ebtables dnsmasq bridge-utils openbsd-netcat ovmf dmidecode
 "
 AUR="
 `#more fonts`
