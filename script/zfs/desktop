@@ -405,7 +405,7 @@ echo 'log_filters="1:qemu"
 log_outputs="1:file:/var/log/libvirt/libvirtd.log"' >> /mnt/etc/libvirt/libvirtd.conf
 arch-chroot /mnt usermod -aG libvirt $USERNAME
 sed -i 's/^#user = "root"/user = "$USERNAME"/' /mnt/etc/libvirt/qemu.conf
-sed -i 's/^#group = "root"/group = "$USERNAME"/' /mnt/etc/libvirt/qemu.conf
+sed -i 's/^#group = "root"/group = "libvirt"/' /mnt/etc/libvirt/qemu.conf
 
 echo "Taking snapshot of install..."
 zpool set cachefile=/etc/zfs/zpool.cache bpool
