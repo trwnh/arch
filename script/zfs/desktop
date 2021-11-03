@@ -17,7 +17,7 @@ PACKAGES="
 `#audio`
 	pipewire wireplumber pipewire-pulse pipewire-jack pipewire-alsa sof-firmware realtime-privileges
 `#files and devices`
-	ntfs-3g exfat-utils android-tools android-udev qmk
+	ntfs-3g exfat-utils android-tools android-udev qmk samba nfs-utils
 `#printer`
 	cups cups-pdf sane-airscan
 `#fonts`
