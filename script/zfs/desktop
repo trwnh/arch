@@ -409,7 +409,7 @@ sed -i 's/^#group = "root"/group = "libvirt"/' /mnt/etc/libvirt/qemu.conf
 mkdir -p /mnt/var/lib/libvirt/vbios
 curl https://www.techpowerup.com/vgabios/214733/ASRock.RX5700XT.8192.190926.rom > /mnt/var/lib/libvirt/vbios/GPU.rom
 arch-chroot /mnt chmod 660 /mnt/var/lib/libvirt/vbios/GPU.rom
-arch-chroot /mnt chown -R trwnh:libvirt /mnt/var/lib/libvirt/vbios/GPU.rom
+arch-chroot /mnt chown -R $USERNAME:libvirt /mnt/var/lib/libvirt/vbios/GPU.rom
 
 echo "Taking snapshot of install..."
 zpool set cachefile=/etc/zfs/zpool.cache bpool
