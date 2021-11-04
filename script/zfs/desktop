@@ -40,10 +40,11 @@ PACKAGES="
 	thunar thunar-volman gvfs file-roller ffmpegthumbnailer
 	zathura zathura-cb zathura-djvu zathura-pdf-mupdf
 `#xfce`
-	gdm xfce4 xfce4-goodies plank
+	xfce4 xfce4-goodies plank
 `#gnome`
 	gnome gnome-tweaks polkit-gnome gnome-shell-extension-appindicator
 `#desktop`
+	lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings lightdm-webkit2-greeter lightdm-webkit-theme-litarvan
 	nm-connection-editor network-manager-applet pavucontrol
 	firefox-developer-edition chromium youtube-dl
 	code
