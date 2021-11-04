@@ -44,7 +44,7 @@ PACKAGES="
 `#gnome`
 	gnome gnome-tweaks polkit-gnome gnome-shell-extension-appindicator
 `#desktop`
-	lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings lightdm-webkit2-greeter lightdm-webkit-theme-litarvan
+	lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings `#lightdm-webkit2-greeter lightdm-webkit-theme-litarvan`
 	nm-connection-editor network-manager-applet pavucontrol
 	firefox-developer-edition chromium youtube-dl
 	code
@@ -280,7 +280,7 @@ systemctl enable NetworkManager --root=/mnt
 systemctl enable systemd-timesyncd --root=/mnt
 systemctl enable cups --root=/mnt
 systemctl enable bluetooth --root=/mnt
-systemctl enable gdm --root=/mnt
+systemctl enable lightdm --root=/mnt
 systemctl enable libvirtd --root=/mnt
 echo "done."
 
