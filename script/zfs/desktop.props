@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# run this in a live iso or something after zfs send|recv from remote backup
+USERNAME=trwnh
+
+zpool import -R /mnt rpool
+zfs load-key rpool
+zpool import -R /mnt bpool
+
+#================================ boot environment = arch ================================#
+zfs set mountpoint=/boot bpool
+zfs set canmount=off mountpoint=none bpool/BOOT
+zfs set canmount=off mountpoint=none rpool/ROOT
+zfs set canmount=off mountpoint=none rpool/DATA
+zfs set canmount=noauto mountpoint=/boot bpool/BOOT/arch
+zfs set canmount=noauto mountpoint=/     rpool/ROOT/arch
+zpool set bootfs=rpool/ROOT/arch rpool
+zfs mount rpool/ROOT/arch
+zfs mount bpool/BOOT/arch
+#================================ persistent data ================================#
+zfs set mountpoint=/home                 rpool/DATA/home
+zfs set mountpoint=/root                 rpool/DATA/home/root
+zfs set mountpoint=none                  rpool/DATA/var
+zfs set mountpoint=/var/lib canmount=off rpool/DATA/var/lib
+
+zfs set com.sun:auto-snapshot=false rpool/DATA/var/lib/docker
+zfs set com.sun:auto-snapshot=false rpool/DATA/var/lib/nfs
+
+zfs set mountpoint=/var/log                rpool/DATA/var/log
+zfs set mountpoint=/var/spool              rpool/DATA/var/spool
+zfs set mountpoint=/var/snap               rpool/DATA/var/snap
+zfs set mountpoint=/var/games              rpool/DATA/var/games
+zfs set mountpoint=/var/www                rpool/DATA/var/www
+zfs set mountpoint=/srv                    rpool/DATA/srv
+zfs set mountpoint=/opt                    rpool/DATA/opt
+zfs set mountpoint=/usr       canmount=off rpool/DATA/usr
+#================================ cache and temporary files ================================#
+zfs set mountpoint=/var/cache com.sun:auto-snapshot=false rpool/DATA/var/cache
+zfs set mountpoint=/var/tmp   com.sun:auto-snapshot=false rpool/DATA/var/tmp
+zfs set mountpoint=/tmp       com.sun:auto-snapshot=false rpool/DATA/tmp
+chmod 1777 /mnt/tmp
+chmod 1777 /mnt/var/tmp
