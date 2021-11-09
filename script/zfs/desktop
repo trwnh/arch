@@ -272,7 +272,7 @@ read TIMEOUT
 
 echo "Setting up users..."
 zfs create rpool/DATA/home/$USERNAME
-arch-chroot /mnt useradd -m -g users -G wheel,ftp,http,sys,audio,realtime,docker -s /bin/bash "$USERNAME"
+arch-chroot /mnt useradd -m -g users -G wheel,ftp,http,sys,audio,realtime,docker,libvirt,kvm -s /bin/bash "$USERNAME"
 arch-chroot /mnt chown -R $USERNAME:users /home/$USERNAME
 echo "* Created user $USERNAME."
 arch-chroot /mnt passwd $USERNAME
