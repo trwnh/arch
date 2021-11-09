@@ -86,7 +86,7 @@ AUR="
 `#zfs snapshots and replication`
 	sanoid lzop mbuffer pv
 `#vfio and virtualization?`
-	linux-vfio linux-vfio-headers zfs-dkms
+	linux-vfio linux-vfio-headers
 "
 
 sed -i 's/^#Color/Color/g' /etc/pacman.conf
@@ -207,31 +207,31 @@ echo "Pacman mirrors synced and sorted."
 
 echo "Bootstrapping mounted system..."
 pacstrap /mnt base base-devel
-VERSION=$(pacman -Si zfs-linux \
-| grep 'Depends On' \
-| sed "s|.*linux=||" \
-| awk '{ print $1 }')
-VERSION_LTS=$(pacman -Si zfs-linux-lts \
-| grep 'Depends On' \
-| sed "s|.*linux-lts=||" \
-| awk '{ print $1 }')
-if [ ${VERSION} = \
-$(pacman -Si linux | grep Version | awk '{ print $3 }') ]; then
- pacstrap /mnt linux linux-headers
-else
- pacstrap -U /mnt \
- https://archive.archlinux.org/packages/l/linux/linux-${VERSION}-x86_64.pkg.tar.zst \
- https://archive.archlinux.org/packages/l/linux/linux-headers-${VERSION}-x86_64.pkg.tar.zst
-fi
-if [ ${VERSION_LTS} = \
-$(pacman -Si linux-lts | grep Version | awk '{ print $3 }') ]; then
- pacstrap /mnt linux-lts linux-lts-headers
-else
- pacstrap -U /mnt \
- https://archive.archlinux.org/packages/l/linux-lts/linux-lts-${VERSION_LTS}-x86_64.pkg.tar.zst \
- https://archive.archlinux.org/packages/l/linux-lts/linux-lts-headers-${VERSION_LTS}-x86_64.pkg.tar.zst
-fi
-pacstrap /mnt zfs-linux zfs-linux-lts zfs-utils linux-firmware grub efibootmgr os-prober mkinitcpio
+#VERSION=$(pacman -Si zfs-linux \
+#| grep 'Depends On' \
+#| sed "s|.*linux=||" \
+#| awk '{ print $1 }')
+#VERSION_LTS=$(pacman -Si zfs-linux-lts \
+#| grep 'Depends On' \
+#| sed "s|.*linux-lts=||" \
+#| awk '{ print $1 }')
+#if [ ${VERSION} = \
+#$(pacman -Si linux | grep Version | awk '{ print $3 }') ]; then
+# pacstrap /mnt linux linux-headers
+#else
+# pacstrap -U /mnt \
+# https://archive.archlinux.org/packages/l/linux/linux-${VERSION}-x86_64.pkg.tar.zst \
+# https://archive.archlinux.org/packages/l/linux/linux-headers-${VERSION}-x86_64.pkg.tar.zst
+#fi
+#if [ ${VERSION_LTS} = \
+#$(pacman -Si linux-lts | grep Version | awk '{ print $3 }') ]; then
+# pacstrap /mnt linux-lts linux-lts-headers
+#else
+# pacstrap -U /mnt \
+# https://archive.archlinux.org/packages/l/linux-lts/linux-lts-${VERSION_LTS}-x86_64.pkg.tar.zst \
+# https://archive.archlinux.org/packages/l/linux-lts/linux-lts-headers-${VERSION_LTS}-x86_64.pkg.tar.zst
+#fi
+pacstrap /mnt zfs-dkms zfs-utils linux-firmware grub efibootmgr os-prober mkinitcpio
 pacstrap /mnt $PACKAGES
 echo "Packages installed."
 
