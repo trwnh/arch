@@ -369,8 +369,8 @@ EOF
 echo "Did that work?"
 read VERIFY
 
-echo "Enabling Early KMS for GPU..."
-sed -i 's/^MODULES=.*/MODULES=(amdgpu)/' /mnt/etc/mkinitcpio.conf
+echo "Enabling early loading of vendor-reset module for GPU reset bug..."
+sed -i 's/^MODULES=.*/MODULES=(vendor-reset)/' /mnt/etc/mkinitcpio.conf
 arch-chroot /mnt /bin/bash <<EOF
 mkinitcpio -P
 exit
