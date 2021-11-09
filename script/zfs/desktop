@@ -386,6 +386,7 @@ cd vala-panel-appmenu
 sed -i '/_disable_mate=false/s/false/true/' PKGBUILD
 sed -i '/_disable_vala=false/s/false/true/' PKGBUILD
 sed -i '/_disable_budgie=false/s/false/true/' PKGBUILD
+sed -i '/source=(.*)/s/#tag.*//' PKGBUILD
 sudo -u $USERNAME makepkg -sic --noconfirm
 EOF
 
