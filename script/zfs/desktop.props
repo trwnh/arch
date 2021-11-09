@@ -47,4 +47,5 @@ mount -L "EFI" /mnt/boot/efi
 zpool set cachefile=/etc/zfs/zpool.cache bpool
 zpool set cachefile=/etc/zfs/zpool.cache rpool
 mkdir -p /mnt/etc/zfs
+rm /mnt/etc/zfs/zpool.cache
 cp /etc/zfs/zpool.cache /mnt/etc/zfs/zpool.cache
