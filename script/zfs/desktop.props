@@ -43,3 +43,8 @@ chmod 1777 /mnt/var/tmp
 
 zfs mount -a
 mount -L "EFI" /mnt/boot/efi
+
+zpool set cachefile=/etc/zfs/zpool.cache bpool
+zpool set cachefile=/etc/zfs/zpool.cache rpool
+mkdir -p /mnt/etc/zfs
+cp /etc/zfs/zpool.cache /mnt/etc/zfs/zpool.cache
