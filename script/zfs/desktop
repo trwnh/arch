@@ -153,6 +153,7 @@ zfs mount rpool/ROOT/arch
 zfs mount bpool/BOOT/arch
 #================================ persistent data ================================#
 zfs create -o mountpoint=/home rpool/DATA/home
+zfs create                     rpool/DATA/home/$USERNAME
 zfs create -o mountpoint=/root rpool/DATA/home/root
 chmod 700 /mnt/root
 zfs create -o mountpoint=none                     rpool/DATA/var
@@ -271,7 +272,6 @@ echo "Avoid timeout -- press Enter when you are ready"
 read TIMEOUT
 
 echo "Setting up users..."
-zfs create rpool/DATA/home/$USERNAME
 arch-chroot /mnt useradd -m -g users -G wheel,ftp,http,sys,audio,realtime,docker,libvirt,kvm -s /bin/bash "$USERNAME"
 arch-chroot /mnt chown -R $USERNAME:users /home/$USERNAME
 echo "* Created user $USERNAME."
