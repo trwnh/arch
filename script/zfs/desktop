@@ -82,7 +82,7 @@ AUR="
 `#more printing`
 	epson-inkjet-printer-escpr2
 `#more hardware`
-	vulkan-amdgpu-pro lib32-vulkan-amdgpu-pro vendor-reset-dkms-git hfsprogs decklink 
+	vendor-reset-dkms-git hfsprogs decklink 
 `#zfs snapshots and replication`
 	sanoid lzop mbuffer pv
 `#vfio and virtualization?`
