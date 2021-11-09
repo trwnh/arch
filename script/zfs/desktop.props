@@ -40,3 +40,6 @@ zfs set mountpoint=/var/tmp   com.sun:auto-snapshot=false rpool/DATA/var/tmp
 zfs set mountpoint=/tmp       com.sun:auto-snapshot=false rpool/DATA/tmp
 chmod 1777 /mnt/tmp
 chmod 1777 /mnt/var/tmp
+
+zfs mount -a
+mount -L "EFI" /mnt/boot/efi
