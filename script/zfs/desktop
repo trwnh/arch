@@ -73,7 +73,10 @@ AUR="
 `#more xfce`
 	mugshot xfce4-docklike-plugin xmousepasteblock-git xfce4-windowck-plugin-xfwm4-theme-support `#vala-panel-appmenu-xfce is causing build errors`
 `#more gnome`
-	gnome-shell-extension-dash-to-dock chrome-gnome-shell
+	chrome-gnome-shell
+	gnome-shell-extension-dash-to-dock
+	gnome-shell-extension-coverflow-alt-tab
+	gnome-shell-extension-audio-output-switcher-git
 `#more desktop`
 	enpass-bin sublime-music
 	checkra1n-cli
