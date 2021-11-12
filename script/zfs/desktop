@@ -77,6 +77,8 @@ AUR="
 	gnome-shell-extension-dash-to-dock
 	gnome-shell-extension-coverflow-alt-tab
 	gnome-shell-extension-audio-output-switcher-git
+	gnome-shell-extension-arc-menu
+	gnome-shell-extension-unite
 `#more desktop`
 	enpass-bin sublime-music
 	checkra1n-cli
