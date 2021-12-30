@@ -234,13 +234,10 @@ EDITOR=nano
 EOF
 echo "done."
 
-echo "Copying system config files..."
+echo "Copying system and config files..."
 rsync -avvzh /mnt/storage/system/ /mnt/
-echo "Copying over files from storage..."
-arch-chroot /mnt /bin/bash <<EOF
-cp -arv /storage/users/root.home/ /root
-cp -arv /storage/backup/srv /
-EOF
+rsync -avvzh /mnt/storage/users/root.home/ /mnt/root/
+rsync -avvzh /mnt/storage/srv/ /mnt/srv/
 
 echo -n "Enabling system services... "
 #systemctl enable systemd-networkd --root=/mnt
