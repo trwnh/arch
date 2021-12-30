@@ -376,6 +376,8 @@ zed -F &
 zfs set canmount=on     bpool/BOOT/arch
 zed -F &
 zfs set canmount=noauto rpool/ROOT/arch
+zed -F &
+zfs set canmount=auto storage
 EOF
 zpool set cachefile=/etc/zfs/zpool.cache bpool
 zpool set cachefile=/etc/zfs/zpool.cache rpool
