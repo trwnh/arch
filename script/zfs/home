@@ -122,6 +122,8 @@ chmod 1777 /mnt/var/tmp
 #zfs mount -a
 #zfs mount bpool/BOOT/arch
 
+zpool import -d /dev/disk/by-id -R /mnt rpool -N
+zfs mount -a
 
 echo -n "Mounting legacy filesystems... "
 mkdir -p /mnt/boot/efi
@@ -194,8 +196,12 @@ arch-chroot /mnt localectl set-locale en_US.UTF-8
 echo "* Locale generated and applied."
 
 echo "Setting up networking..."
-nmcli con add type bridge ifname br0
+#arch-chroot /mnt /bin/bash <<EOF
+#nmcli con add type bridge ifname br0
+#nmcli con add type bridge-slave ifname enp4s0 master br0
+#EOF
 
+echo "Copying config files..."
 rsync -avvzh /mnt/storage/system /mnt/
 
 echo "Avoid timeout -- press Enter when you are ready"
@@ -222,9 +228,10 @@ EOF
 echo "done."
 
 echo -n "Enabling system services... "
-systemctl enable systemd-networkd --root=/mnt
-systemctl enable systemd-resolved --root=/mnt
+#systemctl enable systemd-networkd --root=/mnt
+#systemctl enable systemd-resolved --root=/mnt
 systemctl enable systemd-timesyncd --root=/mnt
+systemctl enable NetworkManager --root=/mnt
 echo "done."
 
 echo "Installing AUR helper..."
