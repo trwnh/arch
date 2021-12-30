@@ -308,7 +308,7 @@ Include = /etc/pacman.d/mirrorlist-archzfs
 #Include = /etc/pacman.d/mirrorlist-archzfs" >> /etc/pacman.conf
 pacman -Sy
 EOF
-echo 'export ZPOOL_VDEV_NAME_PATH=1' >> /etc/profile.d/zfs.sh
+echo 'export ZPOOL_VDEV_NAME_PATH=1' >> /mnt/etc/profile.d/zfs.sh
 echo 'Defaults env_keep += "ZPOOL_VDEV_NAME_PATH"' > /mnt/etc/sudoers.d/zfs
 
 echo "Installing bootloader..."
@@ -338,6 +338,8 @@ echo "* Created user $USERNAME."
 arch-chroot /mnt passwd $USERNAME
 arch-chroot /mnt passwd
 echo "* Set passwords."
+arch-chroot /mnt smbpasswd -a trwnh
+echo "* Added SMB user."
 
 ## FIRST TIME
 #zfs create rpool/DATA/home/a
@@ -357,8 +359,8 @@ echo "* Set passwords."
 #echo "Installing AUR packages..."
 #arch-chroot /mnt sudo -u $USERNAME yay -S $AUR
 
-echo "Configuring syncthing..."
-sed -i '/127\.0\.0\.1:8384/s/127\.0\.0\.1/0\.0\.0\.0/' /mnt/home/$USERNAME/.config/syncthing/config.xml
+#echo "Configuring syncthing..."
+#sed -i '/127\.0\.0\.1:8384/s/127\.0\.0\.1/0\.0\.0\.0/' /mnt/home/$USERNAME/.config/syncthing/config.xml
 systemctl enable syncthing@$USERNAME --root=/mnt
 
 echo "Taking snapshot of install..."
@@ -368,6 +370,7 @@ touch /etc/zfs/zfs-list.cache/bpool
 touch /etc/zfs/zfs-list.cache/rpool
 zed -F &
 zfs set canmount=on     bpool/BOOT/arch
+zed -F &
 zfs set canmount=noauto rpool/ROOT/arch
 EOF
 zpool set cachefile=/etc/zfs/zpool.cache bpool
