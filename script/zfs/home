@@ -249,6 +249,7 @@ systemctl enable dnsmasq --root=/mnt
 systemctl enable smb --root=/mnt
 systemctl enable nmb --root=/mnt
 systemctl enable sshd --root=/mnt
+systemctl enable docker --root=/mnt
 echo "done."
 
 echo "Installing sanoid for ZFS replication..."
