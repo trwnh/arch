@@ -19,8 +19,8 @@ PACKAGES="
 	ntfs-3g exfat-utils
 "
 AUR="
-`#zfs snapshots and replication`
-	sanoid lzop mbuffer pv
+`nothing yet`
+	
 "
 
 sed -i 's/^#Color/Color\nILoveCandy/g' /etc/pacman.conf
@@ -122,7 +122,8 @@ chmod 1777 /mnt/var/tmp
 #zfs mount -a
 #zfs mount bpool/BOOT/arch
 
-zpool import -d /dev/disk/by-id -R /mnt rpool -N
+zpool import -d /dev/disk/by-id -R /mnt storage -N
+#zpool import -f -R /mnt storage
 zfs mount -a
 
 echo -n "Mounting legacy filesystems... "
@@ -196,25 +197,31 @@ arch-chroot /mnt localectl set-locale en_US.UTF-8
 echo "* Locale generated and applied."
 
 echo "Setting up networking..."
+
+cat <<EOF > /mnt/etc/systemd/network/00_br0.netdev
+[NetDev]
+Name=br0
+Kind=bridge
+EOF
+cat <<EOF > /mnt/etc/systemd/network/10_bind.network
+[Match]
+Name=en*
+[Network]
+Bridge=br0
+EOF
+cat <<EOF > /mnt/etc/systemd/network/20_bridge.network
+[Match]
+Name=br0
+[Network]
+DNS=127.0.0.1
+Address=192.168.1.2/24
+Gateway=192.168.1.1
+EOF
+
 #arch-chroot /mnt /bin/bash <<EOF
 #nmcli con add type bridge ifname br0
 #nmcli con add type bridge-slave ifname enp4s0 master br0
 #EOF
-
-echo "Copying config files..."
-rsync -avvzh /mnt/storage/system/ /mnt/
-
-echo "Avoid timeout -- press Enter when you are ready"
-read TIMEOUT
-
-echo "Setting up users..."
-arch-chroot /mnt useradd -r -d /srv/minecraft minecraft
-zfs create rpool/DATA/home/$USERNAME
-arch-chroot /mnt useradd -m -g users -G wheel,ftp,http,sys,audio,docker,minecraft -s /bin/bash "$USERNAME"
-echo "* Created user $USERNAME."
-arch-chroot /mnt passwd $USERNAME
-arch-chroot /mnt passwd
-echo "* Set passwords."
 
 echo -n "Changing configuration values... "
 sed -i 's/^#Color/Color\nILoveCandy/g' /mnt/etc/pacman.conf
@@ -226,6 +233,14 @@ cat <<EOF > /mnt/etc/environment
 EDITOR=nano
 EOF
 echo "done."
+
+echo "Copying system config files..."
+rsync -avvzh /mnt/storage/system/ /mnt/
+echo "Copying over files from storage..."
+arch-chroot /mnt /bin/bash <<EOF
+cp -arv /storage/users/root.home/ /root
+cp -arv /storage/backup/srv /
+EOF
 
 echo -n "Enabling system services... "
 #systemctl enable systemd-networkd --root=/mnt
@@ -239,18 +254,26 @@ arch-chroot /mnt /bin/bash <<EOF
 git clone https://aur.archlinux.org/yay-bin.git
 chmod -R 777 /yay-bin
 cd /yay-bin
-sudo -u $USERNAME makepkg -sic --noconfirm
+sudo -u nobody makepkg -sc
+pacman -U yay-bin*
 cd ..
 rm -r /yay-bin
-sudo -u $USERNAME yay --gendb
-sudo -u $USERNAME yay --devel --nodiffmenu --save
-exit
+sudo -u nobody yay --gendb
 EOF
 
-echo "Installing AUR packages..."
+echo "Installing sanoid for ZFS replication..."
 arch-chroot /mnt /bin/bash <<EOF
-sudo -u $USERNAME yay -S $AUR
-exit
+git clone https://aur.archlinux.org/sanoid.git
+git clone https://aur.archlinux.org/lzop.git
+git clone https://aur.archlinux.org/mbuffer.git
+git clone https://aur.archlinux.org/pv.git
+chmod -R 777 /sanoid
+cd /yay-bin
+sudo -u nobody makepkg -sc
+pacman -U yay-bin*
+cd ..
+rm -r /yay-bin
+sudo -u nobody yay --gendb
 EOF
 
 echo "Doing ZFS-y things..."
@@ -277,9 +300,6 @@ zfs set canmount=on     bpool/BOOT/arch
 zfs set canmount=noauto rpool/ROOT/arch
 EOF
 
-echo "Wait here"
-read VERIFY
-
 echo "Installing bootloader..."
 arch-chroot /mnt /bin/bash <<EOF
 #echo 'GRUB_CMDLINE_LINUX=\"zfs_import_dir=${DISKID%/*}\"' >> /etc/default/grub
@@ -296,30 +316,35 @@ mkdir -p /boot/grub
 cp /boot/efi/EFI/arch/grub/grub.cfg /boot/grub/grub.cfg
 EOF
 
-echo "Did that work?"
-read VERIFY
+echo "Avoid timeout -- press Enter when you are ready"
+read TIMEOUT
 
-echo "Enabling Early KMS for GPU..."
-sed -i 's/^MODULES=.*/MODULES=(i915)/' /mnt/etc/mkinitcpio.conf
-arch-chroot /mnt /bin/bash <<EOF
-mkinitcpio -P
-EOF
+echo "Setting up users..."
+arch-chroot /mnt useradd -r -d /srv/minecraft minecraft
+zfs create rpool/DATA/home/$USERNAME
+arch-chroot /mnt useradd -m -G users,wheel,ftp,http,sys,audio,docker,minecraft -s /bin/bash "$USERNAME"
+echo "* Created user $USERNAME."
+arch-chroot /mnt passwd $USERNAME
+arch-chroot /mnt passwd
+echo "* Set passwords."
 
-echo "Copying over files from storage..."
-zpool import -f -R /mnt storage
-arch-chroot /mnt /bin/bash <<EOF
-cp -arv /storage/users/trwnh/.ssh /home/trwnh
-cp -arv /storage/users/trwnh/.gitconfig /home/trwnh
-cp -arv /storage/users/trwnh/.bashrc /home/trwnh
-cp -arv /storage/users/trwnh/.nanorc /home/trwnh
-cp -arv /storage/users/root.backup/ /root
-cp -arv /storage/config/etc/hosts /etc/hosts
-cp -arv /storage/config/etc/dnsmasq.conf /etc/dnsmasq.conf
-cp -arv /storage/config/etc/samba/smb.conf /etc/samba/smb.conf
-cp -arv /storage/config/etc/exports /etc/exports
-cp -arv /storage/config/etc/nginx /etc/
-cp -arv /storage/backup/srv /
-EOF
+## FIRST TIME
+#zfs create rpool/DATA/home/a
+#zfs create rpool/DATA/home/aaya
+#zfs create rpool/DATA/home/samah
+#zfs create rpool/DATA/home/firas
+## OR RESTORE EXISTING DATASETS -- this needs to be done after AUR
+# syncoid -r storage/zfs/home/rpool/DATA/home/a rpool/DATA/home/a
+## arch-chroot /mnt
+# arch-chroot /mnt useradd -m -G users,wheel,ftp,http,sys,audio,docker,minecraft -s /bin/bash a
+# arch-chroot /mnt useradd -m -G users -s /bin/bash aaya
+# arch-chroot /mnt useradd -m -G users -s /bin/bash samah
+# arch-chroot /mnt useradd -m -G users -s /bin/bash firas
+## OTHER FIRST TIME STUFF
+# arch-chroot /mnt sudo -u $USERNAME yay --devel --nodiffmenu --save
+
+#echo "Installing AUR packages..."
+#arch-chroot /mnt sudo -u $USERNAME yay -S $AUR
 
 echo "Configuring syncthing..."
 sed -i '/127\.0\.0\.1:8384/s/127\.0\.0\.1/0\.0\.0\.0/' /mnt/home/$USERNAME/.config/syncthing/config.xml
