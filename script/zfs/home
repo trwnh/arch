@@ -133,7 +133,7 @@ echo "done."
 
 echo "Updating pacman mirrorlist..."
 pacman -Sy
-pacman -S reflector --noconfirm
+pacman -S python reflector --noconfirm
 echo "Sorting mirrorlist..."
 reflector --country 'US' -p https --sort rate --save /etc/pacman.d/mirrorlist --verbose
 echo "Pacman mirrors synced and sorted."
