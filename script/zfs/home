@@ -1,0 +1,363 @@
+#!/bin/bash
+# $ iwctl station wlan0 connect {SSID}
+HOSTNAME=home
+USERNAME=trwnh
+TIMEZONE=America/Chicago
+DISKID=nvme-WDS100T1X0E-00AFY0_21371W802701
+DEV=/dev/disk/by-id/$DISKID
+PACKAGES="
+`#hardware support`
+	amd-ucode
+`#basic utilities`
+	bash nano openssh wget rsync git zip unzip unrar nmap htop archey3 dnsutils youtube-dl yt-dlp
+`#server`
+	docker docker-compose hugo zola nginx certbot certbot-nginx jre-openjdk-headless
+`#networking`
+	dnsmasq syncthing polkit samba nfs-utils
+`#files and devices`
+	ntfs-3g exfat-utils
+"
+AUR="
+`#zfs snapshots and replication`
+	sanoid lzop mbuffer pv
+"
+
+sed -i 's/^#Color/Color\nILoveCandy/g' /etc/pacman.conf
+sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 20/' /etc/pacman.conf
+
+echo "Setting time sync..."
+timedatectl set-ntp true
+
+echo "Enabling archzfs..."
+curl -s https://eoli3n.github.io/archzfs/init | bash
+
+echo "Partitioning disk..."
+sgdisk -Z $DEV
+parted -s $DEV mklabel gpt
+sgdisk -n 1:0:+2G -t 1:ef00 -c 1:"ESP" $DEV \
+       -n 2:0:+2G -t 2:bf01 -c 2:"BPOOL" $DEV \
+       -n 3:0:0 -t 3:bf00 -c 3:"RPOOL" $DEV \
+sleep 3
+partprobe $DEV
+sleep 3
+
+echo "Making legacy filesystems..."
+mkfs.fat -F32 -n "EFI" /dev/disk/by-partlabel/ESP
+
+echo "Making bpool..."
+#================ bpool with grub-compatible flags ================#
+zpool create -f \
+	-o ashift=12 \
+	-o compatibility=grub2 \
+	-O acltype=posixacl -O canmount=off -O compression=lz4 \
+	-O devices=off -O normalization=formD -O relatime=on -O xattr=sa \
+	-R /mnt -O mountpoint=/boot \
+bpool /dev/disk/by-partlabel/BPOOL
+
+echo "Making rpool..."
+#================ rpool with compression ================#
+zpool create -f \
+	-o ashift=12              \
+	-O acltype=posixacl       \
+	-O relatime=on            \
+	-O xattr=sa               \
+	-O dnodesize=legacy       \
+	-O normalization=formD    \
+	-O mountpoint=none        \
+	-O canmount=off           \
+	-O devices=off            \
+	-O compression=lz4        \
+	-R /mnt                   \
+rpool /dev/disk/by-partlabel/RPOOL
+
+echo "Making ZFS datasets..."
+#================================ boot environment = arch ================================#
+zfs create -o canmount=off -o mountpoint=none bpool/BOOT
+zfs create -o canmount=off -o mountpoint=none rpool/ROOT
+zfs create -o canmount=off -o mountpoint=none rpool/DATA
+zfs create -o canmount=noauto -o mountpoint=/boot bpool/BOOT/arch
+zfs create -o canmount=noauto -o mountpoint=/     rpool/ROOT/arch
+zpool set bootfs=rpool/ROOT/arch rpool
+zfs mount rpool/ROOT/arch
+zfs mount bpool/BOOT/arch
+#================================ persistent data ================================#
+zfs create -o mountpoint=/home rpool/DATA/home
+zfs create -o mountpoint=/root rpool/DATA/home/root
+chmod 700 /mnt/root
+zfs create -o mountpoint=none                     rpool/DATA/var
+zfs create -o mountpoint=/var/lib -o canmount=off rpool/DATA/var/lib
+zfs create                                        rpool/DATA/var/lib/AccountsService
+zfs create                                        rpool/DATA/var/lib/libvirt
+zfs create                                        rpool/DATA/var/lib/lxc
+zfs create                                        rpool/DATA/var/lib/portables
+zfs create                                        rpool/DATA/var/lib/machines
+zfs create                                        rpool/DATA/var/lib/pacman
+zfs create -o com.sun:auto-snapshot=false         rpool/DATA/var/lib/docker
+zfs create -o com.sun:auto-snapshot=false         rpool/DATA/var/lib/nfs
+zfs create -o mountpoint=/var/log                 rpool/DATA/var/log
+zfs create -o mountpoint=/var/spool               rpool/DATA/var/spool
+zfs create                                        rpool/DATA/var/spool/mail
+zfs create -o mountpoint=/var/snap                rpool/DATA/var/snap
+zfs create -o mountpoint=/var/games               rpool/DATA/var/games
+zfs create -o mountpoint=/var/www                 rpool/DATA/var/www
+zfs create -o mountpoint=/srv                     rpool/DATA/srv
+zfs create -o mountpoint=/opt                     rpool/DATA/opt
+zfs create -o mountpoint=/usr -o canmount=off     rpool/DATA/usr
+zfs create                                        rpool/DATA/usr/local
+#================================ cache and temporary files ================================#
+zfs create -o mountpoint=/var/cache -o com.sun:auto-snapshot=false rpool/DATA/var/cache
+zfs create -o mountpoint=/var/tmp   -o com.sun:auto-snapshot=false rpool/DATA/var/tmp
+zfs create -o mountpoint=/tmp       -o com.sun:auto-snapshot=false rpool/DATA/tmp
+chmod 1777 /mnt/tmp
+chmod 1777 /mnt/var/tmp
+
+#echo "Validating ZFS pool..."
+#zpool export rpool
+#zpool export bpool
+#zpool import -d /dev/disk/by-id -R /mnt rpool -N
+#zpool import -d /dev/disk/by-id -R /mnt bpool -N
+#zfs load-key rpool
+#zfs mount rpool/ROOT/arch
+#zfs mount -a
+#zfs mount bpool/BOOT/arch
+
+
+echo -n "Mounting legacy filesystems... "
+mkdir -p /mnt/boot/efi
+mount -L "EFI" /mnt/boot/efi
+echo "done."
+
+echo "Updating pacman mirrorlist..."
+pacman -Sy
+pacman -S reflector --noconfirm
+echo "Sorting mirrorlist..."
+reflector --country 'US' -p https --sort rate --save /etc/pacman.d/mirrorlist --verbose
+echo "Pacman mirrors synced and sorted."
+
+echo "Bootstrapping mounted system..."
+pacstrap /mnt base base-devel
+VERSION=$(pacman -Si zfs-linux \
+| grep 'Depends On' \
+| sed "s|.*linux=||" \
+| awk '{ print $1 }')
+VERSION_LTS=$(pacman -Si zfs-linux-lts \
+| grep 'Depends On' \
+| sed "s|.*linux-lts=||" \
+| awk '{ print $1 }')
+if [ ${VERSION} = \
+$(pacman -Si linux | grep Version | awk '{ print $3 }') ]; then
+ pacstrap /mnt linux linux-headers
+else
+ pacstrap -U /mnt \
+ https://archive.archlinux.org/packages/l/linux/linux-${VERSION}-x86_64.pkg.tar.zst \
+ https://archive.archlinux.org/packages/l/linux/linux-headers-${VERSION}-x86_64.pkg.tar.zst
+fi
+if [ ${VERSION_LTS} = \
+$(pacman -Si linux-lts | grep Version | awk '{ print $3 }') ]; then
+ pacstrap /mnt linux-lts linux-lts-headers
+else
+ pacstrap -U /mnt \
+ https://archive.archlinux.org/packages/l/linux-lts/linux-lts-${VERSION_LTS}-x86_64.pkg.tar.zst \
+ https://archive.archlinux.org/packages/l/linux-lts/linux-lts-headers-${VERSION_LTS}-x86_64.pkg.tar.zst
+fi
+pacstrap /mnt zfs-linux zfs-linux-lts zfs-utils linux-firmware grub efibootmgr os-prober mkinitcpio
+pacstrap /mnt $PACKAGES
+echo "Packages installed."
+
+echo -n "Generating filesystem mount table... "
+#genfstab -U /mnt >> /mnt/etc/fstab
+cat <<EOF > /mnt/etc/fstab
+LABEL=EFI /boot/efi vfat rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro 0 2
+EOF
+echo "done."
+
+echo -n "Setting hostname... "
+echo "$HOSTNAME" > /mnt/etc/hostname
+cat <<EOF > /mnt/etc/hosts
+127.0.0.1 localhost
+::1 localhost
+192.168.1.2 home
+192.168.1.3 backup
+EOF
+arch-chroot /mnt hostnamectl set-hostname $HOSTNAME
+echo "done."
+
+echo "Localizing system..."
+arch-chroot /mnt ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
+arch-chroot /mnt timedatectl set-timezone $TIMEZONE
+echo "* Timezone set."
+arch-chroot /mnt hwclock --systohc
+echo "* Synced system clock to hardware clock."
+cat <<EOF > /mnt/etc/locale.gen
+en_US.UTF-8 UTF-8
+ar_JO.UTF-8 UTF-8
+EOF
+arch-chroot /mnt locale-gen
+echo "LANG=en_US.UTF-8" > /mnt/etc/locale.conf
+arch-chroot /mnt localectl set-locale en_US.UTF-8
+echo "* Locale generated and applied."
+
+echo "Setting up networking..."
+cat <<EOF > /mnt/etc/systemd/network/00_br0.netdev
+[NetDev]
+Name=br0
+Kind=bridge
+EOF
+cat <<EOF > /mnt/etc/systemd/network/10_bind.network
+[Match]
+Name=en*
+
+[Network]
+Bridge=br0
+EOF
+cat <<EOF > /mnt/etc/systemd/network/20_bridge.network
+[Match]
+Name=br0
+
+[Network]
+DHCP=ipv4
+EOF
+
+cat <<EOF > /mnt/etc/dnsmasq.conf
+expand-hosts
+domain=trwnh.com
+server=192.168.1.1
+EOF
+
+echo "Avoid timeout -- press Enter when you are ready"
+read TIMEOUT
+
+echo "Setting up users..."
+arch-chroot /mnt useradd -r -d /srv/minecraft minecraft
+zfs create rpool/DATA/home/$USERNAME
+arch-chroot /mnt useradd -m -g users -G wheel,ftp,http,sys,audio,docker,minecraft -s /bin/bash "$USERNAME"
+echo "* Created user $USERNAME."
+arch-chroot /mnt passwd $USERNAME
+arch-chroot /mnt passwd
+echo "* Set passwords."
+
+echo -n "Changing configuration values... "
+sed -i 's/^#Color/Color\nILoveCandy/g' /mnt/etc/pacman.conf
+sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 20/' /mnt/etc/pacman.conf
+sed -i "/\[multilib\]/,/Include/"'s/^#//' /mnt/etc/pacman.conf
+arch-chroot /mnt pacman -Sy
+echo '%wheel      ALL=(ALL) ALL' > /mnt/etc/sudoers.d/wheel
+cat <<EOF > /mnt/etc/environment
+EDITOR=nano
+EOF
+echo "done."
+
+echo -n "Enabling system services... "
+systemctl enable systemd-networkd --root=/mnt
+systemctl enable systemd-resolved --root=/mnt
+systemctl enable systemd-timesyncd --root=/mnt
+echo "done."
+
+echo "Installing AUR helper..."
+arch-chroot /mnt /bin/bash <<EOF
+git clone https://aur.archlinux.org/yay-bin.git
+chmod -R 777 /yay-bin
+cd /yay-bin
+sudo -u $USERNAME makepkg -sic --noconfirm
+cd ..
+rm -r /yay-bin
+sudo -u $USERNAME yay --gendb
+sudo -u $USERNAME yay --devel --nodiffmenu --save
+exit
+EOF
+
+echo "Installing AUR packages..."
+arch-chroot /mnt /bin/bash <<EOF
+sudo -u $USERNAME yay -S $AUR
+exit
+EOF
+
+echo "Doing ZFS-y things..."
+sed -i 's/^HOOKS=\(.*\)/HOOKS=\(base udev autodetect modconf block keyboard zfs filesystems\)/g' /mnt/etc/mkinitcpio.conf
+zgenhostid $(hostid)
+systemctl enable zfs-import-scan zfs-import-cache zfs-import.target zfs-zed zfs.target --root=/mnt
+systemctl enable zfs-mount --root=/mnt
+curl -L https://archzfs.com/archzfs.gpg |  pacman-key -a -
+curl -L https://git.io/JsfVS | xargs -i{} pacman-key --lsign-key {}
+curl -L https://git.io/Jsfw2 > /mnt/etc/pacman.d/mirrorlist-archzfs
+echo "[archzfs]
+Include = /etc/pacman.d/mirrorlist-archzfs
+#[archzfs-testing]
+#Include = /etc/pacman.d/mirrorlist-archzfs" >> /mnt/etc/pacman.conf
+arch-chroot /mnt pacman -Sy
+echo 'export ZPOOL_VDEV_NAME_PATH=1' >> /etc/profile.d/zfs.sh
+echo 'Defaults env_keep += "ZPOOL_VDEV_NAME_PATH"' > /mnt/etc/sudoers.d/zfs
+arch-chroot /mnt /bin/bash <<EOF
+mkdir /etc/zfs/zfs-list.cache
+touch /etc/zfs/zfs-list.cache/bpool
+touch /etc/zfs/zfs-list.cache/rpool
+zed -F &
+zfs set canmount=on     bpool/BOOT/arch
+zfs set canmount=noauto rpool/ROOT/arch
+EOF
+
+echo "Wait here"
+read VERIFY
+
+echo "Installing bootloader..."
+arch-chroot /mnt /bin/bash <<EOF
+#echo 'GRUB_CMDLINE_LINUX=\"zfs_import_dir=${DISKID%/*}\"' >> /etc/default/grub
+echo "GRUB_DISABLE_OS_PROBER=no" >> /etc/default/grub
+echo 'GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3"' >> /etc/default/grub
+echo "GRUB_DEFAULT=saved" >> /etc/default/grub
+echo "GRUB_SAVEDEFAULT=true" >> /etc/default/grub
+sed -i "s|rpool=.*|rpool=\`zdb -l \${GRUB_DEVICE} \| grep -E '[[:blank:]]name' \| cut -d\\\' -f 2\`|"  /etc/grub.d/10_linux
+sed -i "s|^  linux=.*|  linux=\`echo \$list \| tr ' ' '\\\n' \| sort -V \| head -1 \| cat\`|" /etc/grub.d/10_linux
+mkdir -p /boot/efi/EFI/arch
+grub-install --boot-directory /boot/efi/EFI/arch --efi-directory /boot/efi
+ZPOOL_VDEV_NAME_PATH=1 grub-mkconfig -o /boot/efi/EFI/arch/grub/grub.cfg
+mkdir -p /boot/grub
+cp /boot/efi/EFI/arch/grub/grub.cfg /boot/grub/grub.cfg
+EOF
+
+echo "Did that work?"
+read VERIFY
+
+echo "Enabling Early KMS for GPU..."
+sed -i 's/^MODULES=.*/MODULES=(i915)/' /mnt/etc/mkinitcpio.conf
+arch-chroot /mnt /bin/bash <<EOF
+mkinitcpio -P
+EOF
+
+echo "Copying over files from storage..."
+zpool import -f -R /mnt storage
+arch-chroot /mnt /bin/bash <<EOF
+cp -arv /storage/users/trwnh/.ssh /home/trwnh
+cp -arv /storage/users/trwnh/.gitconfig /home/trwnh
+cp -arv /storage/users/trwnh/.bashrc /home/trwnh
+cp -arv /storage/users/trwnh/.nanorc /home/trwnh
+cp -arv /storage/users/root.backup/ /root
+cp -arv /storage/config/etc/hosts /etc/hosts
+cp -arv /storage/config/etc/dnsmasq.conf /etc/dnsmasq.conf
+cp -arv /storage/config/etc/samba/smb.conf /etc/samba/smb.conf
+cp -arv /storage/config/etc/exports /etc/exports
+cp -arv /storage/config/etc/nginx /etc/
+cp -arv /storage/backup/srv /
+EOF
+
+echo "Configuring syncthing..."
+sed -i '/127\.0\.0\.1:8384/s/127\.0\.0\.1/0\.0\.0\.0/' /mnt/home/$USERNAME/.config/syncthing/config.xml
+systemctl enable syncthing@$USERNAME --root=/mnt
+
+echo "Taking snapshot of install..."
+zpool set cachefile=/etc/zfs/zpool.cache bpool
+zpool set cachefile=/etc/zfs/zpool.cache rpool
+zpool set cachefile=/etc/zfs/zpool.cache storage
+mkdir -p /mnt/etc/zfs
+cp /etc/zfs/zpool.cache /mnt/etc/zfs/zpool.cache
+zfs snapshot -r rpool@install
+zfs snapshot -r bpool@install
+
+echo "Unmounting..."
+sleep 5
+umount /mnt/boot/efi
+zfs umount -a
+zpool export bpool
+zpool export rpool
+zpool export storage
+echo "Done! You may now reboot."
