@@ -246,10 +246,13 @@ echo -n "Enabling system services... "
 systemctl enable systemd-timesyncd --root=/mnt
 systemctl enable NetworkManager --root=/mnt
 systemctl enable dnsmasq --root=/mnt
+systemctl enable nfs-server --root=/mnt
 systemctl enable smb --root=/mnt
 systemctl enable nmb --root=/mnt
 systemctl enable sshd --root=/mnt
 systemctl enable docker --root=/mnt
+systemctl enable nginx --root=/mnt
+
 echo "done."
 
 echo "Installing sanoid for ZFS replication..."
@@ -266,7 +269,6 @@ git clone https://aur.archlinux.org/sanoid.git
 chmod -R 777 /mbuffer
 chmod -R 777 /sanoid
 chmod -R 777 /perl-config-inifiles
-
 
 cd /mbuffer
 sudo -u nobody makepkg -sc
