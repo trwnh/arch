@@ -238,6 +238,7 @@ echo "Copying system and config files..."
 rsync -avvzh /mnt/storage/system/ /mnt/
 rsync -avvzh /mnt/storage/users/root.home/ /mnt/root/
 rsync -avvzh /mnt/storage/srv/ /mnt/srv/
+mv /mnt/etc/sanoid/sanoid.conf.home /mnt/etc/sanoid/sanoid.conf
 
 echo -n "Enabling system services... "
 #systemctl enable systemd-networkd --root=/mnt
@@ -360,6 +361,7 @@ echo "* Added SMB user."
 ## OTHER FIRST TIME STUFF
 # arch-chroot /mnt sudo -u $USERNAME yay --devel --nodiffmenu --save
 # cp -rv /mnt/storage/users/trwnh/.ssh /mnt/home/trwnh/
+# cp -v /mnt/storage/users/trwnh/.bash_profile /mnt/home/trwnh/
 # cp -v /mnt/storage/users/trwnh/.bashrc /mnt/home/trwnh/
 # cp -v /mnt/storage/users/trwnh/.nanorc /mnt/home/trwnh/
 # cp -v /mnt/storage/users/trwnh/.gitconfig /mnt/home/trwnh/
@@ -370,6 +372,7 @@ echo "* Added SMB user."
 #echo "Configuring syncthing..."
 #sed -i '/127\.0\.0\.1:8384/s/127\.0\.0\.1/0\.0\.0\.0/' /mnt/home/$USERNAME/.config/syncthing/config.xml
 systemctl enable syncthing@$USERNAME --root=/mnt
+systemctl enable sanoid.timer --root=/mnt
 
 echo "Taking snapshot of install..."
 arch-chroot /mnt /bin/bash <<EOF
