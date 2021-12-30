@@ -252,12 +252,15 @@ arch-chroot /mnt /bin/bash <<EOF
 
 pacman -S lzop pv
 git clone https://aur.archlinux.org/mbuffer.git
+
+pacman -S perl-capture-tiny perl-exporter-tiny perl-list-moreutils perl-list-moreutils-xs perl-io-stringy perl-inc-latest perl-module-build
 git clone https://aur.archlinux.org/perl-config-inifiles.git
 git clone https://aur.archlinux.org/sanoid.git
 
 chmod -R 777 /mbuffer
 chmod -R 777 /sanoid
 chmod -R 777 /perl-config-inifiles
+
 
 cd /mbuffer
 sudo -u nobody makepkg -sc
@@ -266,8 +269,6 @@ pacman -U mbuffer*.zst
 cd /perl-config-inifiles
 sudo -u nobody makepkg -sc
 pacman -U perl-config-inifiles*.zst
-
-pacman -S perl-capture-tiny perl-exporter-tiny perl-list-moreutils perl-list-moreutils-xs perl-io-stringy perl-inc-latest perl-module-build
 
 cd /sanoid
 sudo -u nobody makepkg -sc
@@ -297,14 +298,16 @@ sed -i 's/^HOOKS=\(.*\)/HOOKS=\(base udev autodetect modconf block keyboard zfs 
 zgenhostid $(hostid)
 systemctl enable zfs-import-scan zfs-import-cache zfs-import.target zfs-zed zfs.target --root=/mnt
 systemctl enable zfs-mount --root=/mnt
+arch-chroot /mnt /bin/bash <<EOF
 curl -L https://archzfs.com/archzfs.gpg |  pacman-key -a -
 curl -L https://git.io/JsfVS | xargs -i{} pacman-key --lsign-key {}
-curl -L https://git.io/Jsfw2 > /mnt/etc/pacman.d/mirrorlist-archzfs
+curl -L https://git.io/Jsfw2 > /etc/pacman.d/mirrorlist-archzfs
 echo "[archzfs]
 Include = /etc/pacman.d/mirrorlist-archzfs
 #[archzfs-testing]
-#Include = /etc/pacman.d/mirrorlist-archzfs" >> /mnt/etc/pacman.conf
-arch-chroot /mnt pacman -Sy
+#Include = /etc/pacman.d/mirrorlist-archzfs" >> /etc/pacman.conf
+pacman -Sy
+EOF
 echo 'export ZPOOL_VDEV_NAME_PATH=1' >> /etc/profile.d/zfs.sh
 echo 'Defaults env_keep += "ZPOOL_VDEV_NAME_PATH"' > /mnt/etc/sudoers.d/zfs
 
