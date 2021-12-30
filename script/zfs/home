@@ -249,25 +249,49 @@ systemctl enable systemd-timesyncd --root=/mnt
 systemctl enable NetworkManager --root=/mnt
 echo "done."
 
-echo "Installing AUR helper..."
-arch-chroot /mnt /bin/bash <<EOF
-git clone https://aur.archlinux.org/yay-bin.git
-chmod -R 777 /yay-bin
-cd /yay-bin
-sudo -u nobody makepkg -sc
-pacman -U yay-bin*
-cd ..
-rm -r /yay-bin
-sudo -u nobody yay --gendb
-EOF
-
 echo "Installing sanoid for ZFS replication..."
 arch-chroot /mnt /bin/bash <<EOF
+
 git clone https://aur.archlinux.org/sanoid.git
 git clone https://aur.archlinux.org/lzop.git
 git clone https://aur.archlinux.org/mbuffer.git
 git clone https://aur.archlinux.org/pv.git
+
 chmod -R 777 /sanoid
+chmod -R 777 /lzop
+chmod -R 777 /mbuffer
+chmod -R 777 /pv
+
+cd /pv
+sudo -u nobody makepkg -sc
+pacman -U pv*
+cd ..
+
+cd /lzop
+sudo -u nobody makepkg -sc
+pacman -U lzop*
+cd ..
+
+cd /mbuffer
+sudo -u nobody makepkg -sc
+pacman -U mbuffer*
+cd ..
+
+cd /sanoid
+sudo -u nobody makepkg -sc
+pacman -U sanoid*
+cd ..
+
+rm -r /sanoid
+rm -r /mbuffer
+rm -r /pv
+rm -r /lzop
+EOF
+
+echo "Installing AUR helper..."
+arch-chroot /mnt /bin/bash <<EOF
+git clone https://aur.archlinux.org/yay-bin.git
+chmod -R 777 /yay-bin
 cd /yay-bin
 sudo -u nobody makepkg -sc
 pacman -U yay-bin*
@@ -291,14 +315,6 @@ Include = /etc/pacman.d/mirrorlist-archzfs
 arch-chroot /mnt pacman -Sy
 echo 'export ZPOOL_VDEV_NAME_PATH=1' >> /etc/profile.d/zfs.sh
 echo 'Defaults env_keep += "ZPOOL_VDEV_NAME_PATH"' > /mnt/etc/sudoers.d/zfs
-arch-chroot /mnt /bin/bash <<EOF
-mkdir /etc/zfs/zfs-list.cache
-touch /etc/zfs/zfs-list.cache/bpool
-touch /etc/zfs/zfs-list.cache/rpool
-zed -F &
-zfs set canmount=on     bpool/BOOT/arch
-zfs set canmount=noauto rpool/ROOT/arch
-EOF
 
 echo "Installing bootloader..."
 arch-chroot /mnt /bin/bash <<EOF
@@ -351,6 +367,14 @@ sed -i '/127\.0\.0\.1:8384/s/127\.0\.0\.1/0\.0\.0\.0/' /mnt/home/$USERNAME/.conf
 systemctl enable syncthing@$USERNAME --root=/mnt
 
 echo "Taking snapshot of install..."
+arch-chroot /mnt /bin/bash <<EOF
+mkdir /etc/zfs/zfs-list.cache
+touch /etc/zfs/zfs-list.cache/bpool
+touch /etc/zfs/zfs-list.cache/rpool
+zed -F &
+zfs set canmount=on     bpool/BOOT/arch
+zfs set canmount=noauto rpool/ROOT/arch
+EOF
 zpool set cachefile=/etc/zfs/zpool.cache bpool
 zpool set cachefile=/etc/zfs/zpool.cache rpool
 zpool set cachefile=/etc/zfs/zpool.cache storage
