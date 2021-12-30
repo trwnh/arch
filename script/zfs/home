@@ -249,40 +249,24 @@ echo "done."
 echo "Installing sanoid for ZFS replication..."
 arch-chroot /mnt /bin/bash <<EOF
 
-git clone https://aur.archlinux.org/sanoid.git
-git clone https://aur.archlinux.org/lzop.git
+
+pacman -S lzop pv
 git clone https://aur.archlinux.org/mbuffer.git
-git clone https://aur.archlinux.org/pv.git
+git clone https://aur.archlinux.org/sanoid.git
 
-chmod -R 777 /sanoid
-chmod -R 777 /lzop
 chmod -R 777 /mbuffer
-chmod -R 777 /pv
-
-cd /pv
-sudo -u nobody makepkg -sc
-pacman -U pv*
-cd ..
-
-cd /lzop
-sudo -u nobody makepkg -sc
-pacman -U lzop*
-cd ..
+chmod -R 777 /sanoid
 
 cd /mbuffer
 sudo -u nobody makepkg -sc
 pacman -U mbuffer*
-cd ..
 
 cd /sanoid
 sudo -u nobody makepkg -sc
 pacman -U sanoid*
-cd ..
 
 rm -r /sanoid
 rm -r /mbuffer
-rm -r /pv
-rm -r /lzop
 EOF
 
 echo "Installing AUR helper..."
