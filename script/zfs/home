@@ -359,6 +359,10 @@ echo "* Added SMB user."
 # arch-chroot /mnt useradd -m -G users -s /bin/bash firas
 ## OTHER FIRST TIME STUFF
 # arch-chroot /mnt sudo -u $USERNAME yay --devel --nodiffmenu --save
+# cp -rv /mnt/storage/users/trwnh/.ssh /mnt/home/trwnh/
+# cp -v /mnt/storage/users/trwnh/.bashrc /mnt/home/trwnh/
+# cp -v /mnt/storage/users/trwnh/.nanorc /mnt/home/trwnh/
+# cp -v /mnt/storage/users/trwnh/.gitconfig /mnt/home/trwnh/
 
 #echo "Installing AUR packages..."
 #arch-chroot /mnt sudo -u $USERNAME yay -S $AUR
