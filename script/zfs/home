@@ -12,7 +12,7 @@ PACKAGES="
 `#basic utilities`
 	bash nano openssh wget rsync git zip unzip unrar nmap htop archey3 dnsutils youtube-dl yt-dlp
 `#server`
-	docker docker-compose hugo zola nginx certbot certbot-nginx jre-openjdk-headless
+	docker docker-compose hugo zola nginx certbot certbot-nginx jre-openjdk-headless screen
 `#networking`
 	networkmanager dnsmasq syncthing polkit samba nfs-utils
 `#files and devices`
