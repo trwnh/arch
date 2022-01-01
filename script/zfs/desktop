@@ -9,7 +9,7 @@ PACKAGES="
 `#hardware support`
 	amd-ucode mesa vulkan-radeon amdvlk acpi bluez iwd solaar
 `#basic utilities`
-	bash nano openssh wget rsync git zip unzip unrar nmap htop archey3 dnsutils bash-completion pacman-contrib man-db tree 
+	bash nano openssh wget rsync git zip unzip unrar p7zip nmap htop archey3 dnsutils bash-completion pacman-contrib man-db tree 
 `#dev`
 	docker docker-compose go rust hugo zola nodejs npm python-pip
 `#networking`
@@ -52,7 +52,7 @@ PACKAGES="
 	obs-studio libva-intel-driver v4l2loopback-dkms
 	gimp krita inkscape blender pitivi audacity
 	bitwarden
-	nextcloud-client nextcloud-client-cloudproviders python-nautilus trash-cli
+	nextcloud-client nextcloud-client-cloudproviders python-nautilus trash-cli xarchiver
 	jre-openjdk sweethome3d
 	curtail
 	darktable rawtherapee shotwell
