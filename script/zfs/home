@@ -339,7 +339,21 @@ echo "Avoid timeout -- press Enter when you are ready"
 read TIMEOUT
 
 echo "Setting up users..."
-arch-chroot /mnt useradd -r -d /srv/minecraft minecraft
+arch-chroot /mnt /bin/bash <<EOF
+
+useradd -r -s /usr/bin/nologin -d /srv/minecraft minecraft
+groupmod -g 700 minecraft
+usermod -u 700 -g 700 minecraft
+
+useradd -r -s /usr/bin/nologin nextcloud
+groupmod -g 701 nextcloud
+usermod -u 701 -g 701 nextcloud
+
+useradd -r -s /usr/bin/nologin transmission
+groupmod -g 702 transmission
+usermod -u 702 -g 702 transmission
+
+EOF
 zfs create rpool/DATA/home/$USERNAME
 arch-chroot /mnt useradd -m -G users,wheel,ftp,http,sys,audio,docker,minecraft -s /bin/bash "$USERNAME"
 echo "* Created user $USERNAME."
