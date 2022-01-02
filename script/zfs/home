@@ -355,7 +355,7 @@ usermod -u 702 -g 702 transmission
 
 EOF
 zfs create rpool/DATA/home/$USERNAME
-arch-chroot /mnt useradd -m -G users,wheel,ftp,http,sys,audio,docker,minecraft -s /bin/bash "$USERNAME"
+arch-chroot /mnt useradd -m -G users,wheel,ftp,http,sys,audio,docker,minecraft,nextcloud,transmission -s /bin/bash "$USERNAME"
 echo "* Created user $USERNAME."
 arch-chroot /mnt passwd $USERNAME
 arch-chroot /mnt passwd
