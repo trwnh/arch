@@ -341,6 +341,10 @@ read TIMEOUT
 echo "Setting up users..."
 arch-chroot /mnt /bin/bash <<EOF
 
+useradd -r -s /usr/bin/nologin -d /srv/docker -g docker docker
+groupmod -g 500 docker
+usermod -u 500 -g 500 docker
+
 useradd -r -s /usr/bin/nologin -d /srv/minecraft minecraft
 groupmod -g 700 minecraft
 usermod -u 700 -g 700 minecraft
