@@ -15,10 +15,19 @@ mysql -u root -p
 #### create user 'nextcloud'@'localhost' identified by 'password';
 #### grant all privileges on nextcloud.* to 'nextcloud'@'localhost';
 #### flush privileges;
+systemctl restart mariadb
 
 ## Redis
+nano /etc/redis/redis.conf
+#### port 0
+#### unixsocket /run/redis/redis.sock
+#### unixsocketperm 770
+usermod -aG redis http
+usermod -aG redis nextcloud
 systemctl enable --now redis
 
-systemctl enable {nginxredis}
+## PHP
+
+## NGINX
 
 # CTRL + ]]]
