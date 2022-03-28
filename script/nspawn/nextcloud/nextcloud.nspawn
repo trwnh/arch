@@ -1,0 +1,5 @@
+[Network]
+Port=tcp:25683:443
+
+[Files]
+Bind=/storage/data/nextcloud:/data
