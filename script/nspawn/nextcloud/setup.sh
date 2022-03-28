@@ -103,6 +103,13 @@ nano /etc/php/php-fpm.d/nextcloud.conf
 # php_value[extension] = pdo_mysql
 # php_value[extension] = redis
 
+systemctl edit php-fpm
+# [Service]
+# ExecStart=
+# ExecStart=/usr/bin/php-fpm --nodaemonize --fpm-config /etc/php/php-fpm.conf --php-ini /etc/php/php-fpm.ini
+# ReadWritePaths=/var/lib/nextcloud
+# ReadWritePaths=/etc/webapps/nextcloud/config
+
 # Nextcloud ================================================
 nano /etc/webapps/nextcloud/config/config.php
 # 'trusted_domains' =>
