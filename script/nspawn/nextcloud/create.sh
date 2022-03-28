@@ -3,8 +3,8 @@
 DIR=/var/lib/machines/nextcloud
 
 mkdir $DIR
-pacstrap -c $DIR base sudo \
-  php uwsgi-plugin-php \
+pacstrap -c $DIR base sudo nano \
+  php php-fpm \
   mariadb \
   redis php-redis \
   php-gd php-imagick ffmpeg libreoffice-fresh \
