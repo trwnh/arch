@@ -119,7 +119,7 @@ systemctl enable nextcloud-cron.timer
 # NGINX ================================================
 
 nano /etc/nginx/nginx.conf
-# include
+# include /etc/nginx/sites/*conf
 
 mkdir /etc/nginx/ssl
 openssl req  -nodes -new -x509 -keyout /etc/nginx/ssl/nextcloud.key -out /etc/nginx/ssl/nextcloud.cert -sha256 -days 365
