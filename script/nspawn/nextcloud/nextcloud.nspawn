@@ -2,4 +2,4 @@
 Port=tcp:25683:443
 
 [Files]
-Bind=/storage/data/nextcloud:/usr/share/webapps/nextcloud/data
+Bind=/storage/data/nextcloud:/var/lib/nextcloud/data
