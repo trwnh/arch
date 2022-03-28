@@ -9,3 +9,5 @@ pacstrap -c $DIR base sudo \
   redis php-redis \
   php-gd php-imagick ffmpeg libreoffice-fresh \
   smbclient php-intl php-imap curl python
+
+cat "pts/0" >> $DIR/etc/securetty
