@@ -12,3 +12,5 @@ pacstrap -c $DIR base sudo nano \
   smbclient php-intl php-imap curl python
 
 cat "pts/0" >> $DIR/etc/securetty
+
+curl https://github.com/trwnh/arch/raw/main/script/nspawn/nextcloud/nextcloud.nspawn > /etc/systemd/nspawn/nextcloud.nspawn
