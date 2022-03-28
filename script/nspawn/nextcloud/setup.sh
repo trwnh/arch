@@ -154,18 +154,18 @@ systemctl enable nextcloud-cron.timer
 nano /etc/nginx/nginx.conf
 # include
 
+mkdir /etc/nginx/ssl
+openssl req  -nodes -new -x509 -keyout /etc/nginx/ssl/nextcloud.key -out /etc/nginx/ssl/nextcloud.cert -sha256 -days 365
+
 mkdir /etc/nginx/sites
 nano /etc/nginx/sites/nextcloud.conf
 # upstream php-handler {
 #     server unix:/run/php-fpm/nextcloud.sock;
 # }
-
 # map $arg_v $asset_immutable {
 #     "" "";
 #     default "immutable";
 # }
-
-
 # server {
 #     listen 80;
 #     listen [::]:80;
