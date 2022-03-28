@@ -4,6 +4,7 @@ DIR=/var/lib/machines/nextcloud
 
 mkdir $DIR
 pacstrap -c $DIR base sudo nano \
+  nextcloud \
   php php-fpm \
   mariadb \
   redis php-redis \
