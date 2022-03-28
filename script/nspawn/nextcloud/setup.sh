@@ -13,9 +13,9 @@ nano /etc/systemd/network/80-container-host0.network
 Name=host0
 
 [Network]
-DNS=192.168.1.254
-Address=192.168.1.94/24
-Gateway=192.168.1.254
+Address=192.168.1.201/24
+DNS=192.168.1.1
+Gateway=192.168.1.1
 """
 
 systemctl enable --now systemd-networkd
