@@ -1,7 +1,9 @@
 #!/bin/bash
 
-DIR=/var/lib/machines/nextcloud
+mkdir /etc/systemd/nspawn
+curl https://raw.githubusercontent.com/trwnh/arch/main/script/nspawn/nextcloud/nextcloud.nspawn > /etc/systemd/nspawn/nextcloud.nspawn
 
+DIR=/var/lib/machines/nextcloud
 mkdir $DIR
 pacstrap -c $DIR base sudo nano \
   nextcloud \
@@ -16,6 +18,3 @@ echo "pts/0" >> $DIR/etc/securetty
 
 iptables -A FORWARD -i ve-+ -o br0 -j ACCEPT
 iptables -A INPUT -i ve-+ -p udp -m udp --dport 67 -j ACCEPT
-
-mkdir /etc/systemd/nspawn
-curl https://raw.githubusercontent.com/trwnh/arch/main/script/nspawn/nextcloud/nextcloud.nspawn > /etc/systemd/nspawn/nextcloud.nspawn
