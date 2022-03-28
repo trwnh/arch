@@ -18,4 +18,4 @@ iptables -A FORWARD -i ve-+ -o br0 -j ACCEPT
 iptables -A INPUT -i ve-+ -p udp -m udp --dport 67 -j ACCEPT
 
 mkdir /etc/systemd/nspawn
-curl https://github.com/trwnh/arch/raw/main/script/nspawn/nextcloud/nextcloud.nspawn > /etc/systemd/nspawn/nextcloud.nspawn
+curl https://raw.githubusercontent.com/trwnh/arch/main/script/nspawn/nextcloud/nextcloud.nspawn > /etc/systemd/nspawn/nextcloud.nspawn
