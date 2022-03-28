@@ -8,4 +8,4 @@ pacstrap -c $DIR base sudo \
   mariadb \
   redis php-redis \
   php-gd php-imagick ffmpeg libreoffice-fresh \
-  smbclient php-intl php-imap curl
+  smbclient php-intl php-imap curl python
