@@ -14,7 +14,7 @@ pacstrap -c $DIR base sudo nano \
 
 echo "pts/0" >> $DIR/etc/securetty
 
-iptables -A FORWARD -i ve-+ -o internet0 -j ACCEPT
+iptables -A FORWARD -i ve-+ -o br0 -j ACCEPT
 iptables -A INPUT -i ve-+ -p udp -m udp --dport 67 -j ACCEPT
 
 mkdir /etc/systemd/nspawn
