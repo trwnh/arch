@@ -13,4 +13,5 @@ pacstrap -c $DIR base sudo nano \
 
 cat "pts/0" >> $DIR/etc/securetty
 
+mkdir /etc/systemd/nspawn
 curl https://github.com/trwnh/arch/raw/main/script/nspawn/nextcloud/nextcloud.nspawn > /etc/systemd/nspawn/nextcloud.nspawn
