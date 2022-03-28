@@ -6,6 +6,11 @@
 
 # systemd-nspawn -b -D /var/lib/machines/nextcloud
 
+# Networking ================================================
+echo "nameserver 9.9.9.9" >> /etc/resolv.conf
+systemctl enable --now systemd-networkd
+systemctl enable --now systemd-resolved
+
 # MariaDB ================================================
 mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
 systemctl enable --now mariadb
