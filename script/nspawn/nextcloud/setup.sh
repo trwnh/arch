@@ -37,16 +37,15 @@ systemctl enable --now redis
 cp /etc/php/php.ini /etc/webapps/nextcloud/php.ini
 chown nextcloud:nextcloud /etc/webapps/nextcloud/php.ini
 
-cat <<EOF >> /etc/webapps/nextcloud/php.ini
-date.timezone = America/Chicago
-extension=bcmath
-extension=bz2
-extension=exif
-extension=gd
-extension=iconv
-extension=imagick
-extension=intl
-EOF
+nano /etc/webapps/nextcloud/php.ini
+# date.timezone = America/Chicago
+# extension=bcmath
+# extension=bz2
+# extension=exif
+# extension=gd
+# extension=iconv
+# extension=imagick
+# extension=intl
 
 echo "NEXTCLOUD_PHP_CONFIG=/etc/webapps/nextcloud/php.ini" >> /etc/environment
 
