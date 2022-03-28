@@ -11,7 +11,7 @@ pacstrap -c $DIR base sudo nano \
   php-gd php-imagick ffmpeg libreoffice-fresh \
   smbclient php-intl php-imap curl python
 
-cat "pts/0" >> $DIR/etc/securetty
+echo "pts/0" >> $DIR/etc/securetty
 
 iptables -A FORWARD -i ve-+ -o internet0 -j ACCEPT
 iptables -A INPUT -i ve-+ -p udp -m udp --dport 67 -j ACCEPT
