@@ -138,6 +138,7 @@ systemctl enable nextcloud-cron.timer
 
 nano /etc/nginx/nginx.conf
 """
+types_hash_max_size 4096;
 include /etc/nginx/sites/*conf;
 """
 
