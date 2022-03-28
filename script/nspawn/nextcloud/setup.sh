@@ -16,6 +16,7 @@ mysql -u root -p
 #### create user 'nextcloud'@'localhost' identified by 'password';
 #### grant all privileges on nextcloud.* to 'nextcloud'@'localhost';
 #### flush privileges;
+#### exit
 
 nano /etc/my.cnf.d/server.cnf
 #### [mysqld]
