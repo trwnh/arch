@@ -125,14 +125,6 @@ nano /etc/webapps/nextcloud/config/config.php
    ),    
  'overwrite.cli.url' => 'https://cloud.trwnh.com/',
  'htaccess.RewriteBase' => '/',
-
- 'filelocking.enabled' => true,
- 'memcache.locking' => '\OC\Memcache\Redis',
- 'redis' => array(
-      'host' => '/run/redis/redis.sock',
-      'port' => 0,
-      'timeout' => 0.0,
-       ),
 """
 
 install --owner=nextcloud --group=nextcloud --mode=700 -d /var/lib/nextcloud/sessions
@@ -175,6 +167,16 @@ systemctl enable --now nginx
 
 # Last steps ================================================
 
+nano /etc/webapps/nextcloud/config/config.php
+"""
+'filelocking.enabled' => true,
+ 'memcache.locking' => '\OC\Memcache\Redis',
+ 'redis' => array(
+      'host' => '/run/redis/redis.sock',
+      'port' => 0,
+      'timeout' => 0.0,
+       ),
+"""
 
 occ files:scan --all
 
