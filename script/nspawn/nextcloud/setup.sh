@@ -7,6 +7,15 @@
 # machinectl start nextcloud
 # machinectl shell nextcloud
 
+# Permissions ================================================
+groupmod -g 701 nextcloud
+usermod -u 701 -g 701 nextcloud
+chown nextcloud:nextcloud /var/lib/nextcloud
+chown nextcloud:nextcloud /var/lib/nextcloud/data
+chown -R nextcloud:nextcloud /var/lib/nextcloud/apps
+chown -R nextcloud:nextcloud /var/lib/nextcloud/sessions
+chown -R nextcloud:nextcloud /etc/webapps/nextcloud
+
 # Networking ================================================
 nano /etc/systemd/network/80-container-host0.network
 """
