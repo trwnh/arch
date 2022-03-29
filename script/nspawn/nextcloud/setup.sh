@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# systemd-nspawn -D /var/lib/machines/nextcloud
+# systemd-nspawn -D /var/lib/machines/nextcloud --private-network
 # passwd
 # logout
 
