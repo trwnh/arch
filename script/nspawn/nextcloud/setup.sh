@@ -4,7 +4,8 @@
 # passwd
 # logout
 
-# systemd-nspawn -b -D /var/lib/machines/nextcloud
+# machinectl start nextcloud
+# machinectl shell nextcloud
 
 # Networking ================================================
 nano /etc/systemd/network/80-container-host0.network
