@@ -15,6 +15,7 @@ chown nextcloud:nextcloud /var/lib/nextcloud/data
 chown -R nextcloud:nextcloud /var/lib/nextcloud/apps
 chown -R nextcloud:nextcloud /var/lib/nextcloud/sessions
 chown -R nextcloud:nextcloud /etc/webapps/nextcloud
+chown -R nextcloud:nextcloud /var/log/nextcloud
 
 # Networking ================================================
 nano /etc/systemd/network/80-container-host0.network
