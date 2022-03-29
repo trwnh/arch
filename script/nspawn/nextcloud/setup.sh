@@ -172,4 +172,9 @@ curl https://raw.githubusercontent.com/trwnh/arch/main/script/nspawn/nextcloud/n
 
 systemctl enable --now nginx
 
+# Last steps ================================================
+
+
+occ files:scan --all
+
 # CTRL + ]]]
