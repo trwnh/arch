@@ -1,4 +1,5 @@
 [Network]
+Bridge=br0
 Port=tcp:25683:443
 
 [Files]
