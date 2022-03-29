@@ -20,6 +20,7 @@ Gateway=192.168.1.1
 """
 
 systemctl enable --now systemd-networkd
+systemctl enable --now systemd-resolved
 
 # MariaDB ================================================
 mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
