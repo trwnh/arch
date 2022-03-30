@@ -4,6 +4,4 @@ Port=tcp:25683:443
 
 [Files]
 Bind=/storage/data/nextcloud:/var/lib/nextcloud/data
-
-[Exec]
-PrivateUsers=no
+BindUser=nextcloud
