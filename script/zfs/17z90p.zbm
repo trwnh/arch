@@ -296,7 +296,7 @@ Include = /etc/pacman.d/mirrorlist-archzfs
 #[archzfs-testing]
 #Include = /etc/pacman.d/mirrorlist-archzfs" >> /mnt/etc/pacman.conf
 arch-chroot /mnt pacman -Sy
-echo 'export ZPOOL_VDEV_NAME_PATH=1' >> /etc/profile.d/zfs
+echo 'export ZPOOL_VDEV_NAME_PATH=1' >> /mnt/etc/profile.d/zfs
 echo 'Defaults env_keep += "ZPOOL_VDEV_NAME_PATH"' > /mnt/etc/sudoers.d/zfs
 
 echo "Wait here"
