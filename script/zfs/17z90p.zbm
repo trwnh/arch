@@ -61,8 +61,6 @@ AUR="
 	mugshot xfce4-docklike-plugin xmousepasteblock-git xfce4-windowck-plugin-xfwm4-theme-support `#vala-panel-appmenu-xfce is causing build errors`
 `#more gnome`
 	gnome-shell-extension-dash-to-dock
-`#more printing`
-	`#brother-mfc-7840w brscan3`
 `#more desktop`
 	enpass-bin sublime-music
 	checkra1n-cli
@@ -235,6 +233,7 @@ read TIMEOUT
 echo "Setting up users..."
 zfs create rpool/DATA/home/$USERNAME
 arch-chroot /mnt useradd -m -G users,wheel,ftp,http,sys,audio,realtime,docker -s /bin/bash "$USERNAME"
+sudo chown -R $USERNAME:$USERNAME /mnt/home/$USERNAME
 echo "* Created user $USERNAME."
 arch-chroot /mnt passwd $USERNAME
 arch-chroot /mnt passwd
@@ -311,6 +310,7 @@ efibootmgr --disk $DEV --part 1 --create --label "ZFSBootMenu 2.0.0" --loader '\
 zfs set org.zfsbootmenu:commandline="rw" rpool/ROOT
 refind-install
 EOF
+mkdir -p /mnt/etc/pacman.d/hooks
 cat <<EOF > /mnt/etc/pacman.d/hooks/refind.hook
 [Trigger]
 Operation=Upgrade
