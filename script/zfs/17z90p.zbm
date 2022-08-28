@@ -13,7 +13,7 @@ PACKAGES="
 `#dev`
 	docker docker-compose go rust hugo zola
 `#networking`
-	networkmanager samba nfs
+	networkmanager samba nfs-utils
 `#audio`
 	pipewire pipewire-pulse pipewire-jack pipewire-alsa sof-firmware realtime-privileges
 `#files and devices`
