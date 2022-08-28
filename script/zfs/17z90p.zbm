@@ -167,32 +167,32 @@ reflector --country 'US' -p https --sort rate --save /etc/pacman.d/mirrorlist --
 echo "Pacman mirrors synced and sorted."
 
 echo "Bootstrapping mounted system..."
-pacstrap /mnt base base-devel
-VERSION=$(pacman -Si zfs-linux \
-| grep 'Depends On' \
-| sed "s|.*linux=||" \
-| awk '{ print $1 }')
-VERSION_LTS=$(pacman -Si zfs-linux-lts \
-| grep 'Depends On' \
-| sed "s|.*linux-lts=||" \
-| awk '{ print $1 }')
-if [ ${VERSION} = \
-$(pacman -Si linux | grep Version | awk '{ print $3 }') ]; then
- pacstrap /mnt linux linux-headers
-else
- pacstrap -U /mnt \
- https://archive.archlinux.org/packages/l/linux/linux-${VERSION}-x86_64.pkg.tar.zst \
- https://archive.archlinux.org/packages/l/linux/linux-headers-${VERSION}-x86_64.pkg.tar.zst
-fi
-if [ ${VERSION_LTS} = \
-$(pacman -Si linux-lts | grep Version | awk '{ print $3 }') ]; then
- pacstrap /mnt linux-lts linux-lts-headers
-else
- pacstrap -U /mnt \
- https://archive.archlinux.org/packages/l/linux-lts/linux-lts-${VERSION_LTS}-x86_64.pkg.tar.zst \
- https://archive.archlinux.org/packages/l/linux-lts/linux-lts-headers-${VERSION_LTS}-x86_64.pkg.tar.zst
-fi
-pacstrap /mnt zfs-linux zfs-linux-lts zfs-utils linux-firmware refind efibootmgr os-prober mkinitcpio
+pacstrap /mnt base base-devel linux linux-headers linux-lts linux-lts-headers
+#VERSION=$(pacman -Si zfs-linux \
+#| grep 'Depends On' \
+#| sed "s|.*linux=||" \
+#| awk '{ print $1 }')
+#VERSION_LTS=$(pacman -Si zfs-linux-lts \
+#| grep 'Depends On' \
+#| sed "s|.*linux-lts=||" \
+#| awk '{ print $1 }')
+#if [ ${VERSION} = \
+#$(pacman -Si linux | grep Version | awk '{ print $3 }') ]; then
+# pacstrap /mnt linux linux-headers
+#else
+# pacstrap -U /mnt \
+# https://archive.archlinux.org/packages/l/linux/linux-${VERSION}-x86_64.pkg.tar.zst \
+# https://archive.archlinux.org/packages/l/linux/linux-headers-${VERSION}-x86_64.pkg.tar.zst
+#fi
+#if [ ${VERSION_LTS} = \
+#$(pacman -Si linux-lts | grep Version | awk '{ print $3 }') ]; then
+# pacstrap /mnt linux-lts linux-lts-headers
+#else
+# pacstrap -U /mnt \
+# https://archive.archlinux.org/packages/l/linux-lts/linux-lts-${VERSION_LTS}-x86_64.pkg.tar.zst \
+# https://archive.archlinux.org/packages/l/linux-lts/linux-lts-headers-${VERSION_LTS}-x86_64.pkg.tar.zst
+#fi
+pacstrap /mnt zfs-dkms zfs-utils linux-firmware refind efibootmgr os-prober mkinitcpio
 pacstrap /mnt $PACKAGES
 echo "Packages installed."
 
@@ -234,7 +234,7 @@ read TIMEOUT
 
 echo "Setting up users..."
 zfs create rpool/DATA/home/$USERNAME
-arch-chroot /mnt useradd -m -g users -G wheel,ftp,http,sys,audio,realtime,docker -s /bin/bash "$USERNAME"
+arch-chroot /mnt useradd -m -G users,wheel,ftp,http,sys,audio,realtime,docker -s /bin/bash "$USERNAME"
 echo "* Created user $USERNAME."
 arch-chroot /mnt passwd $USERNAME
 arch-chroot /mnt passwd
@@ -280,7 +280,7 @@ sudo -u $USERNAME yay -S $AUR
 exit
 EOF
 
-lpadmin -p MFC7840W -E -v socket://192.168.1.15:9100 -P /usr/share/cups/model/MFC7840W.ppd
+#lpadmin -p MFC7840W -E -v socket://192.168.1.15:9100 -P /usr/share/cups/model/MFC7840W.ppd
 
 
 
@@ -306,8 +306,8 @@ read VERIFY
 echo "Installing bootloader..."
 arch-chroot /mnt /bin/bash <<EOF
 mkdir -p /boot/efi/EFI/zbm
-curl https://github.com/zbm-dev/zfsbootmenu/releases/download/v1.10.1/zfsbootmenu-x86_64-v1.10.1.EFI -o /boot/efi/EFI/zbm/zfsbootmenu.EFI
-efibootmgr --disk $DEV --part 1 --create --label "ZFSBootMenu" --loader '\EFI\zbm\zfsbootmenu.EFI' --unicode "spl_hostid=$(hostid) zbm.timeout=3 zbm.prefer=rpool zbm.import_policy=hostid" --verbose
+curl https://github.com/zbm-dev/zfsbootmenu/releases/download/v2.0.0/zfsbootmenu-release-vmlinuz-x86_64-v2.0.0.EFI -o /boot/efi/EFI/zbm/zfsbootmenu.EFI
+efibootmgr --disk $DEV --part 1 --create --label "ZFSBootMenu 2.0.0" --loader '\EFI\zbm\zfsbootmenu.EFI' --unicode "spl_hostid=$(hostid) zbm.timeout=3 zbm.prefer=rpool zbm.import_policy=hostid" --verbose
 zfs set org.zfsbootmenu:commandline="rw" rpool/ROOT
 refind-install
 EOF
