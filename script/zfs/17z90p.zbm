@@ -15,7 +15,7 @@ PACKAGES="
 `#networking`
 	networkmanager samba nfs-utils
 `#audio`
-	pipewire pipewire-pulse pipewire-jack pipewire-alsa sof-firmware realtime-privileges
+	pipewire pipewire-pulse pipewire-jack pipewire-alsa pipewire-v4l2 sof-firmware realtime-privileges
 `#files and devices`
 	ntfs-3g exfat-utils android-tools android-udev cups cups-pdf qmk
 `#fonts`
@@ -49,7 +49,7 @@ PACKAGES="
 	gimp krita inkscape blender pitivi audacity
 	bitwarden trash-cli
 `#theming`
-	materia-gtk-theme materia-kde faenza-icon-theme kvantum-qt5 kvantum-theme-materia
+	materia-gtk-theme materia-kde kvantum kvantum-theme-materia
 "
 AUR="
 `#more fonts`
@@ -62,11 +62,12 @@ AUR="
 `#more gnome`
 	gnome-shell-extension-dash-to-dock
 `#more printing`
-	brother-mfc-7840w brscan3
+	`#brother-mfc-7840w brscan3`
 `#more desktop`
 	enpass-bin sublime-music
 	checkra1n-cli
-	syncthing-gtk
+	syncthing-gtk-python3
+	faenza-icon-theme
 `#zfs snapshots and replication`
 	sanoid lzop mbuffer pv
 "
