@@ -1,7 +1,7 @@
 #!/bin/bash
 # $ iwctl station wlan0 connect {SSID}
 HOSTNAME=17z90p
-USERNAME=trwnh
+USERNAME=a
 TIMEZONE=America/Chicago
 DISKID=nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NG0R621780A
 DEV=/dev/disk/by-id/$DISKID
@@ -31,7 +31,7 @@ PACKAGES="
 	inter-font
 `#sway`
 	sway
-	wayland xorg-xwayland qt5-wayland
+	wayland xorg-xwayland qt6-wayland qt5-wayland
 	brightnessctl
 	mako
 	slurp grim jq wl-clipboard
@@ -45,10 +45,9 @@ PACKAGES="
 	gnome gnome-tweaks polkit-gnome gnome-shell-extension-appindicator
 `#desktop`
 	nm-connection-editor network-manager-applet pavucontrol
-	firefox-developer-edition chromium youtube-dl
-	code
+	firefox-developer-edition chromium yt-dlp
 	quassel-client discord telegram-desktop mumble dino
-	obs-studio libva-intel-driver v4l2loopback-dkms
+	libva-intel-driver v4l2loopback-dkms
 	gimp krita inkscape blender pitivi audacity
 	bitwarden
 	nextcloud-client nextcloud-client-cloudproviders python-nautilus trash-cli
@@ -59,21 +58,22 @@ PACKAGES="
 	steam lib32-vulkan-intel gnome-games libretro dolphin-emu mgba-qt
 	transmission-remote-gtk
 `#theming`
-	materia-gtk-theme materia-kde faenza-icon-theme papirus-icon-theme kvantum-qt5 kvantum-theme-materia
+	materia-gtk-theme materia-kde faenza-icon-theme papirus-icon-theme kvantum kvantum-theme-materia
 "
 AUR="
 `#more fonts`
 	noto-fonts-emoji-blob ttf-roboto-slab
-	ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-sil-scheherazade
+	ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-scheherazade-new
 `#more xfce`
 	mugshot xfce4-docklike-plugin xmousepasteblock-git xfce4-windowck-plugin-xfwm4-theme-support `#vala-panel-appmenu-xfce is causing build errors`
 `#more gnome`
 	gnome-shell-extension-dash-to-dock chrome-gnome-shell
 `#more desktop`
 	enpass-bin sublime-music
-	checkra1n-cli
 	syncthing-gtk
 	caffeine-ng
+	visual-studio-code-bin
+	obs-studio-tytan652
 `#more printing`
 	epson-inkjet-printer-escpr2
 `#zfs snapshots and replication`
@@ -81,7 +81,7 @@ AUR="
 "
 
 sed -i 's/^#Color/Color/g' /etc/pacman.conf
-sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 20/' /etc/pacman.conf
+sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 10/' /etc/pacman.conf
 sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 
 echo "Setting time sync..."
@@ -354,6 +354,7 @@ echo "GRUB_SAVEDEFAULT=true" >> /etc/default/grub
 sed -i "s|rpool=.*|rpool=\`zdb -l \${GRUB_DEVICE} \| grep -E '[[:blank:]]name' \| cut -d\\\' -f 2\`|"  /etc/grub.d/10_linux
 sed -i "s|^  linux=.*|  linux=\`echo \$list \| tr ' ' '\\\n' \| sort -V \| head -1 \| cat\`|" /etc/grub.d/10_linux
 mkdir -p /boot/efi/EFI/arch
+echo 'export ZPOOL_VDEV_NAME_PATH=1' >> /etc/profile.d/zpool_vdev_name_path.sh
 ZPOOL_VDEV_NAME_PATH=1 grub-install --boot-directory /boot/efi/EFI/arch --efi-directory /boot/efi
 ZPOOL_VDEV_NAME_PATH=1 grub-mkconfig -o /boot/efi/EFI/arch/grub/grub.cfg
 mkdir -p /boot/grub
