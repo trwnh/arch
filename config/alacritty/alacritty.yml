@@ -16,6 +16,9 @@ font:
     family: Fira Mono
     style: Bold Italic
   size: 16
+  offset:
+    x: -1
+    y: 4
 
 import:
 # git clone https://github.com/alacritty/alacritty-theme ~/.config/alacritty/themes
