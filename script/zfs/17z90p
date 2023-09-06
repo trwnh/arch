@@ -1,5 +1,9 @@
 #!/bin/bash
-# $ iwctl station wlan0 connect {SSID}
+
+# PREPARATION:
+# iwctl station wlan0 connect {SSID}
+# curl -s https://raw.githubusercontent.com/eoli3n/archiso-zfs/master/init | bash
+
 HOSTNAME=17z90p
 USERNAME=a
 TIMEZONE=America/Chicago
@@ -13,11 +17,11 @@ PACKAGES="
 `#dev`
 	docker docker-compose go rust hugo zola
 `#networking`
-	networkmanager
+	networkmanager ntpd
 `#audio`
 	pipewire wireplumber pipewire-pulse pipewire-jack pipewire-alsa sof-firmware realtime-privileges
 `#files and devices`
-	ntfs-3g exfat-utils android-tools android-udev qmk samba nfs-utils
+	exfat-utils android-tools android-udev qmk samba nfs-utils
 `#printer`
 	cups cups-pdf sane-airscan
 `#fonts`
@@ -91,12 +95,13 @@ echo "Enabling archzfs..."
 curl -s https://eoli3n.github.io/archzfs/init | bash
 
 echo "Partitioning disk..."
+## TODO: make this optional
 sgdisk -Z $DEV
 parted -s $DEV mklabel gpt
 sgdisk -n 1:0:+2G -t 1:ef00 -c 1:"ESP" $DEV \
        -n 2:0:+32G -t 2:8200 -c 2:"SWAP" $DEV \
        -n 3:0:+2G -t 3:bf01 -c 3:"BPOOL" $DEV \
-       -n 4:0:0 -t 4:bf00 -c 4:"RPOOL" $DEV \
+       -n 4:0:0 -t 4:bf00 -c 4:"RPOOL" $DEV
 sleep 3
 partprobe $DEV
 sleep 3
@@ -414,3 +419,12 @@ zpool export bpool
 zpool export rpool
 
 echo "Done! You may now reboot."
+
+# UNHANDLED STUFF
+
+## NTFS kernel driver fix
+## sed -i '' /etc/udisks2/mount_options.conf
+##
+## [defaults]
+## ntfs_defaults=uid=$UID,gid=$GID,prealloc
+
