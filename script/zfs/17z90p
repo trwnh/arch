@@ -2,7 +2,7 @@
 
 # PREPARATION:
 # iwctl station wlan0 connect {SSID}
-$ curl -s https://raw.githubusercontent.com/eoli3n/archiso-zfs/master/init | bash
+# curl -s https://raw.githubusercontent.com/eoli3n/archiso-zfs/master/init | bash
 
 HOSTNAME=17z90p
 USERNAME=a
