@@ -2,7 +2,6 @@
 
 # PREPARATION:
 # iwctl station wlan0 connect {SSID}
-# curl -s https://raw.githubusercontent.com/eoli3n/archiso-zfs/master/init | bash
 
 HOSTNAME=17z90p
 USERNAME=a
@@ -95,19 +94,19 @@ echo "Enabling archzfs..."
 curl -s https://eoli3n.github.io/archzfs/init | bash
 
 echo "Partitioning disk..."
-## TODO: make this optional
 sgdisk -Z $DEV
 parted -s $DEV mklabel gpt
-sgdisk -n 1:0:+2G -t 1:ef00 -c 1:"ESP" $DEV \
-       -n 2:0:+32G -t 2:8200 -c 2:"SWAP" $DEV \
-       -n 3:0:+2G -t 3:bf01 -c 3:"BPOOL" $DEV \
-       -n 4:0:0 -t 4:bf00 -c 4:"RPOOL" $DEV
+sgdisk \
+  -n 1:0:+32G -t 2:8200 -c 1:"SWAP" $DEV \
+  -n 2:0:+2G -t 3:bf01 -c 2:"BPOOL" $DEV \
+  -n 3:0:0 -t 4:bf00 -c 3:"RPOOL" $DEV
 sleep 3
 partprobe $DEV
 sleep 3
 
 echo "Making legacy filesystems..."
-mkfs.fat -F32 -n "EFI" /dev/disk/by-partlabel/ESP
+## reusing existing ESP, so line below is commented out
+# mkfs.fat -F32 -n "EFI" /dev/disk/by-partlabel/ESP
 mkswap -L "SWAP" /dev/disk/by-partlabel/SWAP
 
 echo "Making bpool..."
