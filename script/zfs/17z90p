@@ -2,6 +2,7 @@
 
 # PREPARATION:
 # iwctl station wlan0 connect {SSID}
+$ curl -s https://raw.githubusercontent.com/eoli3n/archiso-zfs/master/init | bash
 
 HOSTNAME=17z90p
 USERNAME=a
@@ -90,8 +91,7 @@ sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 echo "Setting time sync..."
 timedatectl set-ntp true
 
-echo "Enabling archzfs..."
-curl -s https://raw.githubusercontent.com/eoli3n/archiso-zfs/master/init | bash
+#echo "Enabling archzfs..."
 
 echo "Partitioning disk..."
 sgdisk -Z $DEV
