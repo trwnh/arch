@@ -57,11 +57,11 @@ PACKAGES="
 	jre-openjdk sweethome3d
 	curtail
 	darktable rawtherapee shotwell
-	texmaker texlive-most libreoffice-fresh
+	texmaker texlive libreoffice-fresh
 	steam lib32-vulkan-intel gnome-games libretro dolphin-emu mgba-qt
 	transmission-remote-gtk
 `#theming`
-	materia-gtk-theme materia-kde faenza-icon-theme papirus-icon-theme kvantum kvantum-theme-materia
+	materia-gtk-theme materia-kde mate-faenza-icon-theme papirus-icon-theme kvantum kvantum-theme-materia
 "
 AUR="
 `#more fonts`
