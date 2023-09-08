@@ -328,13 +328,18 @@ sed -i 's/^HOOKS=\(.*\)/HOOKS=\(base udev autodetect modconf block keyboard zfs 
 zgenhostid $(hostid)
 systemctl enable zfs-import-scan zfs-import-cache zfs-import.target zfs-zed zfs.target --root=/mnt
 systemctl enable zfs-mount --root=/mnt
-curl -L https://archzfs.com/archzfs.gpg |  pacman-key -a -
-curl -L https://git.io/JsfVS | xargs -i{} pacman-key --lsign-key {}
-curl -L https://git.io/Jsfw2 > /mnt/etc/pacman.d/mirrorlist-archzfs
+
+
+arch-chroot /mnt pacman-key -r DDF7DB817396A49B2A2723F7403BD972F75D9D76
+arch-chroot /mnt pacman-key --lsign-key DDF7DB817396A49B2A2723F7403BD972F75D9D76
+
 echo "[archzfs]
-Include = /etc/pacman.d/mirrorlist-archzfs
-#[archzfs-testing]
-#Include = /etc/pacman.d/mirrorlist-archzfs" >> /mnt/etc/pacman.conf
+Server = http://archzfs.com/$repo/$arch
+Server = http://mirror.sum7.eu/archlinux/archzfs/$repo/$arch
+Server = https://mirror.biocrafting.net/archlinux/archzfs/$repo/$arch
+Server = https://mirror.in.themindsmaze.com/archzfs/$repo/$arch
+Server = https://zxcvfdsa.com/archzfs/$repo/$arch
+" >> /mnt/etc/pacman.conf
 arch-chroot /mnt pacman -Sy
 echo 'export ZPOOL_VDEV_NAME_PATH=1' >> /mnt/etc/profile.d/zfs.sh
 echo 'Defaults env_keep += "ZPOOL_VDEV_NAME_PATH"' > /mnt/etc/sudoers.d/zfs
