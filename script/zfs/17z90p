@@ -16,7 +16,7 @@ PACKAGES="
 `#dev`
 	docker docker-compose go rust hugo zola
 `#networking`
-	networkmanager ntpd
+	networkmanager
 `#audio`
 	pipewire wireplumber pipewire-pulse pipewire-jack pipewire-alsa sof-firmware realtime-privileges
 `#files and devices`
@@ -196,40 +196,44 @@ mkdir -p /mnt/boot/efi
 mount -L "EFI" /mnt/boot/efi
 echo "done."
 
-echo "Updating pacman mirrorlist..."
-pacman -Sy
-pacman -S reflector --noconfirm
-echo "Sorting mirrorlist..."
-reflector --country 'US' -p https --sort rate --save /etc/pacman.d/mirrorlist --verbose
-echo "Pacman mirrors synced and sorted."
+#echo "Updating pacman mirrorlist..."
+#pacman -Sy
+#pacman -S reflector --noconfirm
+#echo "Sorting mirrorlist..."
+#reflector --country 'US' -p https --sort rate --save /etc/pacman.d/mirrorlist --verbose
+#echo "Pacman mirrors synced and sorted."
 
 echo "Bootstrapping mounted system..."
 pacstrap /mnt base base-devel
-VERSION=$(pacman -Si zfs-linux \
-| grep 'Depends On' \
-| sed "s|.*linux=||" \
-| awk '{ print $1 }')
-VERSION_LTS=$(pacman -Si zfs-linux-lts \
-| grep 'Depends On' \
-| sed "s|.*linux-lts=||" \
-| awk '{ print $1 }')
-if [ ${VERSION} = \
-$(pacman -Si linux | grep Version | awk '{ print $3 }') ]; then
- pacstrap /mnt linux linux-headers
-else
- pacstrap -U /mnt \
- https://archive.archlinux.org/packages/l/linux/linux-${VERSION}-x86_64.pkg.tar.zst \
- https://archive.archlinux.org/packages/l/linux/linux-headers-${VERSION}-x86_64.pkg.tar.zst
-fi
-if [ ${VERSION_LTS} = \
-$(pacman -Si linux-lts | grep Version | awk '{ print $3 }') ]; then
- pacstrap /mnt linux-lts linux-lts-headers
-else
- pacstrap -U /mnt \
- https://archive.archlinux.org/packages/l/linux-lts/linux-lts-${VERSION_LTS}-x86_64.pkg.tar.zst \
- https://archive.archlinux.org/packages/l/linux-lts/linux-lts-headers-${VERSION_LTS}-x86_64.pkg.tar.zst
-fi
-pacstrap /mnt zfs-linux zfs-linux-lts zfs-utils linux-firmware grub efibootmgr os-prober mkinitcpio
+
+#VERSION=$(pacman -Si zfs-linux \
+#| grep 'Depends On' \
+#| sed "s|.*linux=||" \
+#| awk '{ print $1 }')
+#VERSION_LTS=$(pacman -Si zfs-linux-lts \
+#| grep 'Depends On' \
+#| sed "s|.*linux-lts=||" \
+#| awk '{ print $1 }')
+#if [ ${VERSION} = \
+#$(pacman -Si linux | grep Version | awk '{ print $3 }') ]; then
+# pacstrap /mnt linux linux-headers
+#else
+# pacstrap -U /mnt \
+# https://archive.archlinux.org/packages/l/linux/linux-${VERSION}-x86_64.pkg.tar.zst \
+# https://archive.archlinux.org/packages/l/linux/linux-headers-${VERSION}-x86_64.pkg.tar.zst
+#fi
+#if [ ${VERSION_LTS} = \
+#$(pacman -Si linux-lts | grep Version | awk '{ print $3 }') ]; then
+# pacstrap /mnt linux-lts linux-lts-headers
+#else
+# pacstrap -U /mnt \
+# https://archive.archlinux.org/packages/l/linux-lts/linux-lts-${VERSION_LTS}-x86_64.pkg.tar.zst \
+# https://archive.archlinux.org/packages/l/linux-lts/linux-lts-headers-${VERSION_LTS}-x86_64.pkg.tar.zst
+#fi
+#pacstrap /mnt zfs-linux zfs-linux-lts zfs-utils linux-firmware grub efibootmgr os-prober mkinitcpio
+
+pacstrap /mnt linux linux-headers linux-lts linux-lts-headers zfs-dkms zfs-utils linux-firmware grub efibootmgr os-prober mkinitcpio
+
 pacstrap /mnt $PACKAGES
 echo "Packages installed."
 
@@ -271,8 +275,8 @@ read TIMEOUT
 
 echo "Setting up users..."
 zfs create rpool/DATA/home/$USERNAME
-arch-chroot /mnt useradd -m -g users -G wheel,ftp,http,sys,audio,realtime,docker -s /bin/bash "$USERNAME"
-arch-chroot /mnt chown -R $USERNAME:users /home/$USERNAME
+arch-chroot /mnt useradd -m -G wheel,ftp,http,sys,audio,realtime,docker -s /bin/bash "$USERNAME"
+arch-chroot /mnt chown -R $USERNAME:$USERNAME /home/$USERNAME
 echo "* Created user $USERNAME."
 arch-chroot /mnt passwd $USERNAME
 arch-chroot /mnt passwd
