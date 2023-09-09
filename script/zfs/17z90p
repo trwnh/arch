@@ -1,0 +1,163 @@
+#!/bin/bash
+
+# PREPARATION:
+# iwctl station wlan0 connect {SSID}
+# curl -s https://raw.githubusercontent.com/eoli3n/archiso-zfs/master/init | bash
+
+# SSH CONNECTION:
+# nano /etc/ssh/sshd_config
+## - change `PermitRootLogin` to `yes`
+## from another machine:
+## - ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@192.168.1.17
+
+# === PARTITION DISK WITH ZFS:
+
+DISKID=nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NG0R621780A
+DEV=/dev/disk/by-id/$DISKID
+
+sgdisk -Z $DEV
+parted -s $DEV mklabel gpt
+sgdisk \
+  -n 1:0:+32G -t 1:8200 -c 1:"SWAP" $DEV \
+  -n 2:0:0 -t 2:bf00 -c 2:"RPOOL" $DEV
+sleep 3
+partprobe $DEV
+sleep 3
+
+zpool create -f \
+	-o ashift=12              \
+	-O acltype=posixacl       \
+	-O relatime=on            \
+	-O xattr=sa               \
+	-O dnodesize=legacy       \
+	-O normalization=formD    \
+	-O mountpoint=none        \
+	-O canmount=off           \
+	-O devices=off            \
+	-O compression=lz4        \
+	-R /mnt                   \
+  rpool /dev/disk/by-partlabel/RPOOL
+
+  ## (for encryption, add these three options)
+	#-O encryption=aes-256-gcm \
+	#-O keyformat=passphrase   \
+	#-O keylocation=prompt     \
+
+zfs create -o canmount=off -o mountpoint=none rpool/ROOT
+zfs create -o canmount=off -o mountpoint=none rpool/DATA
+zfs create -o canmount=noauto -o mountpoint=/     rpool/ROOT/arch
+zpool set bootfs=rpool/ROOT/arch rpool
+zfs mount rpool/ROOT/arch
+
+zfs create -o mountpoint=/home rpool/DATA/home
+zfs create -o mountpoint=/root rpool/DATA/home/root
+chmod 700 /mnt/root
+zfs create -o mountpoint=none                     rpool/DATA/var
+zfs create -o mountpoint=/var/lib -o canmount=off rpool/DATA/var/lib
+zfs create                                        rpool/DATA/var/lib/AccountsService
+zfs create                                        rpool/DATA/var/lib/libvirt
+zfs create                                        rpool/DATA/var/lib/lxc
+zfs create                                        rpool/DATA/var/lib/portables
+zfs create                                        rpool/DATA/var/lib/machines
+zfs create                                        rpool/DATA/var/lib/pacman
+zfs create -o com.sun:auto-snapshot=false         rpool/DATA/var/lib/docker
+zfs create -o com.sun:auto-snapshot=false         rpool/DATA/var/lib/nfs
+zfs create -o mountpoint=/var/log                 rpool/DATA/var/log
+zfs create -o mountpoint=/var/spool               rpool/DATA/var/spool
+zfs create                                        rpool/DATA/var/spool/mail
+zfs create -o mountpoint=/var/snap                rpool/DATA/var/snap
+zfs create -o mountpoint=/var/games               rpool/DATA/var/games
+zfs create -o mountpoint=/var/www                 rpool/DATA/var/www
+zfs create -o mountpoint=/srv                     rpool/DATA/srv
+zfs create -o mountpoint=/opt                     rpool/DATA/opt
+zfs create -o mountpoint=/usr -o canmount=off     rpool/DATA/usr
+zfs create                                        rpool/DATA/usr/local
+zfs create -o mountpoint=/var/cache -o com.sun:auto-snapshot=false rpool/DATA/var/cache
+zfs create -o mountpoint=/var/tmp   -o com.sun:auto-snapshot=false rpool/DATA/var/tmp
+zfs create -o mountpoint=/tmp       -o com.sun:auto-snapshot=false rpool/DATA/tmp
+chmod 1777 /mnt/tmp
+chmod 1777 /mnt/var/tmp
+
+# === LEGACY FILESYSTEMS:
+
+mkswap -L "SWAP" /dev/disk/by-partlabel/SWAP
+swapon -L "SWAP"
+mkdir -p /mnt/boot
+mount -L "EFI" /mnt/boot
+
+# === INSTALL?
+
+pacstrap /mnt base base-devel \
+  linux linux-lts linux-headers linux-lts-headers linux-firmware \
+  zfs-dkms zfs-utils grub efibootmgr os-prober mkinitcpio intel-ucode \
+  realtime-privileges docker docker-compose \
+  iwd networkmanager \
+  nano bash \
+  pipewire wireplumber pipewire-pulse pipewire-jack pipewire-alsa sof-firmware
+
+# === POST-INSTALL?
+## arch-chroot /mnt
+
+cat <<EOF > /etc/fstab
+LABEL=EFI /boot vfat rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro 0 2
+LABEL=SWAP none swap defaults 0 0
+EOF
+
+## LOCALIZE:
+
+HOSTNAME=17z90p
+USERNAME=a
+TIMEZONE=America/Chicago
+
+## (if running after reboot):
+## - timedatectl set-timezone $TIMEZONE
+## - hostnamectl set-hostname $HOSTNAME
+## - localectl set-locale en_US.UTF-8
+
+echo "$HOSTNAME" > /etc/hostname
+cat <<EOF > /etc/hosts
+127.0.0.1 localhost
+::1 localhost
+127.0.1.1 $HOSTNAME.localdomain $HOSTNAME
+EOF
+
+ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
+hwclock --systohc
+
+cat <<EOF > /etc/locale.gen
+en_US.UTF-8 UTF-8
+ar_JO.UTF-8 UTF-8
+EOF
+
+locale-gen
+
+echo "LANG=en_US.UTF-8" > /etc/locale.conf
+
+## USER SETUP:
+
+zfs create rpool/DATA/home/$USERNAME
+useradd -m -G wheel,ftp,http,sys,audio,realtime,docker -s /bin/bash "$USERNAME"
+chown -R $USERNAME:$USERNAME /home/$USERNAME
+
+passwd $USERNAME
+passwd
+
+## MORE SERVICES:
+
+systemctl enable NetworkManager
+systemctl enable systemd-timesyncd
+
+## MORE PACKAGES:
+
+pacman -S gnome gdm bluez fprint solaar intel-media-driver vulkan-intel acpi powertop
+pacman -S bash-completion gdb git openssh wget rsync zip unzip unrar nmap htop archey3 dnsutils
+pacman -S go rust hugo zola
+pacman -S exfat-utils android-tools android-udev qmk samba nfs-utils
+pacman -S cups cups-pdf sane-airscan
+pacman -S ttf-fira-code otf-fira-sans otf-fira-mono noto-fonts ttf-roboto noto-fonts-extra noto-fonts-cjk ttf-nerd-fonts-symbols inter-font
+
+## MORE SYSTEM SERVICES:
+
+systemctl enable gdm
+systemctl enable bluetooth
+systemctl enable cups
