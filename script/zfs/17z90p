@@ -95,7 +95,6 @@ pacstrap /mnt base base-devel \
   nano bash \
   pipewire wireplumber pipewire-pulse pipewire-jack pipewire-alsa sof-firmware
 
-# === POST-INSTALL?
 ## arch-chroot /mnt
 
 cat <<EOF > /etc/fstab
@@ -142,22 +141,113 @@ chown -R $USERNAME:$USERNAME /home/$USERNAME
 passwd $USERNAME
 passwd
 
-## MORE SERVICES:
+echo '%wheel      ALL=(ALL) ALL' > /etc/sudoers.d/wheel
+
+## CONFIG:
+
+echo "FONT=\"ter-v32b\"" > /etc/vconsole.conf
+cat <<EOF > /etc/environment
+EDITOR=nano
+SWEETHOME3D_JAVA3D=1.5
+QT_AUTO_SCREEN_SCALE_FACTOR=0
+QT_SCALE_FACTOR=1
+EOF
+
+## SERVICES:
 
 systemctl enable NetworkManager
 systemctl enable systemd-timesyncd
 
+# ZFS REPO:
+
+pacman-key -r DDF7DB817396A49B2A2723F7403BD972F75D9D76
+pacman-key --lsign-key DDF7DB817396A49B2A2723F7403BD972F75D9D76
+
+echo "[archzfs]
+Server = http://archzfs.com/$repo/$arch
+Server = https://zxcvfdsa.com/archzfs/$repo/$arch
+Server = http://mirror.sum7.eu/archlinux/archzfs/$repo/$arch
+Server = https://mirror.biocrafting.net/archlinux/archzfs/$repo/$arch
+Server = https://mirror.in.themindsmaze.com/archzfs/$repo/$arch" >> /etc/pacman.conf
+
+# MORE ZFS STUFF:
+
+sed -i 's/^HOOKS=\(.*\)/HOOKS=\(base udev autodetect modconf block keyboard zfs filesystems\)/g' /etc/mkinitcpio.conf
+systemctl enable zfs-import-scan zfs-import-cache zfs-import.target zfs-zed zfs.target
+systemctl enable zfs-mount
+
+echo 'export ZPOOL_VDEV_NAME_PATH=1' >> /etc/profile.d/zfs.sh
+echo 'Defaults env_keep += "ZPOOL_VDEV_NAME_PATH"' > /etc/sudoers.d/zfs
+
+mkdir /etc/zfs/zfs-list.cache
+touch /etc/zfs/zfs-list.cache/rpool
+#ln -s /usr/lib/zfs-linux/zed.d/history_event-zfs-list-cacher.sh /etc/zfs/zed.d
+zed -F &
+zfs set canmount=noauto rpool/ROOT/arch
+
+# GRUB:
+
+echo "GRUB_DISABLE_OS_PROBER=no" >> /etc/default/grub
+echo 'GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 video=2560x1600"' >> /etc/default/grub
+echo "GRUB_GFXMODE=2560x1600" >> /etc/default/grub
+echo "GRUB_DEFAULT=saved" >> /etc/default/grub
+echo "GRUB_SAVEDEFAULT=true" >> /etc/default/grub
+sed -i "s|rpool=.*|rpool=\`zdb -l \${GRUB_DEVICE} \| grep -E '[[:blank:]]name' \| cut -d\\\' -f 2\`|"  /etc/grub.d/10_linux
+sed -i "s|^  linux=.*|  linux=\`echo \$list \| tr ' ' '\\\n' \| sort -V \| head -1 \| cat\`|" /etc/grub.d/10_linux
+
+echo 'export ZPOOL_VDEV_NAME_PATH=1' >> /etc/profile.d/zpool_vdev_name_path.sh
+
+mkdir -p /boot/EFI/grub
+
+ZPOOL_VDEV_NAME_PATH=1 grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot
+
+sed -i 's/^MODULES=.*/MODULES=(i915)/' /etc/mkinitcpio.conf
+mkinitcpio -P linux
+
+# EXIT AND REBOOT:
+
+# exit chroot
+
+zpool set cachefile=/etc/zfs/zpool.cache rpool
+mkdir -p /mnt/etc/zfs
+cp /etc/zfs/zpool.cache /mnt/etc/zfs/zpool.cache
+
+umount /mnt/boot
+zfs umount -a
+zpool export rpool
+
+# reboot your system?
+
+# === POST-INSTALL?
+
 ## MORE PACKAGES:
 
-pacman -S gnome gdm bluez fprint solaar intel-media-driver vulkan-intel acpi powertop
+pacman -S bluez fprint solaar intel-media-driver vulkan-intel acpi powertop
 pacman -S bash-completion gdb git openssh wget rsync zip unzip unrar nmap htop archey3 dnsutils
 pacman -S go rust hugo zola
 pacman -S exfat-utils android-tools android-udev qmk samba nfs-utils
 pacman -S cups cups-pdf sane-airscan
 pacman -S ttf-fira-code otf-fira-sans otf-fira-mono noto-fonts ttf-roboto noto-fonts-extra noto-fonts-cjk ttf-nerd-fonts-symbols inter-font
 
+pacman -S gnome gdm polkit-gnome
+pacman -S xfce4 xfce4-goodies plank
+
 ## MORE SYSTEM SERVICES:
 
 systemctl enable gdm
 systemctl enable bluetooth
 systemctl enable cups
+
+## AUR:
+
+git clone https://aur.archlinux.org/yay-bin.git
+chmod -R 777 /yay-bin
+cd /yay-bin
+sudo -u $USERNAME makepkg -si --noconfirm
+cd ..
+rm -r /yay-bin
+sudo -u $USERNAME yay -Y --gendb
+sudo -u $USERNAME yay -Y --devel --nodiffmenu --save
+
+sudo -u $USERNAME yay -S mugshot xfce4-docklike-plugin xmousepasteblock-git xfce4-windowck-plugin-xfwm4-theme-support enpass-bin visual-studio-code-bin 
+
