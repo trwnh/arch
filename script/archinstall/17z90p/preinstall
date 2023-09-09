@@ -12,6 +12,9 @@
 
 # === PARTITION DISK WITH ZFS:
 
+DISKID=nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NG0R621780A
+DEV=/dev/disk/by-id/$DISKID
+
 sgdisk -Z $DEV
 parted -s $DEV mklabel gpt
 sgdisk \
