@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# PREPARATION:
+# iwctl station wlan0 connect {SSID}
+# curl -s https://raw.githubusercontent.com/eoli3n/archiso-zfs/master/init | bash
+
+echo "Which system is this?"
+echo "1 - 17z90p"
+read SYSTEM;
+
+case $SYSTEM in
+  1 | 17z90p )
+    HOSTNAME=17z90p
+    USERNAME=a
+    TIMEZONE=America/Chicago
+    DISKID=nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NG0R621780A
+    DEV=/dev/disk/by-id/$DISKID
+    SYSTEM_PACKAGES="intel-ucode vulkan-intel intel-media-driver acpi bluez powertop fprint solaar iwd networkmanager realtime-privileges bash bash-completion nano openssh wget rsync git zip unzip unrar nmap htop archey3 dnsutils"
+  ;;
+  
+  * )
+  echo "Unsupported system"
+  exit
+  ;;
+
+esac
+
+USER_PACKAGES="pacman-contrib samba nfs-utils"
