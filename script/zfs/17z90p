@@ -232,6 +232,8 @@ pacman -S ttf-fira-code otf-fira-sans otf-fira-mono noto-fonts ttf-roboto noto-f
 pacman -S gnome gdm polkit-gnome
 pacman -S xfce4 xfce4-goodies plank
 
+pacman -S system-config-printer libxdg-basedir
+
 ## MORE SYSTEM SERVICES:
 
 systemctl enable gdm
