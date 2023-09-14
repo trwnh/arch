@@ -232,7 +232,7 @@ pacman -S ttf-fira-code otf-fira-sans otf-fira-mono noto-fonts ttf-roboto noto-f
 pacman -S gnome gdm polkit-gnome
 pacman -S xfce4 xfce4-goodies plank
 
-pacman -S system-config-printer libxdg-basedir rizin trash-cli
+pacman -S system-config-printer libxdg-basedir rizin trash-cli libfido2
 
 ## MORE SYSTEM SERVICES:
 
