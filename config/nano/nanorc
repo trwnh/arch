@@ -1,8 +1,8 @@
 #set breaklonglines
-set nonewlines
+#set nonewlines
 set tabsize 3
 #set tabstospaces
-set autoindent
+#set autoindent
 #set linenumbers
 set mouse
 
