@@ -1,0 +1,507 @@
+#!/bin/bash
+
+ROOTNAME=${1:-arch-new}
+
+HOSTNAME=desktop
+USERNAME=a
+TIMEZONE=America/Chicago
+
+# Pacstrap a new root from an existing Arch Linux installation using ZFS
+
+## Requirements
+# - arch-install-scripts
+# - zfs-dkms
+# - zfs-utils
+
+echo "Preparing a new ZFS root dataset..."
+
+zfs list rpool/ROOT/$ROOTNAME
+[ $? -eq 0 ]  || echo "ERROR: dataset rpool/ROOT/$ROOTNAME already exists." && exit 1
+
+zfs create \
+	-o canmount=noauto \
+	-o mountpoint=/ \
+	rpool/ROOT/$ROOTNAME
+echo "* Dataset created."
+mount -t zfs \
+	-o zfsutil \
+	rpool/ROOT/$ROOTNAME /mnt
+echo "* Dataset mounted."
+
+echo "Running pacstrap..."
+pacstrap /mnt base base-devel
+echo "* Pacstrap complete!"
+
+
+echo "Configuring the new root dataset..."
+
+echo -n "* Generating legacy filesystem mount table... "
+cat <<EOF > /mnt/etc/fstab
+LABEL=EFI /boot vfat rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro 0 2
+LABEL=SWAP none swap defaults 0 0
+EOF
+echo "done."
+
+echo -n "* Setting hostname... "
+echo "$HOSTNAME" > /mnt/etc/hostname
+cat <<EOF > /mnt/etc/hosts
+127.0.0.1 localhost
+::1 localhost
+127.0.1.1 $HOSTNAME.localdomain $HOSTNAME
+EOF
+arch-chroot /mnt hostnamectl set-hostname $HOSTNAME
+echo "done."
+
+echo -n "* Making users and groups... "
+arch-chroot /mnt /bin/bash <<EOF
+groupadd -g 777 a
+useradd -u 777 -g 777 -G wheel -c "a" -d /home/a -M -s /bin/bash a
+EOF
+echo "done."
+
+echo "* Localizing system..."
+arch-chroot /mnt ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
+arch-chroot /mnt timedatectl set-timezone $TIMEZONE
+echo "** Timezone set."
+arch-chroot /mnt hwclock --systohc
+echo "** Synced system clock to hardware clock."
+cat <<EOF > /mnt/etc/locale.gen
+en_US.UTF-8 UTF-8
+ar_JO.UTF-8 UTF-8
+EOF
+arch-chroot /mnt locale-gen
+echo "LANG=en_US.UTF-8" > /mnt/etc/locale.conf
+arch-chroot /mnt localectl set-locale en_US.UTF-8
+echo "** Locale generated and applied."
+
+echo -n "* Editing config files... "
+sed -i 's/^#Color/Color/g' /mnt/etc/pacman.conf
+sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 10/' /mnt/etc/pacman.conf
+sed -i "/\[multilib\]/,/Include/"'s/^#//' /mnt/etc/pacman.conf
+echo '%wheel      ALL=(ALL) ALL' > /mnt/etc/sudoers.d/wheel
+cat <<EOF > /mnt/etc/environment
+EDITOR=nano
+EOF
+echo "done."
+
+echo -n "* Doing ZFS-y things... "
+sed -i 's/^HOOKS=\(.*\)/HOOKS=\(base udev autodetect microcode modconf kms keyboard keymap consolefont block zfs filesystems fsck\)/g' /mnt/etc/mkinitcpio.conf
+zgenhostid $(hostid)
+systemctl enable --root=/mnt \
+	zfs.target \
+	zfs-import.target \
+	zfs-volumes.target \
+	zfs-import-scan \
+	zfs-volume-wait \
+	zfs-zed \
+	zfs-mount
+echo 'export ZPOOL_VDEV_NAME_PATH=1' > /mnt/etc/profile.d/zfs.sh
+echo 'Defaults env_keep += "ZPOOL_VDEV_NAME_PATH"' > /mnt/etc/sudoers.d/zfs
+arch-chroot /mnt /bin/bash <<EOF
+mkdir /etc/zfs/zfs-list.cache
+touch /etc/zfs/zfs-list.cache/rpool
+zed -F &
+zfs set canmount=noauto rpool/ROOT/$ROOTNAME
+EOF
+arch-chroot /mnt /bin/bash <<EOF
+mkdir /tmp/zfs
+chmod -R 777 /tmp/zfs
+cd /tmp/zfs
+pacman -S --asdeps --noconfirm dkms
+sudo -u nobody git clone https://aur.archlinux.org/zfs-utils.git
+sudo -u nobody git clone https://aur.archlinux.org/zfs-dkms.git
+cd zfs-utils
+sudo -u nobody makepkg
+pacman -U --noconfirm *.pkg.tar.*
+cd ../zfs-dkms
+sudo -u nobody makepkg
+pacman -U --noconfirm *.pkg.tar.*
+EOF
+echo "done."
+
+
+echo "Installing stuff from Arch repos..."
+arch-chroot /mnt /bin/bash <<EOF
+
+pacman -S --noconfirm --needed \
+	linux \
+	linux-headers \
+	linux-lts \
+	linux-lts-headers \
+	amd-ucode
+pacman -S --asdeps --noconfirm --needed \
+	linux-firmware \
+	linux-firmware-bnx2x \
+	linux-firmware-liquidio \
+	linux-firmware-marvell \
+	linux-firmware-mellanox \
+	linux-firmware-nfp \
+	linux-firmware-qualcomm \
+	linux-firmware-qlogic \
+	linux-firmware-whence
+
+pacman -S --noconfirm --needed \
+	btrfs-progs \
+	e2fsprogs \
+	exfat-utils \
+	exfatprogs \
+	nfs-utils \
+	android-tools \
+	samba
+pacman -S --asdeps --noconfirm --needed \
+	clang \
+	diffutils \
+	gcc
+
+pacman -S --noconfirm --needed \
+	sudo \
+	bash \
+	nano \
+	git \
+	zip \
+	unzip \
+	unrar \
+	p7zip \
+	htop \
+	pacman-contrib \
+	tree \
+	man-db \
+	docker \
+	docker-compose \
+	go \
+	rust \
+	lua \
+	erlang \
+	elixir \
+	hugo \
+	zola \
+	nodejs
+pacman -S --asdeps --noconfirm --needed \
+	bash-completion \
+	lsof \
+	strace \
+	lm_sensors \
+	diffutils \
+	findutils \
+	plocate \
+	perl \
+	vim \
+	gdb \
+	python-docutils \
+	npm \
+	rust-analyzer \
+	pyright \
+	eslint \
+	clang
+
+pacman -S --noconfirm --needed \
+	networkmanager \
+	openssh \
+	rsync \
+	bind \
+	wget \
+	nmap
+pacman -S --asdeps --noconfirm --needed \
+	iwd \
+	bluez \
+	libfido2 \
+	xorg-xauth \
+	ca-certificates
+
+pacman -S --noconfirm --needed \
+	mesa \
+	vulkan-radeon \
+	acpi
+pacman -S --asdeps --noconfirm --needed \
+	vulkan-mesa-layers
+
+pacman -S --noconfirm --needed \
+	pipewire \
+	wireplumber \
+	sof-firmware
+pacman -S --asdeps --noconfirm --needed \
+	pipewire-pulse \
+	pipewire-jack \
+	pipewire-alsa \
+	pipewire-audio \
+	pipewire-v4l2 \
+	pipewire-libcamera \
+	pipewire-zeroconf \
+	pipewire-roc \
+	realtime-privileges
+
+pacman -S --noconfirm --needed \
+	qmk \
+	solaar \
+	cups \
+	cups-pdf \
+	sane
+pacman -S --asdeps --noconfirm --needed \
+	clang \
+	diffutils \
+	gcc \
+	libffi \
+	libusb-compat \
+	colord \
+	cups-browsed \
+	ipp-usb \
+	logrotate \
+	xdg-utils \
+	sane-airscan
+
+pacman -S --noconfirm --needed \
+	noto-fonts \
+	noto-fonts-extra \
+	noto-fonts-cjk \
+	otf-fira-sans \
+	otf-fira-mono \
+	ttf-fira-code \
+	ttf-inconsolata \
+	inter-font \
+	ttf-dejavu \
+	ttf-nerd-fonts-symbols \
+	ttf-roboto \
+	ttf-roboto-mono \
+	ttf-droid \
+	terminus-font
+
+pacman -S --noconfirm --needed \
+	xfce4 \
+	thunar-vcs-plugin \
+	xfce4-artwork \
+	xfce4-notifyd \
+	xfce4-pulseaudio-plugin \
+	xfce4-screenshooter \
+	xfce4-taskmanager \
+	xfce4-whiskermenu-plugin \
+	xfce4-eyes-plugin \
+	pavucontrol \
+	engrampa \
+	plank \
+	gnome-shell \
+	gnome-shell-extensions \
+	gdm \
+	gnome-backgrounds \
+	gnome-calculator \
+	gnome-calendar \
+	gnome-characters \
+	gnome-clocks \
+	gnome-color-manager \
+	gnome-font-viewer \
+	gnome-logs \
+	gnome-system-monitor \
+	gnome-text-editor \
+	gnome-weather \
+	loupe \
+	nautilus \
+	orca \
+	simple-scan \
+	snapshot \
+	sushi \
+	dconf-editor \
+	nm-connection-editor \
+	network-manager-applet \
+	firefox-developer-edition \
+	chromium \
+	yt-dlp \
+	quassel-client-qt \
+	telegram-desktop \
+	mumble \
+	dino \
+	gimp \
+	krita \
+	inkscape \
+	blender \
+	pitivi \
+	pro-audio \
+	qpwgraph \
+	qemu \
+	libvirt \
+	virt-manager \
+	edk2 \
+	nextcloud-client \
+	jre-openjdk \
+	jre8-openjdk \
+	jre17-openjdk \
+	jre21-openjdk \
+	curtail \
+	darktable \
+	rawtherapee \
+	shotwell \
+	texmaker \
+	texlive-meta \
+	libreoffice-fresh \
+	steam \
+	xf86-video-amdgpu \
+	libretro \
+	dolphin-emu \
+	mgba-qt \
+	transmission-remote-gtk \
+	gparted \
+	materia-gtk-theme \
+	papirus-icon-theme \
+	kvantum \
+	kvantum-qt5 \
+	kvantum-theme-materia \
+	zed
+pacman -S --asdeps --noconfirm --needed \
+	curl \
+	jq \
+	xclip \
+	zenity \
+	gvfs \
+	gvfs-afc \
+	gvfs-dnssd \
+	gvfs-goa \
+	gvfs-google \
+	gvfs-gphoto2 \
+	gvfs-mtp \
+	gvfs-nfs \
+	gvfs-smb \
+	gvfs-wsdd \
+	thunar-archive-plugin \
+	thunar-media-tags-plugin \
+	catfish \
+	gnome-bluetooth-3.0 \
+	gnome-control-center \
+	gnome-disk-utility \
+	gst-plugin-pipewire \
+	gst-plugins-good \
+	power-profiles-daemon \
+	python-gobject \
+	python-simplejson \
+	fprintd \
+	gnome-menus \
+	libgtop \
+	xdg-desktop-portal-gnome \
+	xdg-desktop-portal-gtk \
+	gnome-keyring \
+	libnotify \
+	speech-dispatcher \
+	gtk4 \
+	aria2 \
+	atomicparsley \
+	ffmpeg \
+	python-brotli \
+	python-brotlicffi \
+	python-mutagen \
+	python-pycryptodrome \
+	python-pycryptodromex \
+	python-secretstorage \
+	python-websockets \
+	python-xattr \
+	rtmpdump \
+	espeak-ng \
+	libappindicator-gtk3 \
+	ghostscript \
+	kimageformats5 \
+	libheif \
+	libjxl \
+	poppler-qt5 \
+	python-pyqt5 \
+	pstoedit \
+	texlive-pstricks \
+	hip-runtime-amd \
+	hiprt \
+	libdecor \
+	frei0r-plugins \
+	gst-libav \
+	gst-plugin-opencv \
+	gst-plugins-ugly \
+	python-librosa \
+	dmidecode \
+	dnsmasq \
+	gettext \
+	iptables-nft \
+	libvirt-python \
+	lvm2 \
+	python-cryptography \
+	python-lxml \
+	swtpm \
+	nautilus-python \
+	python-caja \
+	trash-cli \
+	gnuplot \
+	imagemagick \
+	perl-image-exiftool \
+	portmidi \
+	lib32-vulkan-radeon \
+	lib32-vulkan-mesa-layers \
+	lib32-mesa \
+	gamemode \
+	gnu-netcat
+EOF
+
+
+echo "Installing AUR helper..."
+arch-chroot /mnt /bin/bash <<EOF
+mkdir /tmp/build
+chmod -R 777 /tmp/build
+cd /tmp/build
+sudo -u nobody git clone https://aur.archlinux.org/yay-bin.git
+cd yay-bin
+sudo -u nobody makepkg
+pacman -U --noconfirm *.pkg.tar.*
+EOF
+
+
+echo "Installing stuff from AUR..."
+arch-chroot /mnt /bin/bash <<EOF
+
+sudo -u $USERNAME yay -S --noconfirm --needed \
+	ntfsprogs-ntfs3 \
+	visual-studio-code-bin \
+	discord-electron-openasar \
+	obs-studio-tytan652 \
+	decklink \
+	v4l2loopback-dkms \
+	enpass-bin \
+	epson-inkjet-printer-escpr2 \
+	vendor-reset-dkms-git \
+	xfce4-docklike-plugin \
+	mugshot \
+	xfce4-windowck-plugin-xfwm4-theme-support
+
+EOF
+
+echo "Setting up libvirt..."
+sed -i '/unix_sock_group = "libvirt"/s/^#//' /mnt/etc/libvirt/libvirtd.conf
+sed -i '/unix_sock_rw_perms = "0770"/s/^#//' /mnt/etc/libvirt/libvirtd.conf
+echo 'log_filters="1:qemu"
+log_outputs="1:file:/var/log/libvirt/libvirtd.log"' >> /mnt/etc/libvirt/libvirtd.conf
+sed -i 's/^#user = "root"/user = "$USERNAME"/' /mnt/etc/libvirt/qemu.conf
+sed -i 's/^#group = "root"/group = "libvirt"/' /mnt/etc/libvirt/qemu.conf
+sed -i 's/^MODULES=\(.*\)/MODULES=(vendor-reset)/' /mnt/etc/mkinitcpio.conf
+
+echo "Setting up printers..."
+arch-chroot /mnt /bin/bash <<EOF
+
+lpadmin -p "ET-3850" \
+	-D "Epson ET-3850" \
+	-L "Downstairs" \
+	-v lpd://192.168.1.15:515/PASSTHRU \
+	-P /usr/share/ppd/epson-inkjet-printer-escpr2/Epson-ET-3850_Series-epson-escpr2-en.ppd \
+	-E
+lpadmin -p "CUPS-PDF" \
+	-D "Virtual PDF printer" \
+	-L "$HOSTNAME" \
+	-v cups-pdf:/ \
+	-P /usr/share/cups/model/CUPS-PDF_opt.ppd \
+	-E
+EOF
+
+echo -n "Final configuration stuff... "
+arch-chroot /mnt /bin/bash <<EOF
+usermod -aG ftp,http,games,audio,input,kvm,video,realtime,docker,libvirt $USERNAME
+mkinitcpio -P
+EOF
+echo "done."
+
+echo -n "Enabling system services... "
+systemctl enable NetworkManager --root=/mnt
+systemctl enable systemd-timesyncd --root=/mnt
+systemctl enable cups --root=/mnt
+systemctl enable bluetooth --root=/mnt
+systemctl enable gdm --root=/mnt
+systemctl enable libvirtd --root=/mnt
+echo "done."
