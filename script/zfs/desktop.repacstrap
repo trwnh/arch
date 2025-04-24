@@ -13,114 +13,156 @@ TIMEZONE=America/Chicago
 # - zfs-dkms
 # - zfs-utils
 
-echo "Preparing a new ZFS root dataset..."
+## Define some helpers
 
-zfs list rpool/ROOT/$ROOTNAME
-[ $? -eq 0 ]  || echo "ERROR: dataset rpool/ROOT/$ROOTNAME already exists." && exit 1
+ROOTNAME=${1:-arch-new}
+DATASET="rpool/ROOT/$ROOTNAME"
 
-zfs create \
-	-o canmount=noauto \
-	-o mountpoint=/ \
-	rpool/ROOT/$ROOTNAME
-echo "* Dataset created."
-mount -t zfs \
-	-o zfsutil \
-	rpool/ROOT/$ROOTNAME /mnt
-echo "* Dataset mounted."
+dataset_exists() {
+	zfs list "$DATASET" 1>/dev/null 2>/dev/null
+}
 
-echo "Running pacstrap..."
+dataset_mounted() {
+	grep -qs "$DATASET" /proc/mounts
+}
+
+create_dataset() {
+	zfs create \
+		-o canmount=noauto \
+		-o mountpoint=/ \
+		"$DATASET"
+}
+
+delete_dataset() {
+	zfs destroy "$DATASET"
+}
+
+mount_dataset() {
+	mount -t zfs \
+		-o zfsutil \
+		"$DATASET" /mnt
+}
+
+unmount_dataset() {
+	zfs umount "$DATASET"
+}
+
+get_confirmation() {
+	read -p "$1" CONFIRMATION
+	case "$CONFIRMATION" in
+		[yY]) return 0;;
+		*) return 1;;
+	esac
+}
+
+## Prepare a new ZFS root dataset
+
+echo "=== Preparing a new ZFS root dataset..."
+
+if dataset_exists
+then
+	echo "[!] WARNING: dataset $DATASET already exists."
+	if get_confirmation "    Would you like to delete it and recreate it? [y/N]: "
+	then
+		delete_dataset
+		if dataset_exists
+		then
+			echo "[!] ERROR: Deleting dataset failed! Exiting..." && exit 1
+		fi
+	else
+		echo "[!] Cowardly refusing to overwrite $DATASET. Exiting..." && exit 1
+	fi
+fi
+
+create_dataset
+
+if dataset_exists
+then
+	echo "[*] Dataset created."
+else
+	echo "[!] ERROR: Failed creating dataset $DATASET -- Exiting..." && exit 1
+fi
+
+if dataset_mounted
+then
+	echo "[!] ERROR: Dataset $DATASET already mounted -- Exiting..." && exit 1
+fi
+
+mount_dataset
+
+if dataset_mounted
+then
+	echo "[*] Dataset mounted."
+else
+	echo "[!] ERROR: Failed to mount dataset $DATASET -- Exiting..." && exit 1
+fi
+
+## Bootstrap the new ZFS root dataset
+
+echo "=== Running pacstrap..."
 pacstrap /mnt base base-devel
-echo "* Pacstrap complete!"
+echo "[*] Pacstrap complete!"
 
+echo "=== Configuring the new root dataset..."
 
-echo "Configuring the new root dataset..."
+mkdir -p /mnt/efi
+mount -L ESP /mnt/efi
 
-echo -n "* Generating legacy filesystem mount table... "
+echo -n "[*] Generating legacy filesystem mount table... "
 cat <<EOF > /mnt/etc/fstab
-LABEL=EFI /boot vfat rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro 0 2
+LABEL=ESP /boot vfat rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro 0 2
 LABEL=SWAP none swap defaults 0 0
 EOF
 echo "done."
 
-echo -n "* Setting hostname... "
+echo -n "[*] Mounting legacy filesystems... "
+arch-chroot /mnt mount -L ESP /boot
+echo "done."
+
+echo -n "[*] Setting hostname... "
 echo "$HOSTNAME" > /mnt/etc/hostname
 cat <<EOF > /mnt/etc/hosts
 127.0.0.1 localhost
 ::1 localhost
 127.0.1.1 $HOSTNAME.localdomain $HOSTNAME
 EOF
-arch-chroot /mnt hostnamectl set-hostname $HOSTNAME
 echo "done."
 
-echo -n "* Making users and groups... "
+echo -n "[*] Making users and groups... "
 arch-chroot /mnt /bin/bash <<EOF
 groupadd -g 777 a
 useradd -u 777 -g 777 -G wheel -c "a" -d /home/a -M -s /bin/bash a
 EOF
 echo "done."
 
-echo "* Localizing system..."
+echo "[*] Localizing system..."
 arch-chroot /mnt ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
 arch-chroot /mnt timedatectl set-timezone $TIMEZONE
-echo "** Timezone set."
+echo "    - Timezone set."
 arch-chroot /mnt hwclock --systohc
-echo "** Synced system clock to hardware clock."
+echo "    - Synced system clock to hardware clock."
+cp /mnt/usr/share/i18n/locales/en_US /mnt/usr/share/i18n/locales/en_US@a
+sed -i -e 's/"English locale for the USA"/"English locale for the USA \(24h ymd\)"/' /mnt/usr/share/i18n/locales/en_US@a
+sed -i -e 's/"1.0"/"1.0a"/' /mnt/usr/share/i18n/locales/en_US@a
+sed -i -e 's/"2000-06-24"/"2025-02-23"/' /mnt/usr/share/i18n/locales/en_US@a
+sed -i -e 's/^d_t_fmt "%a %d %b %Y %r %Z"$/d_t_fmt "%a %Y %b %d %r %Z"/' /mnt/usr/share/i18n/locales/en_US@a
+sed -i -e 's/^d_fmt   "%m\/\/%d\/\/%Y"$/d_fmt   "%Y\/\/%m\/\/%d"/' /mnt/usr/share/i18n/locales/en_US@a
+sed -i -e 's/^t_fmt   "%r"$/t_fmt   "%R"/' /mnt/usr/share/i18n/locales/en_US@a
+sed -i -e 's/^date_fmt "%a %b %e %r %Z %Y"$/date_fmt "%a %Y %b %e %r %Z"/' /mnt/usr/share/i18n/locales/en_US@a
 cat <<EOF > /mnt/etc/locale.gen
 en_US.UTF-8 UTF-8
 ar_JO.UTF-8 UTF-8
+en_US.UTF-8@a UTF-8
 EOF
 arch-chroot /mnt locale-gen
-echo "LANG=en_US.UTF-8" > /mnt/etc/locale.conf
-arch-chroot /mnt localectl set-locale en_US.UTF-8
-echo "** Locale generated and applied."
-
-echo -n "* Editing config files... "
-sed -i 's/^#Color/Color/g' /mnt/etc/pacman.conf
-sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 10/' /mnt/etc/pacman.conf
-sed -i "/\[multilib\]/,/Include/"'s/^#//' /mnt/etc/pacman.conf
-echo '%wheel      ALL=(ALL) ALL' > /mnt/etc/sudoers.d/wheel
-cat <<EOF > /mnt/etc/environment
-EDITOR=nano
+cat <<EOF > /mnt/etc/locale.conf
+LANG=en_US.UTF-8
+LC_COLLATE=C.UTF-8
+LC_TIME=en_US.UTF-8@a
 EOF
-echo "done."
+echo "    - Locale generated and applied."
 
-echo -n "* Doing ZFS-y things... "
-sed -i 's/^HOOKS=\(.*\)/HOOKS=\(base udev autodetect microcode modconf kms keyboard keymap consolefont block zfs filesystems fsck\)/g' /mnt/etc/mkinitcpio.conf
-zgenhostid $(hostid)
-systemctl enable --root=/mnt \
-	zfs.target \
-	zfs-import.target \
-	zfs-volumes.target \
-	zfs-import-scan \
-	zfs-volume-wait \
-	zfs-zed \
-	zfs-mount
-echo 'export ZPOOL_VDEV_NAME_PATH=1' > /mnt/etc/profile.d/zfs.sh
-echo 'Defaults env_keep += "ZPOOL_VDEV_NAME_PATH"' > /mnt/etc/sudoers.d/zfs
-arch-chroot /mnt /bin/bash <<EOF
-mkdir /etc/zfs/zfs-list.cache
-touch /etc/zfs/zfs-list.cache/rpool
-zed -F &
-zfs set canmount=noauto rpool/ROOT/$ROOTNAME
-EOF
-arch-chroot /mnt /bin/bash <<EOF
-mkdir /tmp/zfs
-chmod -R 777 /tmp/zfs
-cd /tmp/zfs
-pacman -S --asdeps --noconfirm dkms
-sudo -u nobody git clone https://aur.archlinux.org/zfs-utils.git
-sudo -u nobody git clone https://aur.archlinux.org/zfs-dkms.git
-cd zfs-utils
-sudo -u nobody makepkg
-pacman -U --noconfirm *.pkg.tar.*
-cd ../zfs-dkms
-sudo -u nobody makepkg
-pacman -U --noconfirm *.pkg.tar.*
-EOF
-echo "done."
-
-
-echo "Installing stuff from Arch repos..."
+echo "=== Installing stuff from Arch repos..."
 arch-chroot /mnt /bin/bash <<EOF
 
 pacman -S --noconfirm --needed \
@@ -136,14 +178,13 @@ pacman -S --asdeps --noconfirm --needed \
 	linux-firmware-marvell \
 	linux-firmware-mellanox \
 	linux-firmware-nfp \
-	linux-firmware-qualcomm \
+	linux-firmware-qcom \
 	linux-firmware-qlogic \
 	linux-firmware-whence
 
 pacman -S --noconfirm --needed \
 	btrfs-progs \
 	e2fsprogs \
-	exfat-utils \
 	exfatprogs \
 	nfs-utils \
 	android-tools \
@@ -200,9 +241,11 @@ pacman -S --noconfirm --needed \
 	rsync \
 	bind \
 	wget \
-	nmap
+	nmap \
+	reflector
 pacman -S --asdeps --noconfirm --needed \
 	iwd \
+	wireless-regdb \
 	bluez \
 	libfido2 \
 	xorg-xauth \
@@ -218,7 +261,8 @@ pacman -S --asdeps --noconfirm --needed \
 pacman -S --noconfirm --needed \
 	pipewire \
 	wireplumber \
-	sof-firmware
+	sof-firmware \
+	alsa-firmware \
 pacman -S --asdeps --noconfirm --needed \
 	pipewire-pulse \
 	pipewire-jack \
@@ -318,7 +362,8 @@ pacman -S --noconfirm --needed \
 	qemu \
 	libvirt \
 	virt-manager \
-	edk2 \
+	edk2-shell \
+	edk2-ovmf \
 	nextcloud-client \
 	jre-openjdk \
 	jre8-openjdk \
@@ -460,9 +505,42 @@ sudo -u $USERNAME yay -S --noconfirm --needed \
 	vendor-reset-dkms-git \
 	xfce4-docklike-plugin \
 	mugshot \
-	xfce4-windowck-plugin-xfwm4-theme-support
+	xfce4-windowck-plugin-xfwm4-theme-support \
+	mpris-discord-rpc \
+	arrpc
 
 EOF
+
+echo "=== Configuring the new root..."
+
+echo -n "[*] Enabling pacmna color output... "
+sed -i 's/^#Color/Color/g' /mnt/etc/pacman.conf
+echo "done."
+
+echo -n "[*] Setting pacman parallel downloads to 10... "
+sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 10/' /mnt/etc/pacman.conf
+echo "done."
+
+echo -n "[*] Enabling pacman multilib repository... "
+sed -i "/\[multilib\]/,/Include/"'s/^#//' /mnt/etc/pacman.conf
+echo "done."
+
+echo -n "[*] Allowing users in wheel group to use sudo... "
+echo '%wheel      ALL=(ALL) ALL' > /mnt/etc/sudoers.d/wheel
+echo "done."
+
+echo -n "[*] Disallowing SSH password authentication... "
+echo 'PasswordAuthentication no' > /mnt/etc/ssh/sshd_config.d/nopassword.conf
+echo "done."
+
+echo -n "[*] Setting system environment to default editor to nano... "
+cat <<EOF > /mnt/etc/environment
+EDITOR=nano
+EOF
+echo "done."
+
+
+
 
 echo "Setting up libvirt..."
 sed -i '/unix_sock_group = "libvirt"/s/^#//' /mnt/etc/libvirt/libvirtd.conf
@@ -490,10 +568,38 @@ lpadmin -p "CUPS-PDF" \
 	-E
 EOF
 
-echo -n "Final configuration stuff... "
+echo -n "* Doing ZFS-y things... "
 arch-chroot /mnt /bin/bash <<EOF
-usermod -aG ftp,http,games,audio,input,kvm,video,realtime,docker,libvirt $USERNAME
-mkinitcpio -P
+mkdir /tmp/zfs
+chmod -R 777 /tmp/zfs
+cd /tmp/zfs
+pacman -S --asdeps --noconfirm --needed dkms
+sudo -u nobody git clone https://aur.archlinux.org/zfs-utils.git
+sudo -u nobody git clone https://aur.archlinux.org/zfs-dkms.git
+cd zfs-utils
+sudo -u nobody makepkg
+pacman -U --noconfirm *.pkg.tar.*
+cd ../zfs-dkms
+sudo -u nobody makepkg
+pacman -U --noconfirm *.pkg.tar.*
+EOF
+sed -i 's/^HOOKS=\(.*\)/HOOKS=\(base udev autodetect microcode modconf kms keyboard keymap consolefont block zfs filesystems fsck\)/g' /mnt/etc/mkinitcpio.conf
+zgenhostid $(hostid)
+systemctl enable --root=/mnt \
+	zfs.target \
+	zfs-import.target \
+	zfs-volumes.target \
+	zfs-import-scan \
+	zfs-volume-wait \
+	zfs-zed \
+	zfs-mount
+echo 'export ZPOOL_VDEV_NAME_PATH=1' > /mnt/etc/profile.d/zfs.sh
+echo 'Defaults env_keep += "ZPOOL_VDEV_NAME_PATH"' > /mnt/etc/sudoers.d/zfs
+arch-chroot /mnt /bin/bash <<EOF
+mkdir /etc/zfs/zfs-list.cache
+touch /etc/zfs/zfs-list.cache/rpool
+zed -F &
+zfs set canmount=noauto rpool/ROOT/$ROOTNAME
 EOF
 echo "done."
 
@@ -504,4 +610,28 @@ systemctl enable cups --root=/mnt
 systemctl enable bluetooth --root=/mnt
 systemctl enable gdm --root=/mnt
 systemctl enable libvirtd --root=/mnt
+systemctl enable reflector.timer --root=/mnt
 echo "done."
+
+echo -n "Final configuration stuff... "
+arch-chroot /mnt /bin/bash <<EOF
+usermod -aG ftp,http,games,audio,input,kvm,video,realtime,docker,libvirt $USERNAME
+mkinitcpio -P
+EOF
+echo "done."
+
+
+cat <<EOF > /mnt/etc/systemd/system/storage.mount
+[Unit]
+Description = Mount storage from home server
+
+[Mount]
+What=backup.local:/storage
+Where=/storage
+Type=nfs
+Options=defaults,_netdev
+#TimeoutSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
