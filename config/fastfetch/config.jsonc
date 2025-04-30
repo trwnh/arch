@@ -7,7 +7,7 @@
 		},
 		"datetime",
 		"version",
-		
+
 		"break",
 		{
 			"type": "separator",
@@ -19,13 +19,16 @@
 		"packages",
 		"processes",
 		"uptime",
-		
+
 		"break",
 		{
 			"type": "separator",
 			"string": "Hardware:  "
 		},
-		"host",
+		{
+			"type": "host",
+			"format": "{vendor} {name} {version}"
+		},
 		{
 			"type": "cpu",
 			"format": "{name}, {cores-logical} core(s) @ {freq-base}"
@@ -35,6 +38,7 @@
 		"memory",
 		"swap",
 		"disk",
+
 		"break",
 		"colors"
 	]
