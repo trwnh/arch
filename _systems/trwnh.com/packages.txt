@@ -1,0 +1,77 @@
+# Arch packages
+base
+base-devel
+reflector
+	reflector-mirrorlist-update
+
+# Dependencies
+imagemagick
+
+# Dependencies (AUR)
+ffmpeg-headless
+ffmpeg-normalize
+
+# Utilities
+git
+nano
+vim
+htop
+ncdu
+fastfetch
+pacman-contrib
+	plocate
+rhit
+goaccess
+rsync
+uv
+wget
+
+
+# Utilities (AUR)
+yay-bin
+isd
+
+# Things I host
+
+## Firewall
+fail2ban
+iptables-nft
+
+## SSH
+openssh
+
+## HTTP
+nginx
+certbot
+certbot-dns-cloudflare
+certbot-nginx
+
+## XMPP
+prosody
+coturn
+
+## Docker
+docker
+docker-compose
+
+## SQL
+postgresql
+postgresql-old-upgrade
+
+## Akkoma
+elixir
+erlang-headless
+perl-image-exiftool
+
+## Mumble
+mumble-server
+
+## Quassel (AUR)
+quassel-core-small
+
+## Discord bot
+yt-dlp
+
+## ???
+zram-generator
+websockify

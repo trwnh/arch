@@ -1,0 +1,428 @@
+# Bootstrap
+base
+base-devel
+
+# Kernel
+linux
+	linux-firmware
+	linux-firmware-bnx2x
+	linux-firmware-liquidio
+	linux-firmware-marvell
+	linux-firmware-mellanox
+	linux-firmware-nfp
+	linux-firmware-qcom
+	linux-firmware-qlogic
+	linux-firmware-whence
+linux-headers
+linux-lts
+linux-lts-headers
+amd-ucode
+dkms
+
+# Hardware
+bluez
+mesa
+vulkan-radeon
+	vulkan-mesa-layers
+acpi
+
+# System utilities
+sudo
+bash
+	bash-completion
+nano
+git
+zip
+unzip
+unrar
+p7zip
+pacman-contrib
+	diffutils
+	findutils
+	plocate
+	perl
+	vim
+## AUR
+systemd-boot-pacman-hook
+
+# Other CLI utilities
+jq
+less
+
+# Filesystem
+btrfs-progs
+e2fsprogs
+exfatprogs
+nfs-utils
+samba
+## AUR
+ntfsprogs-ntfs3
+
+# Network
+networkmanager
+iwd
+	wireless-regdb
+openssh
+	libfido2
+	xorg-xauth
+rsync
+bind
+curl
+wget
+	ca-certificates
+yt-dlp
+nmap
+reflector
+
+# Audio
+pipewire
+	pipewire-pulse
+	pipewire-jack
+	pipewire-alsa
+	pipewire-audio
+	pipewire-v4l2
+	pipewire-libcamera
+	pipewire-zeroconf
+	pipewire-roc
+wireplumber
+sof-firmware
+alsa-firmware
+realtime-privileges
+
+# Development
+docker
+docker-compose
+go
+rust
+	gdb
+lua
+erlang
+elixir
+nodejs
+	npm
+hugo
+	python-docutils
+zola
+android-tools
+
+# Monitoring
+htop
+fastfetch
+smartmontools
+inxi
+	bind
+	binutils
+	bluez-tools
+	dmidecode
+	hddtemp
+lsof
+strace
+lm_sensors
+
+# === Graphical ===
+
+# UI
+materia-gtk-theme
+papirus-icon-theme
+kvantum
+kvantum-qt5
+kvantum-theme-materia
+
+# Fonts
+noto-fonts
+noto-fonts-extra
+noto-fonts-cjk
+otf-fira-sans
+otf-fira-mono
+ttf-fira-code
+ttf-inconsolata
+inter-font
+ttf-dejavu
+ttf-nerd-fonts-symbols
+ttf-roboto
+ttf-roboto-mono
+ttf-droid
+terminus-font
+
+# XFCE
+xfce4
+	xfce4-artwork
+	xfce4-notifyd
+	xfce4-pulseaudio-plugin
+	xfce4-screenshooter
+	xfce4-taskmanager
+	xfce4-whiskermenu-plugin
+	xfce4-eyes-plugin
+	## AUR
+	mugshot
+	xfce4-docklike-plugin
+	xfce4-windowck-plugin-xfwm4-theme-support
+plank
+
+# GNOME
+gnome-shell
+	gnome-shell-extensions
+	gnome-bluetooth-3.0
+	gnome-control-center
+		fwupd
+		gnome-user-share  # webdav file sharing
+		malcontent  # app permissions
+		rygel  # media sharing
+		system-config-printer
+	gnome-disk-utility
+	gst-plugin-pipewire  # screen recording
+	gst-plugins-good  # screen recording
+	power-profiles-daemon
+gdm
+gnome-backgrounds
+gnome-calculator
+gnome-calendar
+gnome-characters
+gnome-clocks
+gnome-color-manager
+gnome-font-viewer
+gnome-logs
+gnome-system-monitor
+gnome-text-editor
+gnome-weather
+loupe
+nautilus
+orca
+simple-scan
+snapshot
+sushi
+dconf-editor
+xdg-desktop-portal-gtk  # better than xdg-desktop-portal-gnome?
+## ???
+
+
+
+# Files
+thunar
+	thunar-archive-plugin
+	thunar-media-tags-plugin
+	thunar-vcs-plugin
+	gvfs
+	gvfs-afc
+	gvfs-dnssd
+	gvfs-goa
+	gvfs-google
+	gvfs-gphoto2
+	gvfs-mtp
+	gvfs-nfs
+	gvfs-smb
+	gvfs-wsdd
+	engrampa
+	catfish
+nextcloud-client
+
+# Audio
+pavucontrol
+qpwgraph
+pro-audio
+
+# Network
+nm-connection-editor
+network-manager-applet
+
+# Peripherals
+cups
+	cups-pdf
+	cups-browsed
+	ipp-usb
+	colord
+sane
+	sane-airscan
+qmk
+solaar
+
+# Communication
+firefox-developer-edition
+chromium
+quassel-client-qt
+telegram-desktop
+mumble
+dino
+
+# Media
+gimp
+krita
+inkscape
+blender
+pitivi
+curtail
+darktable
+rawtherapee
+shotwell
+
+# Streaming
+## AUR
+obs-studio-tytan652
+decklink
+v4l2loopback-dkms
+
+# Games
+prismlauncher
+	jre-openjdk
+	jre8-openjdk
+	jre17-openjdk
+	jre21-openjdk
+steam
+xf86-video-amdgpu
+libretro
+dolphin-emu
+mgba-qt
+
+# Virtualization
+qemu
+libvirt
+virt-manager
+edk2-shell
+edk2-ovmf
+
+# Document editing
+texmaker
+texlive-meta
+libreoffice-fresh
+## AUR
+visual-studio-code-bin
+
+
+
+
+
+
+
+
+
+transmission-remote-gtk
+gparted
+
+zed
+	rust-analyzer
+	eslint
+	clang
+
+
+
+
+discord-electron-openasar
+
+enpass-bin
+epson-inkjet-printer-escpr2
+vendor-reset-dkms-git
+mpris-discord-rpc
+arrpc
+
+
+
+
+
+
+
+
+
+	
+	xclip
+	zenity
+	
+	
+	
+	
+	
+	power-profiles-daemon
+	python-gobject
+	python-simplejson
+	fprintd
+	gnome-menus
+	libgtop
+	
+	gnome-keyring
+	libnotify
+	speech-dispatcher
+	gtk4
+	aria2
+	atomicparsley
+	ffmpeg
+	python-brotli
+	python-brotlicffi
+	python-mutagen
+	python-pycryptodrome
+	python-pycryptodromex
+	python-secretstorage
+	python-websockets
+	python-xattr
+	rtmpdump
+	espeak-ng
+	libappindicator-gtk3
+	ghostscript
+	kimageformats5
+	libheif
+	libjxl
+	poppler-qt5
+	python-pyqt5
+	pstoedit
+	texlive-pstricks
+	hip-runtime-amd
+	hiprt
+	libdecor
+	frei0r-plugins
+	gst-libav
+	gst-plugin-opencv
+	gst-plugins-ugly
+	python-librosa
+	dmidecode
+	dnsmasq
+	gettext
+	iptables-nft
+	libvirt-python
+	lvm2
+	python-cryptography
+	python-lxml
+	swtpm
+	nautilus-python
+	python-caja
+	trash-cli
+	gnuplot
+	imagemagick
+	perl-image-exiftool
+	portmidi
+	lib32-vulkan-radeon
+	lib32-vulkan-mesa-layers
+	lib32-mesa
+	gamemode
+	gnu-netcat
+	pyright
+
+
+
+
+
+
+
+
+
+	
+
+
+	
+
+
+
+
+
+
+
+
+
+
+	clang
+	diffutils
+	gcc
+	libffi
+	libusb-compat
+	
+	
+	
+	logrotate
+	xdg-utils

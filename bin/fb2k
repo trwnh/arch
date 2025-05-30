@@ -1,3 +1,0 @@
-#!/bin/sh
-WINEPREFIX=~/.local/share/wineprefixes/foobar2000 wine /opt/wine-discord-ipc-bridge/winediscordipcbridge.exe &
-foobar2000 -immediate

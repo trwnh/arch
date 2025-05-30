@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = memtest86+-efi
+
+[Action]
+Description = Copy new versions of MemTest86+ executable to ESP
+When = PostTransaction
+Exec = /usr/bin/cp -f /boot/memtest86+/memtest.efi /efi/EFI/tools/memtest86.efi

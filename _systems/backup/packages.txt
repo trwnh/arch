@@ -1,0 +1,76 @@
+# Bootstrap
+base
+base-devel
+
+# Hardware
+linux
+	linux-headers
+	linux-firmware
+linux-lts
+	linux-lts-headers
+efibootmgr
+intel-ucode
+vulkan-intel
+kernel-modules-hook
+
+# Utilities
+sudo
+bash
+nano
+git
+jq
+pacman-contrib
+reflector
+rsync
+wget
+zip
+unzip
+unrar
+yt-dlp
+## AUR
+phantomjs
+
+# File management
+dosfstools
+exfat-utils
+nfs-utils
+zfs-dkms
+zfs-utils
+samba
+syncthing
+
+# Network
+networkmanager  # TODO: replace with systemd-networkd?
+iperf3
+net-tools
+nmap
+
+# SSH
+openssh
+
+# Web
+apache
+nginx
+certbot
+certbot-nginx
+certbot-dns-cloudflare
+
+# DNS
+dnsmasq
+bind
+
+# Docker containers
+docker
+docker-compose
+
+# Monitoring
+fastfetch
+htop
+ncdu
+smartmontools
+
+# Minecraft
+#jre-openjdk-headless
+#jre8-openjdk-headless
+#jre17-openjdk-headless
+#jre21-openjk-headless

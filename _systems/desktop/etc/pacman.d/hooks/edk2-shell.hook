@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = edk2-shell
+
+[Action]
+Description = Copy new versions of UEFI Shell v2 executable to ESP
+When = PostTransaction
+Exec = /usr/bin/cp -f /usr/share/edk2-shell/x64/Shell_Full.efi /efi/shellx64.efi
