@@ -1,12 +1,1 @@
-font-family = "Fira Mono Regular"
-font-family-bold = "Fira Mono Bold"
 
-#theme = "catppuccin-macchiato"
-theme = "iceberg-dark"
-
-background = 212121
-background-opacity = 0.8
-
-cursor-style = "bar"
-
-#window-decoration = "server"
