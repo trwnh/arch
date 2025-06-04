@@ -1,0 +1,44 @@
+# git clone https://github.com/alacritty/alacritty-theme ~/.config/alacritty/themes
+# acceptable themes: {wombat, Cobalt2}
+import = ["/home/a/.config/alacritty/themes/themes/Cobalt2.toml"]
+
+[cursor]
+style = "Beam"
+unfocused_hollow = false
+
+[font]
+size = 16
+
+[font.bold]
+family = "Fira Mono"
+style = "Bold"
+
+[font.bold_italic]
+family = "Fira Mono"
+style = "Bold Italic"
+
+[font.italic]
+family = "Fira Mono"
+style = "Italic"
+
+[font.normal]
+family = "Fira Mono"
+style = "Regular"
+
+[font.offset]
+x = -1
+y = 4
+
+[scrolling]
+history = 10000
+
+[window]
+opacity = 0.8
+
+[window.dimensions]
+columns = 100
+lines = 40
+
+[window.padding]
+x = 0
+y = 0
