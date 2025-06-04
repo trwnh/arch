@@ -1,5 +1,6 @@
 #set breaklonglines
 #set nonewlines
+#set softwrap
 set tabsize 3
 #set tabstospaces
 #set autoindent
