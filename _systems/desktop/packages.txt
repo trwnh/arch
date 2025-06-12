@@ -157,7 +157,8 @@ xfce4
 	mugshot
 	xfce4-docklike-plugin
 	xfce4-windowck-plugin-xfwm4-theme-support
-plank
+## AUR
+plank-reloaded-git
 
 # GNOME
 gnome-shell
