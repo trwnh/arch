@@ -13,6 +13,7 @@ ffmpeg-normalize
 
 # Utilities
 git
+	git-lfs
 nano
 vim
 htop
@@ -24,7 +25,9 @@ rhit
 goaccess
 rsync
 uv
+curl
 wget
+jq
 
 
 # Utilities (AUR)
@@ -49,6 +52,9 @@ certbot-nginx
 ## XMPP
 prosody
 coturn
+luarocks
+lua-dbi
+lua-zlib
 
 ## Docker
 docker
