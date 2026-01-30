@@ -2,8 +2,8 @@
 
 # Given:
 # - the goal state is to pacstrap to some $ROOT
-# - $POOL exists already
-# - efi system partition already exists with partlabel $ESP_label
+# - $POOL is already imported
+# - efi system partition already exists with name $ESP_name
 # When:
 # - we create a new $DATASET like rpool/OS/arch-20260130 or whatever
 # - we mark that $DATASET as the bootfs of the zpool (TODO: is this the right time to do this?)
@@ -17,13 +17,9 @@ $OS = arch-$(date +%Y%m%d)
 $DATASET = $POOL/OS/$OS
 
 $ROOT = /mnt
-$ESP_label = ESP
+$ESP_name = ESP
 
 ## instructions
-
-zpool import \
-	-R $ROOT \
-	$POOL
 
 zfs create \
 	-o canmount=noauto
