@@ -36,5 +36,3 @@ zpool set bootfs=rpool/OS/arch rpool
 zfs mount rpool/OS/arch
 mkdir -p /mnt/efi
 mount -L ESP /mnt/efi
-
-pacstrap /mnt base base-devel
