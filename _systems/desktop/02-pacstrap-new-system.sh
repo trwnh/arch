@@ -3,6 +3,8 @@
 HOSTNAME="desktop"
 TIMEZONE="America/Chicago"
 
+pacstrap /mnt base base-devel
+
 cat <<EOF > /mnt/etc/fstab
 LABEL=ESP /efi vfat rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro 0 2
 LABEL=SWAP none swap defaults 0 0
