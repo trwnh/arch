@@ -1,15 +1,22 @@
 #!/bin/sh
 
+## variables
+
 HOSTNAME="desktop"
 TIMEZONE="America/Chicago"
 
+## instructions
+
 pacstrap /mnt base base-devel
 
-cat <<EOF > /mnt/etc/fstab
+# TODO: consider loading from repo instead of writing from scratch?
+# TODO: extract variables for labels (fslabels? partlabels? which does LABEL= pull from?)
+cat > /mnt/etc/fstab <<EOF 
 LABEL=ESP /efi vfat rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro 0 2
 LABEL=SWAP none swap defaults 0 0
 EOF
 
+# TODO: is there a better way to set hostname now?
 cat <<EOF > /mnt/etc/hostname
 $HOSTNAME
 EOF
@@ -20,8 +27,12 @@ cat <<EOF > /mnt/etc/hosts
 127.0.1.1 $HOSTNAME.local $HOSTNAME
 EOF
 
+
+# TODO: is there a better way to set timezone now?
 arch-chroot /mnt ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
 
+
+# TODO: is there a better way to manage this locale patch? maybe a patch file? maybe in the repo?
 cp /mnt/usr/share/i18n/locales/en_US /mnt/usr/share/i18n/locales/en_US@a
 sed -i -e 's/"English locale for the USA"/"English locale for the USA \(24h ymd\)"/' /mnt/usr/share/i18n/locales/en_US@a
 sed -i -e 's/"1.0"/"1.0a"/' /mnt/usr/share/i18n/locales/en_US@a
