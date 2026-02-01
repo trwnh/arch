@@ -1,0 +1,2 @@
+adw-gtk-theme
+materia-gtk-theme
