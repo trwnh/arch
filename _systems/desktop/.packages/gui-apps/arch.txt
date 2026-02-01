@@ -4,3 +4,4 @@ ghostty
 steam
 telegram-desktop
 transmission-remote-gtk
+gimp
