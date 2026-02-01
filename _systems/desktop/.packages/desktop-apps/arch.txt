@@ -1,0 +1,6 @@
+firefox-developer-edition
+discord
+ghostty
+steam
+telegram-desktop
+transmission-remote-gtk
