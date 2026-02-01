@@ -1,0 +1,9 @@
+base
+base-devel
+linux
+linux-firmware
+linux-headers
+linux-lts
+linux-lts-headers
+amd-ucode
+efibootmgr
