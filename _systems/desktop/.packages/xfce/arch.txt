@@ -1,0 +1,14 @@
+xf86-video-amdgpu
+xfce4-appfinder
+xfce4-docklike-plugin
+xfce4-panel
+xfce4-power-manager
+xfce4-session
+xfce4-settings
+xfce4-terminal
+xfce4-whiskermenu-plugin
+xfce4-windowck-plugin
+xfconf
+xfdesktop
+xfwm4
+xfwm4-themes
