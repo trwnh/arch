@@ -12,3 +12,4 @@ xfconf
 xfdesktop
 xfwm4
 xfwm4-themes
+mugshot
