@@ -5,3 +5,4 @@ steam
 telegram-desktop
 transmission-remote-gtk
 gimp
+code
