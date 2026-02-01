@@ -1,2 +1,5 @@
 carla
 lsp-plugins
+pipewire-alsa
+pipewire-libcamera
+qpwgraph
