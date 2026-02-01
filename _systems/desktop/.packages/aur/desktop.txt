@@ -1,5 +1,0 @@
-enpass-bin
-mpc-qt-bin
-protonup-qt-bin
-vrcx-bin
-planify
