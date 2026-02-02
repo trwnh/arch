@@ -10,14 +10,11 @@ gvfs-nfs
 gvfs-smb
 gvfs-wsdd
 
+noto-fonts-cjk
+noto-fonts-emoji
+noto-fonts-extra
 
 
-
-
-git
-nano
-less
-uv
 
 
 
@@ -32,29 +29,22 @@ edk2-shell
 ethtool
 exo
 ffmpegthumbnailer
-fwupd
 garcon
 gnome-browser-connector
-gnome-disk-utility
+
 gst-libav
 labwc
 libappindicator
 libxdg-basedir
 logrotate
 memtest86+-efi
-mpv
-networkmanager
-nextcloud-client
-noto-fonts-cjk
-noto-fonts-emoji
-noto-fonts-extra
+
+
 pavucontrol
 power-profiles-daemon
-quassel-client-qt
+
 reflector
 sane
 sshfs
-thunar
-thunar-volman
-tumbler
+
 vulkan-radeon
