@@ -8,3 +8,8 @@ linux-lts-headers
 amd-ucode
 efibootmgr
 fwupd
+
+git
+nano
+less
+uv
