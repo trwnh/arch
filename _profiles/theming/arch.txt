@@ -1,3 +1,7 @@
 adw-gtk-theme
 materia-gtk-theme
 papirus-icon-theme
+kvantum
+kvantum-qt5
+kvantum-theme-materia
+materia-kde
