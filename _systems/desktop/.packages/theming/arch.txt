@@ -1,2 +1,3 @@
 adw-gtk-theme
 materia-gtk-theme
+papirus-icon-theme
