@@ -8,7 +8,7 @@ linux-lts-headers
 amd-ucode
 efibootmgr
 fwupd
-
+libfido2
 git
 nano
 less
