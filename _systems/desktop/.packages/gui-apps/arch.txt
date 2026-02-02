@@ -6,3 +6,11 @@ telegram-desktop
 transmission-remote-gtk
 gimp
 code
+quassel-client-qt
+mpv
+nextcloud-client
+gnome-disk-utility
+
+thunar
+thunar-volman
+tumbler
