@@ -7,3 +7,4 @@ linux-lts
 linux-lts-headers
 amd-ucode
 efibootmgr
+fwupd
