@@ -1,0 +1,6 @@
+[Unit]
+Description=Renew TLS certs with Certbot
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/certbot renew
