@@ -1,7 +1,0 @@
-{
-  "BACKGROUND_COLOR": "#2c2d32",
-  "offloadAdmControls": true,
-  "chromiumSwitches": {},
-  "asyncVideoInputDeviceInit": false,
-  "SKIP_HOST_UPDATE": true
-}
