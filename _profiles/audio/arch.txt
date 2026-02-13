@@ -3,3 +3,7 @@ lsp-plugins
 pipewire-alsa
 pipewire-libcamera
 qpwgraph
+
+audacity
+reaper
+reapack
