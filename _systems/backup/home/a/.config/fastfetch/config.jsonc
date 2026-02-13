@@ -1,0 +1,47 @@
+{
+	"$schema":"https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+	"modules":[
+		{
+			"type": "title",
+			"fqdn": true
+		},
+		"datetime",
+		"version",
+		"shell",
+		"terminal",
+
+		"break",
+		{
+			"type": "separator",
+			"string": "Software:  "
+		},
+		"os",
+		"kernel",
+		"initsystem",
+		"packages",
+		"processes",
+		"uptime",
+
+		"break",
+		{
+			"type": "separator",
+			"string": "Hardware:  "
+		},
+		{
+			"type": "host",
+			"format": "{vendor} {name} {version}"
+		},
+		{
+			"type": "cpu",
+			"format": "{name}, {cores-physical}C{cores-logical}T @ {freq-base}"
+		},
+		"cpucache",
+		"cpuusage",
+		"memory",
+		"swap",
+		"zpool",
+
+		"break",
+		"colors"
+	]
+}
