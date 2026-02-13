@@ -7,6 +7,8 @@
 		},
 		"datetime",
 		"version",
+		"shell",
+		"terminal",
 
 		"break",
 		{
@@ -31,7 +33,7 @@
 		},
 		{
 			"type": "cpu",
-			"format": "{name}, {cores-logical} core(s) @ {freq-base}"
+			"format": "{name}, {cores-physical}C{cores-logical}T @ {freq-base}"
 		},
 		"cpucache",
 		"cpuusage",
