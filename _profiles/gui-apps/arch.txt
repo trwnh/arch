@@ -10,6 +10,7 @@ quassel-client-qt
 mpv
 nextcloud-client
 gnome-disk-utility
+mumble
 
 thunar
 thunar-volman
